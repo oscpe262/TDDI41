@@ -1,0 +1,81 @@
+LXB
+=============================
+3-1
+a)
+
+1   Executable programs or shell commands
+2   System calls (functions provided by the kernel)
+3   Library calls (functions within program libraries)
+4   Special files (usually found in /dev)
+5   File formats and conventions eg /etc/passwd
+6   Games
+7   Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7)
+8   System administration commands (usually only for root)
+9   Kernel routines [Non standard]
+
+b) Section 1
+c) Section 5
+d) Section 8
+
+4-1
+a) command argument argument
+b) command [runtime options goes here]... [optional input stream[optional output stream]]
+c) command [-available runtime flags w/o further arguments] [-S flag needs argument (filename suffix)] [optional output name]
+d) Three possible invokation syntaxes:
+     command [runtime option] argument argument
+     command [runtime option] [-u-flag argument] [-r-flag argument] argument
+     command [runtime option] --reference-flag=argument argument
+
+4-2
+a) A brief briefing of what the entry is about, i.e. for an executable - what the executable' function is.
+b) Section 1
+c) Under "SEE ALSO" 
+d) Section 1, usually a subsection
+
+4-3
+a) man -a <search term> 
+b) man -k <keyword>
+
+4-4
+a) It lists info about files in a given search path.
+b) -l
+c) Adds recursive directory search (lists subdirectories and their content as well).
+
+5-1
+a) ./ssh/, ssh/, ../bin/ssh/ 
+b) ../../bin/ssh/
+
+6-1
+a) chmod ugo+rw-x,go-wx <file>
+b) chmod g-w <file>
+c) chmod ug+x foo
+
+7-1
+a) rw-rw-rw-
+b) rwxrwx---
+c) rw-r-----
+d) r--r--r--
+
+7-2
+-R, --recursive
+
+7-3
+Allows entering the directory and listing of its content.
+
+7-4
+(c) is the most suitable one, as it doesn't change possibly existing executive permissions for [ug]. (a) would remove any executive permissions on all files (and directories, making them inaccessible) for anyone, and (b) would add executive permissions for [ug] to all files and directories in the tree.
+
+8-1
+# chown user:group -R <path>
+
+9-{1,2,3}
+1) Changes current work directory to the parent directory.
+2) Changes current work directory to the parent directory of the parent directory.
+3) Current directory content in the format:
+   filemode <> user group filesize(bytes) modification_time filename[entry type indicator]
+
+9-4
+Character special file, e.g. pipes, ports, devices etc ...
+
+9-5
+rename file a to 'b'.
