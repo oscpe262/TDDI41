@@ -79,3 +79,27 @@ Character special file, e.g. pipes, ports, devices etc ...
 
 9-5
 rename file a to 'b'.
+
+9-6
+cp -a /dir1/*.* /dir2/
+
+9-7
+$ chown root:wheel secret && chmod 640 secret
+
+10-2
+/bin/bash
+	The bash executable
+/etc/profile
+	The systemwide initialization file, executed for login shells
+/etc/bash.bashrc
+	The systemwide per-interactive-shell startup file
+/etc/bash.bash.logout
+	The systemwide login shell cleanup file, executed when a login shell exits
+~/.bash_profile
+	The personal initialization file, executed for login shells
+~/.bashrc
+	The individual per-interactive-shell startup file
+~/.bash_logout
+	The individual login shell cleanup file, executed when a login shell exits
+~/.inputrc
+	Individual readline initialization file
