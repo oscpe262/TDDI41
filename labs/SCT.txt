@@ -42,3 +42,18 @@ Arithmetic expansion. Allows evaluation of arithmetic expressions and substituti
 # 5-5
 
 ls -a | grep "^\." | wc -l
+
+# 6-1
+a) A backslash is used as en escape character in bash, and in this case it escapes the newline, allowing the script to be written on several (two here) lines while being evaluated as if it was a single line.
+b) Earlier, we saw that command scope within () are executed in a new sub-shell. If replaced by {} the scope is executed in the current shell context.
+
+# 6-2
+"local" creates a temporary object that is local to the current call frame, in this case a variable $mailserver.
+
+# 6-3
+To demonstrate "sleep"?
+
+# 7-1, 8-1
+
+See separate file.
+
