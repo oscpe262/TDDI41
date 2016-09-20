@@ -1,0 +1,113 @@
+%% Doc Props
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% Packages
+\usepackage{
+  amsmath,
+  titlesec,
+  tikz,
+  pifont,
+  textcomp,
+  fixltx2e,
+  xcolor,
+  fullpage,
+  graphicx,
+  afterpage,
+  lastpage,
+  float,
+  fancyhdr,
+  fancyvrb,
+  parskip,
+  xfrac,
+  gensymb,
+  framed,
+  caption,
+  subcaption,
+  mathtools,
+  pdfpages,
+  etoolbox,
+  enumitem,
+  hyperref
+}
+\usepackage[nottoc,section,numbib]{tocbibind}
+%\usepackage[europeancurrents,europeanvoltages,europeanresistors,europeaninductors,smartlabels]{circuitikz}
+%\usepackage{pgfplotstable}
+%\pgfplotsset{compat=1.12}
+\usetikzlibrary{calc,matrix,positioning,arrows,shapes,trees,plotmarks,decorations.markings,shapes.geometric}
+\usepackage[font={small,it}]{caption} %% Italics in captions
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position 1 with {\arrow[semithick, fill=green]{triangle 60}}}, double distance=1.4pt, shorten >= 5.5pt, preaction = {decorate}, postaction = {draw,line width=1.4pt, green,shorten >= 4.5pt}]
+\tikzstyle{innerWhite} = [semithick, green,line width=1.4pt, shorten >= 4.5pt]
+
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,font=\sffamily},
+  arnn/.style = {treenode, circle, white, font=\sffamily\bfseries, draw=black,fill=black, text width=1.5em},
+  arnr/.style = {treenode, circle, red, draw=red, text width=1.5em, very thick},
+  arnx/.style = {treenode, rectangle, draw=black,  minimum width=0.5em, minimum height=0.5em}
+}
+
+% PDF props
+\hypersetup {
+  bookmarks=true,              % show bookmarks bar?
+  unicode=true,                % non-Latin characters in Acrobat’s bookmarks
+  pdftoolbar=true,             % show Acrobat’s toolbar?
+  pdfmenubar=true,             % show Acrobat’s menu?
+  pdffitwindow=false,          % window fit to page when opened
+  pdfstartview={FitH},         % fits the width of the page to the window
+  pdftitle={TDDI41},                 % title
+  pdfauthor={Oscar Petersson}, % author
+  pdfsubject={},          % subject of the document
+  pdfkeywords={}          % list of keywords
+  pdfnewwindow=true,           % links in new window
+  hidelinks,                   % hide links (removing color and border)
+  linktoc=all,                 % parts of TOC made into links
+}
+\urlstyle{same}
+
+% More Props
+\graphicspath{{./fig/}}
+
+% Comfy Command Redefinitions
+
+%% First Page Information
+\author{Oscar Petersson, Johan Levinsson}
+\title{TDDI41 Lab report}
+\date{\today}
+\newcommand{\course}{System Administration}
+\newcommand{\coursenumber}{TDDI41, Linköpings universitet}
+\newcommand{\programme}{Högskoleingenjörsutbildning i datateknik, 180 hp}
+\newcommand{\examiner}{}
+\newcommand{\institution}{IDA}
+\newcommand{\reptype}{Laboration report}
+
+%%% Document %%%
+\begin{document}
+
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{-1}
+
+% Custom titlepage, empty backside, do not use with \maketitle
+\pagestyle{empty}
+  \makeatletter\begin{center}~\vfill
+  \Large{\@author}\vskip .3cm
+  \textbf{\LARGE{\@title}}\vskip .2cm
+  \large{\programme}
+  \vfill
+\end{center}
+\reptype{} - \@date\hfill Assistant:\\
+\textbf{\course}\hfill\examiner\\
+\coursenumber\hfill\institution
+\makeatother
+\newpage
+\pagestyle{plain}
+%% Table of Contents
+%\addtocontents{toc}{\protect\hypertarget{toc}{}}
+%\tableofcontents\label{sec:toc}
+%\addtocontents{toc}{\protect\thispagestyle{empty}}
+%\cleardoublepage
+% Call First File Branch
+\input{./tex/main.tex}
+%\input{./tex/LXB.tex}
+
+\end{document}

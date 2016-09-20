@@ -27,7 +27,8 @@ d) Three possible invokation syntaxes:
      command [runtime option] --reference-flag=argument argument
 
 4-2
-a) A brief briefing of what the entry is about, i.e. for an executable - what the executable' function is.
+a) A brief briefing of what the entry is about, i.e. for an executable - what the executable' function is,
+   and a description of flags etc.
 b) Section 1
 c) Under "SEE ALSO" 
 d) Section 1, usually a subsection
@@ -42,11 +43,12 @@ b) -l
 c) Adds recursive directory search (lists subdirectories and their content as well).
 
 5-1
-a) ./ssh/, ssh/, ../bin/ssh/ 
+a) ./ssh/
+   ../bin/ssh/ 
 b) ../../bin/ssh/
 
 6-1
-a) chmod ugo+rw-x,go-wx <file>
+a) chmod a+rw-x,go-wx <file>
 b) chmod g-w <file>
 c) chmod ug+x foo
 
@@ -199,10 +201,9 @@ gzless() {
 
 20-4
 a)
-$ (sleep 3; echo PASSWD; sleep 1; echo ls; sleep 1) |\
-   socat - EXEC:'ssh -l USER remote.ip.addr',pty,setsid,ctty
-
-"echo ls" could of course be replaced either with a loop over a local script, or executing a remote script.
+$ file=$(cat commandfile) && \
+  (sleep 3; echo PASSWD; sleep 1; echo "$file"; sleep 1) |\
+  socat - EXEC:'ssh -l USER remote.ip.addr',pty,setsid,ctty
 
 b)
 ########
@@ -252,4 +253,32 @@ ssh user@$client <<'FOOXECUTETHIS
 w
 FOOXECUTETHIS
 done
+
+21-1
+%%%%%%%%%
+
+21-2
+The code starts out with directing two file descriptors, one for input and one for output (l.2). We look
+for .bak-files throughout the file system and print their path on a line each (l.3). We read these lines (l.5),
+ask (l.6) the user to confirm that we should log the entry to /tmp/RECORD (l.2). If (l.8) the user answers (l.7)
+"y", we log the entry (l.2).
+
+21-3
+
+#/bin/bash
+exec 23<&0 23>&1 <<EOF
+`find . -name "*.bak" -print`
+EOF
+while read BAK; do
+    FILE=$(echo "$BAK" | sed 's|\.bak$||g')
+    if [ ! -e "$FILE" ] || [ "${BAK}" -nt "${FILE}" ]; then
+       echo -n "$FILE not found or older than $BAK. Replace $FILE? Y/N"
+       read and <&23
+       if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then
+	  mv -T "$BAK" "$FILE"
+       fi
+    fi
+done
+
+
 

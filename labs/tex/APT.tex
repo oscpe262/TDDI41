@@ -1,0 +1,26 @@
+\chapter{APT}
+$\text{Errata: "[...]dpkg, is one of the most powerful"}^{\text{citation needed}}$
+\subsection{1-1}
+a) \verb=# apt-get install <package>=
+b) \verb=# apt-get remove|purge <package>=
+c) \verb=update= gets the latest index files from the repositories.
+d) It upgrades all explicitly installed packages and (hopefully) their dependencies.
+
+\subsection{1-2}
+a) Prints a list of installed packages, unless a search pattern is given, in which case not installed in the indexes also are included (well, the ones that matches the search pattern).
+b) Removes the package and its config files.
+c) Lists files installed by \verb=bind9=.
+
+
+% 2-1
+% # /etc/apt/sources.list
+% deb http://ftp.se.debian.org/debian squeeze
+% deb http://ftp.se.debian.org/debian squeeze updates
+%
+% deb-src <url> <dist> <component>
+
+% 3-1,2
+% # apt-get install aptitude hping
+
+% 4-1
+% # apt-get remove hping

@@ -1,0 +1,340 @@
+foo
+\section{LXB}
+\subsection{3-1}
+a)
+
+\begin{tabular}{ll}
+1&   Executable programs or shell commands\\
+2&   System calls (functions provided by the kernel)\\
+3&   Library calls (functions within program libraries)\\
+4&   Special files (usually found in /dev)\\
+5&   File formats and conventions eg /etc/passwd\\
+6&   Games\\
+7&   Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7)\\
+8&   System administration commands (usually only for root)\\
+9&   Kernel routines
+\end{tabular}
+
+b) Section 1
+
+c) Section 5
+
+d) Section 8
+
+\subsection{4-1}
+a) \begin{verbatim}command argument argument\end{verbatim}
+
+b) \begin{verbatim}command [runtime options goes here]...
+[optional input stream[optional output stream]]\end{verbatim}
+
+c) \begin{verbatim}
+command [-available runtime flags w/o further arguments]
+[-S flag needs argument (filename suffix)] [optional output name]
+\end{verbatim}
+
+
+d) Three possible invokation syntaxes:
+\begin{verbatim}
+     command [runtime option] argument argument
+     command [runtime option] [-u-flag argument] [-r-flag argument] argument
+     command [runtime option] --reference-flag=argument argument
+\end{verbatim}
+
+\subsection{4-2}
+a) A brief briefing of what the entry is about, i.e. for an executable - what the executable' function is,
+   and a description of flags etc.
+
+b) Section 1
+
+c) Under \textbf{SEE ALSO}
+
+d) Section 1, usually a subsection
+
+\subsection{4-3}
+a) \verb=man -a <search term>=
+
+b) \verb=man -k <keyword>=
+
+\subsection{4-4}
+a) It lists info about files in a given search path.
+
+b) \verb=-l=
+
+c) Adds recursive directory search (lists subdirectories and their content as well).
+
+\subsection{5-1}
+a) \verb=./ssh/=
+
+   \verb=../bin/ssh/ =
+
+b) \verb=../../bin/ssh/=
+
+\subsection{6-1}
+a) \verb=# chmod a+rw-x,go-wx <file>=
+
+b) \verb=# chmod g-w <file>=
+
+c) \verb=# chmod ug+x foo=
+
+\subsection{7-1}
+a) \verb=rw-rw-rw-=
+
+b) \verb=rwxrwx---=
+
+c) \verb=rw-r-----=
+
+d) \verb=r--r--r--=
+
+\subsection{7-2}
+\verb=-R, --recursive=
+
+\subsection{7-3}
+Allows entering the directory and listing of its content.
+
+\subsection{7-4}
+\emph{(c)} is the most suitable one, as it doesn't change possibly existing executive permissions for \verb=[ug]=. \emph{(a)} would remove any executive permissions on all files (and directories, making them inaccessible) for anyone, and \emph{(b)} would add executive permissions for \verb=[ug]= to all files and directories in the tree.
+
+\subsection{8-1}
+\verb=# chown user:group -R <path>=
+
+\subsection{9-1,2,3}
+1) Changes current work directory to the parent directory.
+
+2) Changes current work directory to the parent directory of the parent directory.
+
+3) Current directory content in the format:
+
+\verb=filemode <> user group filesize(bytes) modification_time filename[entry type indicator]=
+
+\subsection{9-4}
+Character special file, e.g. pipes, ports, devices etc ...
+
+\subsection{9-5}
+rename file 'a' to 'b'.
+
+\subsection{9-6}
+\verb=$ cp -a /dir1/*.* /dir2/=
+
+\subsection{9-7}
+\verb=$ chown root:wheel secret && chmod 640 secret=
+
+\subsection{10-2}
+\begin{tabular}{ll}
+\verb=/bin/bash= &
+	The bash executable\\
+\verb=/etc/profile= &
+	The systemwide initialization file, executed for login shells\\
+\verb=/etc/bash.bashrc= &
+	The systemwide per-interactive-shell startup file\\
+\verb=/etc/bash.bash.logout= &
+	The systemwide login shell cleanup file, executed when a login shell exits\\
+\verb=~/.bash_profile= &
+	The personal initialization file, executed for login shells\\
+\verb=~/.bashrc= &
+	The individual per-interactive-shell startup file\\
+\verb=~/.bash_logout= &
+	The individual login shell cleanup file, executed when a login shell exits\\
+\verb=~/.inputrc=&
+	Individual readline initialization file
+\end{tabular}
+\subsection{11-1}
+\verb+PATH=/bin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:\+
+\verb+/usr/bin/vendor_perl:/usr/bin/core_perl+
+
+\verb=$PATH= is a list of paths from where the shell will recognize executables. Executables in \verb=$PATH= can be executed from any search path without writing the full path to the executable.
+
+\subsection{11-2}
+\verb=$HOME= is the user "default" directory. Here the users document, user-specific configurations etc. are stored.
+
+\subsection{11-3}
+\verb=$ sed -i "s|$PATH|${PATH}':/data/kurs/adit/bin:/data/kurs/TDDI41/bin'|g" ~/.bash_profile=
+
+\subsection{12-1}
+\begin{tabular}{l|ll|l|l|ll}
+stdout: &&&	stderr:&&\\\hline
+ &  file1 &console&&	  & file1& console\\\hline
+a&  y&	 n &&		a&  n&     y\\
+b&  y&   n &&		b&  y&     n\\
+c&  y&	 n &&		c&  n&	   y
+\end{tabular}
+\subsection{13-1}
+a) List directory content, select only the lines which contains the ordered character set "doc" ignoring upper/lower case.
+
+b) Redirects stderr output of \verb=command= to stdout which is then parsed for "fail" (ignoring u/l case)
+
+c) As b, but will also put the output into The Great Void, which of course does jack shit. So, this example is either a typo or intended to raise awareness about the importance of proper syntax. Would we change the line to
+
+\verb=$ command >/dev/null 2>&1 | grep -i fail=
+
+then we would trash all output apart from successful output from grep.
+
+\subsection{13-2}
+a) \verb=$ ls -aR ~ > /tmp/HOMEFILES=
+b) \verb=# find / -perm -0002 -type f 2>/dev/null=
+
+\subsection{14-2}
+\begin{verbatim}
+$ ping 127.0.0.1 >/dev/null&
+kill $(ps -Ao pid=,comm --no-headers | grep ping | grep -o -E '[0-9]+')
+\end{verbatim}
+(Or, just "ps", look for ping, send \verb=kill <found PID>=), but that's a rather boring way, isn't it? ;)
+
+\subsection{14-3}
+\verb=$ kill -9 <pid>=
+
+This line sends \textbf{SIGKILL} to the process with given PID. This can not be caught or ignored by the process.
+
+\verb=$ kill -9 -1=
+
+This line sends \textbf{SIGKILL} to all processes with a PID larger than 1, i.e. every process apart from the init process started by the boot manager.
+
+\subsection{14-4}
+\verb=$ pkill ping=
+
+\subsection{16-1,2,3,4}
+BOF: g
+
+EOF: G
+
+forward search: /option
+
+backward search: ?option
+
+\subsection{16-5}
+a) For security reasons, \verb=X11Forwarding= is disabled by default in many decent distros, but Debian's \verb=openssh-server= package has it enabled by default.
+
+b) A working xorg server (\verb=xserver-xorg=) at a bare minimum, plus of course any related packages for whatever functionality is needed.
+
+\subsection{17-1 (optional)}
+\verb=# sed -i "s/'bin/tcsh'/'bin/sh'/g" /etc/passwd=
+
+\subsection{17-2 (optional)}
+\begin{verbatim}$ paste passwd shadow | expand $(awk 'n<length {n=length} END {print n+1}')\end{verbatim}
+
+Easier done with:
+
+\verb=$ pr -mtw 150 passwd shadow > file1=
+
+\subsection{18-1}
+Prints the last 10 lines of \verb=/var/log/syslog=
+
+\subsection{18-2}
+\verb=$ cat /var/log/syslog | grep cron=
+
+
+\section{Part 5 Errata:}
+The default configuration for most contemporary distributions is systemd, regardless of what one thinks of that. Sure, sysvinit might be a reasonable (at least you can reason wether it is or not ...) choice regarding this course, but that does not change the fact that the major distributions likely to be found in a professional environment (Debian, Fedora, SUSE, Red Hat, \*buntu, Mint)- except for legacy systems - are not running sysvinit.
+
+\subsection{19-1}
+bootlogs, syslog, cron, rmnologin, stopbootlogs
+
+\subsection{19-2}
+\begin{verbatim}
+$ systemctl restart sshd.service
+-bash: systemctl: command not found
+\end{verbatim}
+
+Oh right, old habits die hard ... :p
+
+\verb=$ /etc/init.d/ssh restart=
+
+\subsection{20-1}
+\emph{see 12-1 b/c}
+
+\subsection{20-2}
+\verb=$ kill $(ps -Ao pid=,comm --no-headers | grep ping | grep -o -E '[0-9]+')=
+
+\subsection{20-3}
+\begin{verbatim}
+# ~/.aliases
+gzless() {
+  gunzip -c $1 | less
+}
+\end{verbatim}
+\subsection{20-4}
+a)
+\begin{verbatim}
+$ file=$(cat commandfile) && \
+  (sleep 3; echo PASSWD; sleep 1; echo "$file"; sleep 1) |\
+  socat - EXEC:'ssh -l USER remote.ip.addr',pty,setsid,ctty
+\end{verbatim}
+
+b)
+%%%%%%%%%%%
+
+\subsection{20-5}
+\begin{verbatim}
+#!/bin/bash
+
+for OLD in `find $1 -depth`
+do
+   NEW=`dirname "${OLD}"`/`basename "${OLD}" | tr '[A-Z ]' '[a-z ]'`
+   if [ "${OLD}" != "${NEW}" ]
+   then
+	[ ! -e "${NEW}" ] && mv -T "${OLD}" "${NEW}" \
+	|| echo "Could not rename ${OLD}. ${NEW} already exists."
+   fi
+done
+\end{verbatim}
+
+\subsection{20-6}
+\emph{see 17-2}
+
+\subsection{20-7}
+\verb=# find ./ -type f | xargs grep "$oldip" 2>/dev/null=
+...where \verb=$oldip= is the IP-address we are looking for, of course.
+
+\subsection{20-8}
+\verb=# find /etc -type f -exec sed -i "s|$OLD|$NEW|g" {} \;=
+
+\subsection{20-9}
+Avoiding password login would be done through pubkey-based access:
+
+\begin{verbatim}
+#/etc/ssh/sshd_config
+ PasswordAuthentication no
+ PermitEmptyPasswords no
+ RSAAuthentication yes
+ DSAAuthentication yes
+ HostKey <key path>
+ [...]
+#EOF
+\end{verbatim}
+
+Generating and importing keys ...
+
+Once sorted (phew), and supposing we have the computers defined in \verb=/etc/hosts=,  we'll simply run
+
+\begin{verbatim}
+$ for client in `seq 0001 2000`
+  do
+    ssh user@$client <<'FOOXECUTETHIS
+    w
+    FOOXECUTETHIS
+  done
+\end{verbatim}
+\subsection{21-1}
+%%%%%%%%%
+
+\subsection{21-2}
+The code starts out with directing two file descriptors, one for input and one for output (l.2). We look
+for .bak-files throughout the file system and print their path on a line each (l.3). We read these lines (l.5),
+ask (l.6) the user to confirm that we should log the entry to \verb=/tmp/RECORD (l.2)=. If (l.8) the user answers (l.7) "y", we log the entry (l.2).
+
+\subsection{21-3}
+\begin{verbatim}
+#/bin/bash
+exec 23<&0 23>&1 <<EOF
+`find . -name "*.bak" -print`
+EOF
+while read BAK; do
+    FILE=$(echo "$BAK" | sed 's|\.bak$||g')
+    if [ ! -e "$FILE" ] || [ "${BAK}" -nt "${FILE}" ]; then
+       echo -n "$FILE not found or older than $BAK. Replace $FILE? Y/N"
+       read and <&23
+       if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then
+	  mv -T "$BAK" "$FILE"
+       fi
+    fi
+done
+\end{verbatim}
