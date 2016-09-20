@@ -1,0 +1,18 @@
+#############################################################################
+
+The root password for lab-1 is: bU5dLbeK
+Directory /users/oscpe262/mln/files available on UML as /host
+
+/data/kurs/adit/bin/mln start -p lab-1  starts all UML instances for lab-1.
+/data/kurs/adit/bin/mln stop -p lab-1   stops all UML instances for lab-1.
+
+#############################################################################
+
+The root password for lab-2 is: fM3H8toy
+Directory /users/oscpe262/mln/files available on UML as /host
+
+/data/kurs/adit/bin/mln start -p lab-2  starts all UML instances for lab-2.
+/data/kurs/adit/bin/mln stop -p lab-2   stops all UML instances for lab-2.
+
+#############################################################################
+

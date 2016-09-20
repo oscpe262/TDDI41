@@ -1,1 +1,15 @@
-info
+*dropbox*
+\#*
+lectures
+*~
+*.class
+*.aux
+*.bbl
+*.blg
+*.fdb*
+*.fls
+*.log
+*.out
+*.toc
+*.db
+*.synctex.gz
