@@ -70,7 +70,7 @@ a) \verb=./ssh/=
 b) \verb=../../bin/ssh/=
 
 \subsection{6-1}
-a) \verb=# chmod a+rw-x,go-wx <file>=
+a) \verb=# chmod a+rw-x,go-w <file>=
 
 b) \verb=# chmod g-w <file>=
 
@@ -95,7 +95,7 @@ Allows entering the directory and listing of its content.
 \emph{(c)} is the most suitable one, as it doesn't change possibly existing executive permissions for \verb=[ug]=. \emph{(a)} would remove any executive permissions on all files (and directories, making them inaccessible) for anyone, and \emph{(b)} would add executive permissions for \verb=[ug]= to all files and directories in the tree.
 
 \subsection{8-1}
-\verb=# chown user:group -R <path>=
+\verb=# chown user:group -R <path root>=
 
 \subsection{9-1,2,3}
 1) Changes current work directory to the parent directory.
@@ -110,8 +110,7 @@ Allows entering the directory and listing of its content.
 Character special file, e.g. pipes, ports, devices etc ...
 
 \subsection{9-5}
-rename file 'a' to 'b'.
-
+rename file 'a' to 'b'. \verb=mv -i= will interactively ask for permission to overwrite.
 \subsection{9-6}
 \verb=$ cp -a /dir1/*.* /dir2/=
 
