@@ -137,7 +137,7 @@ rename file 'a' to 'b'. \verb=mv -i= will interactively ask for permission to ov
 	Individual readline initialization file
 \end{tabular}
 \subsection{11-1}
-\verb+PATH=/bin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:\+
+\verb+PATH=/bin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:\+\\
 \verb+/usr/bin/vendor_perl:/usr/bin/core_perl+
 
 \verb=$PATH= is a list of paths from where the shell will recognize executables. Executables in \verb=$PATH= can be executed from any search path without writing the full path to the executable.
@@ -146,30 +146,27 @@ rename file 'a' to 'b'. \verb=mv -i= will interactively ask for permission to ov
 \verb=$HOME= is the user "default" directory. Here the users document, user-specific configurations etc. are stored.
 
 \subsection{11-3}
-\verb=$ sed -i "s|$PATH|${PATH}':/data/kurs/adit/bin:/data/kurs/TDDI41/bin'|g" ~/.bash_profile=
+\begin{verbatim}$ PATH='/data/kurs/adit/bin:/data/kurs/TDDI41/bin:'${PATH}\end{verbatim}
 
 \subsection{12-1}
-\begin{tabular}{l|ll|l|l|ll}
+\begin{tabular}{l|ll||l|ll}
 stdout: &&&	stderr:&&\\\hline
- &  file1 &console&&	  & file1& console\\\hline
-a&  y&	 n &&		a&  n&     y\\
-b&  y&   n &&		b&  y&     n\\
-c&  y&	 n &&		c&  n&	   y
+ &  file1 &console&	  & file1& console\\\hline
+a&  y&	 n &	  a&  n&     y\\
+b&  y&   n &		b&  n&     y\\
+c&  y&	 n &		c&  y&	   n
 \end{tabular}
 \subsection{13-1}
 a) List directory content, select only the lines which contains the ordered character set "doc" ignoring upper/lower case.
 
 b) Redirects stderr output of \verb=command= to stdout which is then parsed for "fail" (ignoring u/l case)
 
-c) As b, but will also put the output into The Great Void, which of course does jack shit. So, this example is either a typo or intended to raise awareness about the importance of proper syntax. Would we change the line to
-
-\verb=$ command >/dev/null 2>&1 | grep -i fail=
-
-then we would trash all output apart from successful output from grep.
+c) As b, but will also put the stdout output into The Great Void.
 
 \subsection{13-2}
 a) \verb=$ ls -aR ~ > /tmp/HOMEFILES=
-b) \verb=# find / -perm -0002 -type f 2>/dev/null=
+
+b) \verb=# find / -perm -o=w -type f 2>/dev/null=
 
 \subsection{14-2}
 \begin{verbatim}
