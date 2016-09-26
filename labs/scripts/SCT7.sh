@@ -40,7 +40,8 @@ userGen() {
 
 # b) Add the user to the system.
 addUser() {
-  # Add the users, default group being the same as the username and
+  # Add the users, default group being the same as the username and extra groups
+  # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
   ${DEBUG+printf "\n\e[1;32m%s\e[0m %s" "unset DEBUG" "to add users "}
   ${DEBUG-useradds -m -G "$CGROUPS" -s "$CSHELL" "$NAME"}
 }
@@ -106,7 +107,7 @@ if [ -z "$DEBUG-unset" ]; then
 else
   printf "%s \n" "Starting dry run ..."
 fi
-
+# End of dry-run option.
 
 # Read the usernames from file.
 while read NAME; do
