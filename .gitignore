@@ -1,19 +1,6 @@
-<<<<<<< HEAD
-*dropbox*
-\#*
-lectures
-*~
-*.class
-*.aux
-*.bbl
-*.blg
-*.fdb*
-*.fls
-*.log
-*.out
-*.toc
-*.db
-*.synctex.gz
-=======
-info
->>>>>>> 3889279d007dbbfaea7990750f742be4cb63b3eb
+inforeport.aux
+report.fdb_latexmk
+report.log
+report.aux
+report.fls
+report.out

@@ -137,7 +137,7 @@ rename file 'a' to 'b'. \verb=mv -i= will interactively ask for permission to ov
 	Individual readline initialization file
 \end{tabular}
 \subsection{11-1}
-\verb+PATH=/bin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:\+
+\verb+PATH=/bin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:\+\\
 \verb+/usr/bin/vendor_perl:/usr/bin/core_perl+
 
 \verb=$PATH= is a list of paths from where the shell will recognize executables. Executables in \verb=$PATH= can be executed from any search path without writing the full path to the executable.
@@ -146,30 +146,27 @@ rename file 'a' to 'b'. \verb=mv -i= will interactively ask for permission to ov
 \verb=$HOME= is the user "default" directory. Here the users document, user-specific configurations etc. are stored.
 
 \subsection{11-3}
-\verb=$ sed -i "s|$PATH|${PATH}':/data/kurs/adit/bin:/data/kurs/TDDI41/bin'|g" ~/.bash_profile=
+\begin{verbatim}$ PATH='/data/kurs/adit/bin:/data/kurs/TDDI41/bin:'${PATH}\end{verbatim}
 
 \subsection{12-1}
-\begin{tabular}{l|ll|l|l|ll}
+\begin{tabular}{l|ll||l|ll}
 stdout: &&&	stderr:&&\\\hline
- &  file1 &console&&	  & file1& console\\\hline
-a&  y&	 n &&		a&  n&     y\\
-b&  y&   n &&		b&  y&     n\\
-c&  y&	 n &&		c&  n&	   y
+ &  file1 &console&	  & file1& console\\\hline
+a&  y&	 n &	  a&  n&     y\\
+b&  y&   n &		b&  n&     y\\
+c&  y&	 n &		c&  y&	   n
 \end{tabular}
 \subsection{13-1}
 a) List directory content, select only the lines which contains the ordered character set "doc" ignoring upper/lower case.
 
 b) Redirects stderr output of \verb=command= to stdout which is then parsed for "fail" (ignoring u/l case)
 
-c) As b, but will also put the output into The Great Void, which of course does jack shit. So, this example is either a typo or intended to raise awareness about the importance of proper syntax. Would we change the line to
-
-\verb=$ command >/dev/null 2>&1 | grep -i fail=
-
-then we would trash all output apart from successful output from grep.
+c) As b, but will also put the stdout output into The Great Void.
 
 \subsection{13-2}
 a) \verb=$ ls -aR ~ > /tmp/HOMEFILES=
-b) \verb=# find / -perm -0002 -type f 2>/dev/null=
+
+b) \verb=# find / -perm -o=w -type f 2>/dev/null=
 
 \subsection{14-2}
 \begin{verbatim}
@@ -200,22 +197,18 @@ forward search: /option
 backward search: ?option
 
 \subsection{16-5}
-a) For security reasons, \verb=X11Forwarding= is disabled by default in many decent distros, but Debian's \verb=openssh-server= package has it enabled by default.
+a) For security reasons, \verb=X11Forwarding= is disabled by default, this goes for Debian's \verb=openssh-server= package as well.
 
-b) A working xorg server (\verb=xserver-xorg=) at a bare minimum, plus of course any related packages for whatever functionality is needed.
+b) \verb=xauth= at a bare minimum, plus of course any related packages for whatever functionality desired.
 
 \subsection{17-1 (optional)}
-\verb=# sed -i "s/'bin/tcsh'/'bin/sh'/g" /etc/passwd=
+\verb=# sed -i "s|bin/tcsh|bin/sh|g" < /etc/passwd > foo=
 
 \subsection{17-2 (optional)}
-\begin{verbatim}$ paste passwd shadow | expand $(awk 'n<length {n=length} END {print n+1}')\end{verbatim}
-
-Easier done with:
-
-\verb=$ pr -mtw 150 passwd shadow > file1=
+\begin{verbatim}$ paste <(awk -F ":" '{print $2}' passwd ) <(awk -F ":" '{print $3}' shadow)\end{verbatim}
 
 \subsection{18-1}
-Prints the last 10 lines of \verb=/var/log/syslog=
+Prints the last 10 lines of \verb=/var/log/syslog= and keeps parsing.
 
 \subsection{18-2}
 \verb=$ cat /var/log/syslog | grep cron=
@@ -225,7 +218,7 @@ Prints the last 10 lines of \verb=/var/log/syslog=
 The default configuration for most contemporary distributions is systemd, regardless of what one thinks of that. Sure, sysvinit might be a reasonable (at least you can reason wether it is or not ...) choice regarding this course, but that does not change the fact that the major distributions likely to be found in a professional environment (Debian, Fedora, SUSE, Red Hat, \*buntu, Mint)- except for legacy systems - are not running sysvinit.
 
 \subsection{19-1}
-bootlogs, syslog, cron, rmnologin, stopbootlogs
+bootlogs, syslog, ssh, cron, rmnologin, stopbootlogs
 
 \subsection{19-2}
 \begin{verbatim}
@@ -241,7 +234,7 @@ Oh right, old habits die hard ... :p
 \emph{see 12-1 b/c}
 
 \subsection{20-2}
-\verb=$ kill $(ps -Ao pid=,comm --no-headers | grep ping | grep -o -E '[0-9]+')=
+\begin{verbatim}$ kill $(ps -Ao pid,comm --no-headers | grep ping | grep -o -E '[0-9]+')\end{verbatim}
 
 \subsection{20-3}
 \begin{verbatim}
@@ -307,7 +300,7 @@ Once sorted (phew), and supposing we have the computers defined in \verb=/etc/ho
 \begin{verbatim}
 $ for client in `seq 0001 2000`
   do
-    ssh user@$client <<'FOOXECUTETHIS
+    ssh user@$client <<FOOXECUTETHIS
     w
     FOOXECUTETHIS
   done
@@ -316,21 +309,19 @@ $ for client in `seq 0001 2000`
 %%%%%%%%%
 
 \subsection{21-2}
-The code starts out with directing two file descriptors, one for input and one for output (l.2). We look
-for .bak-files throughout the file system and print their path on a line each (l.3). We read these lines (l.5),
-ask (l.6) the user to confirm that we should log the entry to \verb=/tmp/RECORD (l.2)=. If (l.8) the user answers (l.7) "y", we log the entry (l.2).
+The code starts out with directing two file descriptors, one for input and one for output (l.2). We look for .bak-files throughout the file system and print their path on a line each (l.3). We read these lines (l.5), ask (l.6) the user to confirm that we should log the entry to \verb=/tmp/RECORD (l.2)=. If (l.8) the user answers (l.7) "y", we log the entry (l.2).
 
 \subsection{21-3}
 \begin{verbatim}
 #/bin/bash
-exec 23<&0 23>&1 <<EOF
+exec 23<&0 24>&1 <<EOF
 `find . -name "*.bak" -print`
 EOF
 while read BAK; do
     FILE=$(echo "$BAK" | sed 's|\.bak$||g')
     if [ ! -e "$FILE" ] || [ "${BAK}" -nt "${FILE}" ]; then
        echo -n "$FILE not found or older than $BAK. Replace $FILE? Y/N"
-       read and <&23
+       read ans <&23
        if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then
 	  mv -T "$BAK" "$FILE"
        fi
