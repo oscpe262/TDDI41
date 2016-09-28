@@ -1,0 +1,51 @@
+\chapter{NET}
+\subsection{1-1}
+Ping is used to check and time connectivity between two nodes (a). It uses the ICMP protocol to send \verb=ECHO_REQUEST= and \verb=ECHO_RESPONSE= datagrams (c).
+
+b) \verb=ping -n <address>=
+
+d) By \verb=ping= alone, we need to know that the host, and the routers leading there, allows ICMP datagrams. But, assuming they do,
+\verb=ping 10.17.1.1= should do the trick. We will then get a response time.
+
+\subsection{1-2}
+a) There are often multiple possible paths between nodes, and traceroute tries to list a possible path between two nodes (client, target). Over Internet, we can often run into incomplete traces though as ICMP datagrams and not-explicitly-used UDP ports are often blocked by firewalls. Therefore, http-packets to ports known to be in use (i.e. 80 for a web server, 25 for a mail server, etc.) can be needed to give a proper path.
+
+b) \verb=traceroute= sends IP packets with an increasing ttl, and listening for responses claiming it to have exceeded its ttl. This keeps on going until we get an "unreachable" or TCP reset response, at which time we will have reached the target.
+
+c) \verb=-n=
+
+d) \begin{verbatim}traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  c-210-4.eduroam.liu.se (130.236.210.4)  14.118 ms  17.596 ms  18.731 ms
+ 2  130.236.7.61 (130.236.7.61)  19.058 ms  19.075 ms  20.394 ms
+ 3  130.236.9.198 (130.236.9.198)  22.094 ms  22.349 ms  22.350 ms
+ 4  liu-br2.sunet.se (193.11.0.21)  22.340 ms  22.328 ms  24.651 ms
+ 5  m1tug-xe-7-3-3.sunet.se (130.242.85.173)  29.593 ms  31.280 ms  31.282 ms
+ 6  se-tug.nordu.net (109.105.102.17)  31.273 ms  9.483 ms  4.631 ms
+ 7  google-gw.nordu.net (109.105.98.6)  4.609 ms  9.961 ms  9.962 ms
+ 8  216.239.40.27 (216.239.40.27)  11.039 ms  11.038 ms  11.028 ms
+ 9  209.85.242.47 (209.85.242.47)  11.030 ms  11.023 ms 72.14.234.85 (72.14.234.85)  11.017 ms
+10  google-public-dns-a.google.com (8.8.8.8)  10.969 ms  10.946 ms  10.939 ms
+\end{verbatim}
+
+Here we see an example of a 10-hop path from 130.236.210.157 to a Google DNS server (8.8.8.8) with 60 byte packets (IPv4). By default, we send three probe packets per hop and therefore we end up with three response times for each hop. The times are between current and previous node. We also see the nodes' name addresses (where applicable) and IP addresses.
+
+\subsection{1-3}
+a)
+\verb=ifconfig eth0 130.236.189.14/24 broadcast 130.236.189.255=
+
+\verb=ip addr add 130.236.189.14/24 broadcast 130.236.189.255 dev eth0=
+
+\subsection{1-4}
+a) \verb=sysctl= in Linux is used to examining and modify kernel parameters at runtime" (SYSCTL(8)). This is done through files in procfs' virtual process file system (\verb=/proc/sys=).
+
+b) If we want to load certain values at boot time, we have to know what init-system we use. For instance, in systemd, we'll put the config files in \verb=/etc/system.d/=, whereas in sysvinit we'll use /etc/sysctl.conf.
+
+c) \verb=net.ipv<4|6>.conf.<device|all>.forwarding=
+
+\subsection{1-5}
+FQDN: b4.sysinst.ida.liu.se\\
+Internal IP range: 130.236.178.152/29 (i.e. 130.236.178.(152-159, brd 159, hosts 153-158))\\
+Router external IP: 130.236.178.17
+
+\subsection{1-6}
+Routing is finding out where the destination of the packet is, forwarding is just passing the packet on, not knowing whether it would reach the destination or not.
