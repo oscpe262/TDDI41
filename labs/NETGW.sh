@@ -16,5 +16,5 @@ echo "" >> /etc/network/interfaces
 echo " auto eth1" >> /etc/network/interfaces
 echo "   iface eth1 inet static" >> /etc/network/interfaces
 echo "   address 130.236.178.17" >> /etc/network/interfaces
-echo "   netmask 255.255.255.0" >> /etc/network/interfaces
+echo "   netmask 255.255.0.0" >> /etc/network/interfaces
 echo "   gateway 130.236.178.0"  >> /etc/network/interfaces
