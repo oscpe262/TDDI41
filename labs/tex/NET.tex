@@ -36,9 +36,9 @@ a)
 \verb=ip addr add 130.236.189.14/24 broadcast 130.236.189.255 dev eth0=
 
 \subsection{1-4}
-a) \verb=sysctl= in Linux is used to examining and modify kernel parameters at runtime" (SYSCTL(8)). This is done through files in procfs' virtual process file system (\verb=/proc/sys=).
+a) \verb=sysctl= in Linux is the control of kernel runtime parameters. This is done through files in procfs' virtual process file system (\verb=/proc/sys=).
 
-b) If we want to load certain values at boot time, we have to know what init-system we use. For instance, in systemd, we'll put the config files in \verb=/etc/system.d/=, whereas in sysvinit we'll use /etc/sysctl.conf.
+b) If we want to load certain values at boot time, we have to know what init-system we use. For instance, in systemd, we'll put the config files in \verb=/etc/system.d/=, whereas in sysvinit we'll use \verb=/etc/sysctl.conf=.
 
 c) \verb=net.ipv<4|6>.conf.<device|all>.forwarding=
 
@@ -48,4 +48,4 @@ Internal IP range: 130.236.178.152/29 (i.e. 130.236.178.(152-159, brd 159, hosts
 Router external IP: 130.236.178.17
 
 \subsection{1-6}
-Routing is finding out where the destination of the packet is, forwarding is just passing the packet on, not knowing whether it would reach the destination or not.
+Routing is finding the path to where the destinations of packets are, forwarding is just passing the packet on, not knowing whether it would reach the destination or not.
