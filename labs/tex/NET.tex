@@ -49,3 +49,116 @@ Router external IP: 130.236.178.17
 
 \subsection{1-6}
 Routing is finding the path to where the destinations of packets are, forwarding is just passing the packet on, not knowing whether it would reach the destination or not.
+
+\subsection{7-1}
+\emph{Errata: Yes, there is an oversight by the teachers. nsswitch.conf is configured properly already.}
+
+a) \verb=/etc/nsswitch.conf=
+
+b) \verb=/etc/resolv.conf=
+
+c) Defines the domain context for where to look for short host names when we do not have a fully qualified domain name. Usually the same as \verb=domain=, but might, for instance, differ when different subnets are present.
+
+%\subsection{7-2}
+% echo "nameserver 130.236.1.9" >> /etc/resolv.conf
+
+%\subsection{7-3}
+% sed -i "s/^hosts.*$/hosts: files dns/g" /etc/nsswitch.conf
+
+\subsection{8-1}
+Quagga consists of a couple daemons, each specific to a routing protocol, and \verb=zebra= which is the manager daemon.
+
+\subsection{8-2}
+The Debian installation of Quagga use the configuration files in \verb=/etc/quagga/*=
+
+\subsection{8-3}
+\emph{How do you configure Quagga interactively? When configuring interactively, how do you save the current configuration to file.}
+
+We connect to the zebra daemon by \verb=telnet= as suggested. From there, we \verb=enable= privileged mode and configure stuff in real time. We can then \verb=write file= to save current config to file.
+
+% \subsection{9-1}
+% distance-vector routing, hop count, udp port 520
+
+% \subsection{9-2}
+% multicast route table to 224.0.0.9 on eth1
+
+\subsection{10}
+\begin{verbatim}
+ripd> show ip rip status
+Routing Protocol is "rip"
+  Sending updates every 30 seconds with +/-50%, next due in 7 seconds
+  Timeout after 180 seconds, garbage collect after 120 seconds
+  Outgoing update filter list for all interface is not set
+  Incoming update filter list for all interface is not set
+  Default redistribution metric is 1
+  Redistributing:
+  Default version control: send version 2, receive any version
+    Interface        Send  Recv   Key-chain
+    eth1             2     1 2
+  Routing for Networks:
+    130.236.178.0/26
+    eth1
+  Routing Information Sources:
+    Gateway          BadPackets BadRoutes  Distance Last Update
+    130.236.178.15           0         0       120   00:00:22
+    130.236.178.37           0         0       120   00:00:23
+    130.236.178.32           0         0       120   00:00:20
+    130.236.178.1            0         0       120   00:00:56
+    130.236.178.31           0         0       120   00:00:08
+  Distance: (default is 120)
+
+ripd> show ip rip
+Codes: R - RIP, C - connected, S - Static, O - OSPF, B - BGP
+Sub-codes:
+      (n) - normal, (s) - static, (d) - default, (r) - redistribute,
+      (i) - interface
+
+     Network            Next Hop         Metric From            Tag Time
+R(n) 0.0.0.0/0          130.236.178.1         2 130.236.178.1     0 01:20
+C(i) 130.236.178.0/26   0.0.0.0               1 self              0
+R(n) 130.236.178.136/29 130.236.178.15        2 130.236.178.15    0 02:51
+R(s) 130.236.178.152/29 0.0.0.0               1 self              0
+R(n) 130.236.179.72/29  130.236.178.31        2 130.236.178.31    0 02:35
+R(n) 130.236.179.80/29  130.236.178.32        2 130.236.178.32    0 02:52
+R(n) 130.236.179.120/29 130.236.178.37        2 130.236.178.37    0 02:55
+
+# ip route
+130.236.178.136/29 via 130.236.178.15 dev eth1  proto zebra  metric 2
+130.236.178.152/29 dev eth0  proto kernel  scope link  src 130.236.178.153
+130.236.179.72/29 via 130.236.178.31 dev eth1  proto zebra  metric 2
+130.236.179.80/29 via 130.236.178.32 dev eth1  proto zebra  metric 2
+130.236.179.120/29 via 130.236.178.37 dev eth1  proto zebra  metric 2
+130.236.178.0/26 dev eth1  proto kernel  scope link  src 130.236.178.17
+default via 130.236.178.1 dev eth1
+\end{verbatim}
+
+\subsection{11}
+\begin{verbatim}
+ripd-ida-gw> show ip rip
+Codes: R - RIP, C - connected, S - Static, O - OSPF, B - BGP
+Sub-codes:
+      (n) - normal, (s) - static, (d) - default, (r) - redistribute,
+      (i) - interface
+
+     Network            Next Hop         Metric From            Tag Time
+R(d) 0.0.0.0/0          0.0.0.0               1 self              0
+C(i) 10.17.1.0/24       0.0.0.0               1 self              0
+C(i) 10.19.0.0/24       0.0.0.0               1 self              0
+C(i) 10.20.0.0/24       0.0.0.0               1 self              0
+C(i) 130.236.178.0/26   0.0.0.0               1 self              0
+R(n) 130.236.178.136/29 130.236.178.15        2 130.236.178.15    0 02:52
+R(n) 130.236.178.152/29 130.236.178.17        2 130.236.178.17    0 02:46  <<Ourzomg!
+R(n) 130.236.179.72/29  130.236.178.31        2 130.236.178.31    0 03:00
+R(n) 130.236.179.80/29  130.236.178.32        2 130.236.178.32    0 02:51
+R(n) 130.236.179.120/29 130.236.178.37        2 130.236.178.37    0 02:45
+C(r) 130.236.181.128/25 0.0.0.0               1 self (connected:1)  0
+\end{verbatim}
+
+%13-1 Configure your router to filter incoming announcements (use a prefix list). You should a) Accept routes for 10.17.1.0/24 (but not longer prefixes).
+%zebra: ip prefix-list a1 permit 10.17.1.0/24
+
+% b) Accept routes for the other groups' address space.
+% zebra: ip prefix-list b1 permit 130.236.178.0/23 ge 29
+
+% c) Not accept anything else.
+% defaults

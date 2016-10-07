@@ -12,3 +12,5 @@ echo "   address 130.236.178.155" >> /etc/network/interfaces
 echo "   netmask 255.255.255.248" >> /etc/network/interfaces
 echo "   network 130.236.178.152" >> /etc/network/interfaces
 echo "   gateway 130.236.178.153" >> /etc/network/interfaces
+echo "nameserver 130.236.1.9" >> /etc/resolv.conf
+sed -i "s/^hosts.*$/hosts: files dns/g" /etc/nsswitch.conf

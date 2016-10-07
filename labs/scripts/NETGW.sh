@@ -22,3 +22,6 @@ echo "   network 130.236.178.0" >> /etc/network/interfaces
 echo "   gateway 130.236.178.1"  >> /etc/network/interfaces
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 ip route add default via 130.236.178.1
+echo "nameserver 130.236.1.9" >> /etc/resolv.conf
+sed -i "s/^hosts.*$/hosts: files dns/g" /etc/nsswitch.conf
+apt-get install quagga
