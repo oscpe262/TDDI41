@@ -1,0 +1,22 @@
+\input{../report.input.tex}
+\chapter{DNS}
+\subsection{1-2}
+%a) What is an authoritative name server? What is its role in DNS.
+a) A name server which answers queries about names in a zone.
+
+%b) What is the difference between a domain and a zone.
+A domain is a subtree of the namespace, and a zone is a part of the namespace of which a NS is authoritative. Zone $\subseteq$ Domain
+
+%c) What is the difference between a recursive and a non-recursive query in DNS? When is each type of query used.
+A recursive query will not return until it has a complete answer, whereas the non-recursive can return a "partial" answer---i.e. "I don't know, but ask this other guy ...".
+
+%d) What is the purpose of delegation in DNS.
+
+%e) What is a resource record? What does a resource record consist of.
+
+%f) DNS messages contain answer, authority and additional sections. What is the purpose of each section.
+
+%g) How does the DNS protocol indicate if an answer comes from an authoritative name server or not? How does the DNS protocol indicate whether a query is recursive or not.
+
+%h) Explain what glue records are and when they are necessary.
+\end{document}

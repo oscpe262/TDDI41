@@ -13,6 +13,34 @@ PWLENGTH=8            # Length of passwords generated
 # Multi purpose variables ...
 LOOP=true
 DEBUG=
+
+# Fluffy output ...
+Bold=$(tput bold)
+Underline=$(tput sgr 0 1)
+Reset=$(tput sgr0)
+# Regular Colors
+Red=$(tput setaf 1)
+Green=$(tput setaf 2)
+Yellow=$(tput setaf 3)
+Blue=$(tput setaf 4)
+Purple=$(tput setaf 5)
+Cyan=$(tput setaf 6)
+White=$(tput setaf 7)
+# Bold
+BRed=${Bold}$(tput setaf 1)
+BGreen=${Bold}$(tput setaf 2)
+BYellow=${Bold}$(tput setaf 3)
+BBlue=${Bold}$(tput setaf 4)
+BPurple=${Bold}$(tput setaf 5)
+BCyan=${Bold}$(tput setaf 6)
+BWhite=${Bold}$(tput setaf 7)
+
+error_msg() {
+  local _msg="\n$1\n"
+  echo -e "${Red}${_msg}${Reset}" >&2
+  exit 1
+}
+
 ## Do not uncomment until you are in a live environment.
 #unset DEBUG
 # a) Calculate a unique username for the user.
@@ -42,7 +70,7 @@ userGen() {
 addUser() {
   # Add the users, default group being the same as the username and extra groups
   # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
-  ${DEBUG+printf "\n\e[1;32m%s\e[0m %s" "unset DEBUG" "to add users "}
+  ${DEBUG+printf "\n${Green}%s${Reset} %s" "unset DEBUG" "to add users "}
   ${DEBUG-useradds -m -G "$CGROUPS" -s "$CSHELL" "$NAME"}
 }
 
@@ -55,7 +83,7 @@ pwGen() {
 # Now, this might not work depending on passwd(1) version, due to safety reasons
 # and so on, but as we're going to print it anyway later ...
   ${DEBUG+printf "%s\n" "and password!"}
-  ${DEBUG-passwds "$NAME" --stdin <<< "$PASSWD"}
+  ${DEBUG-passwd "$NAME" --stdin <<< "$PASSWD"}
 }
 
 # d) Create the user's home directory and copy standard files to it.
@@ -71,7 +99,7 @@ configServices() {
 
 # f) Output the username and password on a single line.
 printUser() {
-printf "\e[1;34m%s\e[0m : \e[1;36m%s\e[0m\n" "$NAME" "$PASSWD"
+printf "${Blue}%s${Reset} : ${Cyan}%s${Reset}\n" "$NAME" "$PASSWD"
 }
 
 randomString() {
@@ -82,15 +110,16 @@ randomString() {
 
 # Make sure the file exists ...
 if [[ $# -eq 0 ]] ; then
-  printf "%s\n%s\n" "No user list-file assigned." "Syntax: $0 <filename>" >&2
-  exit 1
+  error_msg "No user list-file assigned. ${Reset} Syntax: ${0} <filename>"
 else
   if [ ! -f "$1" ]; then
-    echo "The file $1 could not be found." >&2
-    exit 1
+    error_msg "The file $1 could not be found."
   fi
 fi
-
+if [[ "$(id -u)" != "0" ]]; then
+  error_msg "ERROR! You must execute the script as the 'root' user."
+fi
+tput clear
 printf "\n%s \n\n" "Welcome!"
 printf "%s \n" "Uncomment 'unset DEBUG' in the script file to disable dry run."
 printf "%s \n" "During a dry run, no permanent changes will be made to the system."
@@ -98,7 +127,7 @@ printf "%s \n" "Therefore, duplicate users can still be listed if not already pr
 
 # This part is for testing purposes only.
 if [ -z "$DEBUG-unset" ]; then
-  printf "\e[1;31m%s\e[0m \n" "YOU ARE LIVE! CHANGES WILL BE MADE TO THE SYSTEM. PROCEED? ([N]/Y)"
+  printf "${BRed}%s${Reset} \n" "YOU ARE LIVE! CHANGES WILL BE MADE TO THE SYSTEM. PROCEED? ([N]/Y)"
   read -n1 LIVE
   LIVE=$(echo ${LIVE} | tr 'A-Z' 'a-z')
   if [ ! ${LIVE} == y ]; then
