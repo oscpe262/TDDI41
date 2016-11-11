@@ -87,7 +87,67 @@ ip-only.net
 \verb=$ host -l sysinst.ida.liu.se ns.ida.liu.se | sed '1,/^$/d' | wc -l=\\
 \verb=125=
 
+\subsection{3-3}
 %3-3 Use host to find out all information you can about the name ida.liu.se (i.e. the name itself, not the contents of the zone). What did you find out? How can you be sure that is all the information that is available.
 
+\verb=$ host -a ida.liu.se $(host -av ida.liu.se | grep SOA \=\\
+\verb=| sed 's/.*SOA//g ; s/\.\ .*//g ; s/\t//g')=
+
+We found the records (A,AAAA,MX,SOA,NS) regarding the zone, and glue records for the name servers.
+
+This is all the information available as the ida.liu.se domain is wholly delegated to the ida.liu.se zone, which subsequently only delegates \textbf{sub}-domains if such exists.
+
+\subsection{4-1}
+%4-1 Use dig to answer the following questions.
+%a) What is the address of ida-gw.sysinst.ida.liu.se.
+a) \begin{verbatim}$ dig ida-gw.sysinst.ida.liu.se
+[...]
+;; ANSWER SECTION:
+ida-gw.sysinst.ida.liu.se. 300	IN	A	130.236.178.1
+\end{verbatim}
+
+%b) Which nameservers have authoritative information for sysinst.ida.liu.se.
+b) \begin{verbatim}
+$ dig ida-gw.sysinst.ida.liu.se SOA
+[...]
+;; QUESTION SECTION:
+;ida-gw.sysinst.ida.liu.se.	IN	SOA
+
+;; AUTHORITY SECTION:
+sysinst.ida.liu.se.	300	IN	SOA	sysinst-gw.ida.liu.se. david.byers.liu.se. 2016110901 3600 1800 604800 300
+\end{verbatim}
+
+%c) Which name corresponds to the IPv4 address 130.236.189.1.
+c) \begin{verbatim}
+  $ dig -x 130.236.189.1
+[...]
+;; QUESTION SECTION:
+;1.189.236.130.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+1.189.236.130.in-addr.arpa. 3564 IN	PTR	idagw-189.ida.liu.se.
+\end{verbatim}
+
+
+\subsection{4-2}
+%4-2 Use the trace feature of dig to answer the following questions.
+%a) What nameservers are consulted in a query for the A record of www.ida.liu.se.
+a) \begin{verbatim}
+  $ dig www.ida.liu.se A +trace | grep Received
+;; Received 525 bytes from 130.236.1.9#53(130.236.1.9) in 1 ms
+;; Received 865 bytes from 192.203.230.10#53(e.root-servers.net) in 30 ms
+;; Received 483 bytes from 130.239.5.114#53(g.ns.se) in 11 ms
+;; Received 1188 bytes from 192.36.125.2#53(sunic.sunet.se) in 4 ms
+;; Received 958 bytes from 130.236.146.68#53(ns2.liu.se) in 2 ms
+\end{verbatim}
+
+%b) What nameservers are consulted when determining the address of update.microsoft.com? Note that the presence of a CNAME record makes this question different from the previous one: you will need to run dig more than once to get the answer.
+b)\begin{verbatim}
+$ dig $(dig update.microsoft.com | grep CNAME |tail -n 1 | sed 's/.*\t//') +trace | grep Received
+;; Received 525 bytes from 130.236.1.9#53(130.236.1.9) in 1 ms
+;; Received 883 bytes from 192.58.128.30#53(j.root-servers.net) in 21 ms
+;; Received 791 bytes from 192.42.93.30#53(g.gtld-servers.net) in 27 ms
+;; Received 283 bytes from 4.27.16.155#53(d.ns.nsatc.net) in 142 ms
+\end{verbatim}
 
 \end{document}
