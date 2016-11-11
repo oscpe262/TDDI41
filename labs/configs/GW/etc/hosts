@@ -1,0 +1,9 @@
+127.0.0.1	localhost
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+130.236.178.153  gw.b4.sysinst.ida.liu.se gw
+130.236.178.17   b4-gw.sysinst.ida.liu.se gw

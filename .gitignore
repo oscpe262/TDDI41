@@ -1,5 +1,7 @@
+.latex
 tmptest*
 info
+*.synctex*
 *.aux
 *.fdb_latexmk
 *.log
