@@ -5,153 +5,122 @@
 
 ### CONFIG VARIABLES
 # These are variables used throughout the script. Adjust to fit your desires.
+declare -A USERS      # Users array (associative).
 CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
 CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
 USUF=5                # Suffix Length in case of conflicting usernames
 PWLENGTH=8            # Length of passwords generated
+CPHOME=()             # Array of files to be copied to homedir of each user
+TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 
-# Multi purpose variables ...
-LOOP=true
-DEBUG=
+[[ ! -f SCT7_funcs.sh ]] && echo -e "Missing dependency: SCT7_funcs.sh" && exit 1
+source SCT7_funcs.sh
 
-# Fluffy output ...
-Bold=$(tput bold)
-Underline=$(tput sgr 0 1)
-Reset=$(tput sgr0)
-# Regular Colors
-Red=$(tput setaf 1)
-Green=$(tput setaf 2)
-Yellow=$(tput setaf 3)
-Blue=$(tput setaf 4)
-Purple=$(tput setaf 5)
-Cyan=$(tput setaf 6)
-White=$(tput setaf 7)
-# Bold
-BRed=${Bold}$(tput setaf 1)
-BGreen=${Bold}$(tput setaf 2)
-BYellow=${Bold}$(tput setaf 3)
-BBlue=${Bold}$(tput setaf 4)
-BPurple=${Bold}$(tput setaf 5)
-BCyan=${Bold}$(tput setaf 6)
-BWhite=${Bold}$(tput setaf 7)
+# Make sure we run this script properly!
+[[ $1 == "-h" ]] && helpme && exit 0
+[[ $# -eq 0 ]] && helpme && exit 1
+[[ ! -f "$1" ]] && cecho "The file $1 could not be found." && exit 1
+[[ "$(id -u)" != "0" ]] && echo -e "ERROR! You must execute the script as 'root'." && exit 1
+INFILE=$1 && shift
 
-error_msg() {
-  local _msg="\n$1\n"
-  echo -e "${Red}${_msg}${Reset}" >&2
-  exit 1
-}
-
-## Do not uncomment until you are in a live environment.
-#unset DEBUG
-# a) Calculate a unique username for the user.
-userGen() {
-  # Check if user exists ... Returns UID or -1.
-  if [ `id -u "$NAME"  2>/dev/null || echo -1` -ge 0 ]; then
-
-    # If existing:
-    # Generate a random string, append as USERNAME-STRING,
-    # make sure it does not exist.
-    while [ ${LOOP} = true ];
-    do
-      VALCHAR="a-z"
-      NOCHARS=$USUF
-      randomString
-      NAME=${NAME}-"$RAND"
-      if [ `id -u "$NAME" 2>/dev/null || echo -1` -eq -1 ]; then
-         LOOP=false; else
-          :
-      fi
-    done; LOOP=true
-  fi
-
-}
-
-# b) Add the user to the system.
-addUser() {
-  # Add the users, default group being the same as the username and extra groups
-  # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
-  ${DEBUG+printf "\n${Green}%s${Reset} %s" "unset DEBUG" "to add users "}
-  ${DEBUG-useradds -m -G "$CGROUPS" -s "$CSHELL" "$NAME"}
-}
-
-# c) Generate a random password for the user.
-pwGen() {
-  NOCHARS=$PWLENGTH
-  VALCHAR="a-zA-Z0-9!#%&?_-"
-  randomString
-  PASSWD="$RAND"
-# Now, this might not work depending on passwd(1) version, due to safety reasons
-# and so on, but as we're going to print it anyway later ...
-  ${DEBUG+printf "%s\n" "and password!"}
-  ${DEBUG-passwd "$NAME" --stdin <<< "$PASSWD"}
-}
-
-# d) Create the user's home directory and copy standard files to it.
-cpFiles() {
-  # User home directory created in addUser.
-:
-}
-
-# e) Configure any services that need to be configured.
-configServices() {
-:
-}
-
-# f) Output the username and password on a single line.
-printUser() {
-printf "${Blue}%s${Reset} : ${Cyan}%s${Reset}\n" "$NAME" "$PASSWD"
-}
-
-randomString() {
-  RAND=$(cat /dev/urandom | tr -dc ${VALCHAR} | fold -w $NOCHARS | head -n 1)
-}
+while [ $# -ne 0 ]; do
+  arg="$1"
+  case "$arg" in
+    # Failed tests will force the script to exit.
+    -h)
+      helpme
+      exit 0
+      ;;
+    -l)
+      # To allow testing, DRYRUN is enabled by default.
+      DRYRUN=0
+      ;;
+    -f)
+      FORCE_EXIT=1
+      ;;
+    -v)
+      VERBOSE=1
+      ;;
+    -fv)
+      FORCE_EXIT=1
+      VERBOSE=1
+      ;;
+    -vf)
+      FORCE_EXIT=1
+      VERBOSE=1
+      ;;
+    *)
+      echo -e "Unknown argument ${arg}. Run ${0} -h"
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 ### MAIN SCRIPT STARTS HERE
-
-# Make sure the file exists ...
-if [[ $# -eq 0 ]] ; then
-  error_msg "No user list-file assigned. ${Reset} Syntax: ${0} <filename>"
-else
-  if [ ! -f "$1" ]; then
-    error_msg "The file $1 could not be found."
-  fi
-fi
-if [[ "$(id -u)" != "0" ]]; then
-  error_msg "ERROR! You must execute the script as the 'root' user."
-fi
 tput clear
-printf "\n%s \n\n" "Welcome!"
-printf "%s \n" "Uncomment 'unset DEBUG' in the script file to disable dry run."
-printf "%s \n" "During a dry run, no permanent changes will be made to the system."
-printf "%s \n" "Therefore, duplicate users can still be listed if not already present."
+print_title "SCT7 SETUP SCRIPT"
+print_info "Welcome!"
+[[ $DRYRUN -eq 1 ]] && print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users can still be listed if not already present. Run the script with -l to go live!" && sleep 1
 
 # This part is for testing purposes only.
-if [ -z "$DEBUG-unset" ]; then
-  printf "${BRed}%s${Reset} \n" "YOU ARE LIVE! CHANGES WILL BE MADE TO THE SYSTEM. PROCEED? ([N]/Y)"
+if [[ $DRYRUN -eq 0 ]]; then
+  print_info "${BRed}YOU ARE LIVE! CHANGES WILL BE MADE TO THE SYSTEM. PROCEED? ([N]/y)${Reset} "
   read -n1 LIVE
   LIVE=$(echo ${LIVE} | tr 'A-Z' 'a-z')
-  if [ ! ${LIVE} == y ]; then
-    exit 0
-  fi
-else
-  printf "%s \n" "Starting dry run ..."
+  [[ ! ${LIVE} == y ]] && exit 0
 fi
 # End of dry-run option.
 
 # Read the usernames from file.
+print_title "ADDING USERS"
 while read NAME; do
+  print_info "Processing ${NAME}"
   # Remove sucky characters and make it all nice lowercase.
-  NAME=$( echo "$NAME" | tr 'A-Z' 'a-z' | sed 's/[^ab-z]//g')
+  NAME=$( echo "$NAME" | tr 'A-Z' 'a-z' | sed 's/[^ab-z]//g ; s/[åäö]//g')
 
   # Do magic!
-  userGen
-  addUser
-  pwGen
-  # cpFiles
-  # configServices
-  printUser
+  techo "a) Calculate a unique username for the user (${Yellow}userGen${Reset} ${NAME})"
+  userGen &
+  pid=$! ; progress $pid ; NAME=`cat /dev/shm/name`
 
-done < $1
+  techo "b,d) Add the user and create home dir (${Yellow}addUser${Reset} ${NAME})"
+  addUser &
+  pid=$! ; progress $pid
+
+  techo "c) Generate a random password for the user (${Yellow}pwGen${Reset})"
+  pwGen &
+  pid=$! ; progress $pid ; PASSWD=`cat /dev/shm/name` ; rm /dev/shm/name
+
+  USERS[${NAME}]=${PASSWD}
+
+  techo "d) Copy standard files to home dir. (${Yellow}cpFiles${Reset})"
+  cpFiles &
+  pid=$! ; progress $pid
+
+  techo "e) Configure any services that need to be configured. (${Yellow}configServices${Reset})"
+  configServices &
+  pid=$! ; progress $pid
+
+  techo "Setting owner for home dir and its contents (${Yellow}chown${Reset})"
+  [[ $DRYRUN -eq 0 ]] && chown -R $NAME:$NAME /home/$NAME/ &
+  pid=$! ; progress $pid
+
+  print_line
+done < $INFILE
+#sleep 2
+
+print_info "Generated ${Blue}users${Reset}${BOLD} and ${Yellow}passwords:"
+for E in "${!USERS[@]}"; do
+#  echo -e "\t${BBlue}${E}${Reset} : ${BYellow}${USERS[$E]}${Reset}"
+  printf "\t%s" "${BBlue}${E}${Reset} "
+  [[ ${#E} -le 20 ]] && printf "%*s" $(( 20-${#E} )) ""
+  printf "%s\n" "${BYellow}${USERS[$E]}${Reset}"
+done; echo ""
+
+techo "${Reset}f) Output the username and password on a single line${Reset}" ; tested_ok "Passed!"
+  #Yeah, those resets are just there for looks, literally...
+print_line
 
 # No user input apart from the list of names is allowed. The script may need to
 # do other things as well. Part of your job is to figure out what. Your script

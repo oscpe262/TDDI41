@@ -1,0 +1,79 @@
+#!/bin/bash
+[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
+source common.sh
+
+DRYRUN=1
+dry_ok() {
+  cecho "${Blue}Dryrun!${Reset}"
+}
+
+helpme() {
+  echo -e "Usage: ${0} FILENAME [OPTION]"
+  echo -e "\t-h\tprint this help"
+  echo -e "\t-l\tdeactivate dry-run"
+  echo -e "\t-f\tforces exit on failures"
+  echo -e "\t-v\tincreased verbosity"
+  echo -e "\t-fv, -vf\tas -v -f"
+}
+
+randomString() {
+  RAND=$(cat /dev/urandom | tr -dc ${VALCHAR} | fold -w $NOCHARS | head -n 1)
+}
+
+userGen() {
+  local _LOOP=true
+  # Check if user exists ... Returns UID or -1.
+  if [ `id -u "$NAME"  2>/dev/null || echo -1` -ge 0 ]; then
+
+    # If existing:
+    # Generate a random string, append as USERNAME-STRING,
+    # make sure it does not exist.
+    while [ ${_LOOP} = true ];
+    do
+      VALCHAR="a-z"
+      NOCHARS=$USUF
+      randomString
+      NAME="${NAME}-${RAND}"
+      if [ `id -u "$NAME" 2>/dev/null || echo -1` -eq -1 ]; then
+         _LOOP=false
+      fi
+    done
+  fi
+  echo -ne "$NAME" > /dev/shm/name
+}
+
+addUser() {
+  # Add the users, default group being the same as the username and extra groups
+  # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
+  #echo -e "\baddUser $NAME"
+  [[ $DRYRUN -eq 0 ]] && useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
+}
+
+pwGen() {
+  NOCHARS=$PWLENGTH
+  VALCHAR="a-zA-Z0-9!#%&?_-"
+  randomString
+  PASSWD=${RAND}
+#  sleep .25 # fixing nice output
+
+# Now, this might not work depending on passwd(1) version, due to safety reasons
+# and so on, but as we're going to print it anyway later ...
+  [[ $DRYRUN -eq 0 ]] && passwd "$NAME" --stdin <<< "$PASSWD"
+  echo -ne "$PASSWD" > /dev/shm/name
+}
+
+cpFiles() {
+  for f in ${CPHOME[@]}; do
+    [[ $DRYRUN -eq 0 ]] && cp -r ${f} /home/${NAME}/$(basename ${f})
+    echo -e "cp -r ${f} /home/${NAME}/$(basename ${f})" >> $LOG
+  done
+
+  for t in ${TOUCH[@]}; do
+    [[ $DRYRUN -eq 0 ]] && touch /home/${NAME}/${t}
+    echo -e "touch /home/${NAME}/${t}" >> $LOG
+  done
+}
+
+configServices() {
+:
+}
