@@ -1,35 +1,7 @@
 #!/bin/bash
-defpingc=3 #default amount of ping tries
 FORCE_EXIT=0
 VERBOSE=0
-[[ -z $1 ]] && echo -e "run with ./`basename $0` <hostname>" && exit 1
-HOST=$1 && shift
-
-while [ $# -ne 0 ]
-do
-  arg="$1"
-  case "$arg" in
-    # Failed tests will force the script to exit.
-    -f)
-      FORCE_EXIT=1
-      ;;
-    -v)
-      VERBOSE=1
-      ;;
-    -fv)
-      FORCE_EXIT=1
-      VERBOSE=1
-      ;;
-    -vf)
-      FORCE_EXIT=1
-      VERBOSE=1
-      ;;
-    *)
-      echo -e "unknown argument '${arg}'"
-      ;;
-  esac
-  shift
-done
+DRYRUN=0
 
 ### TYPE SETTING ###############################################################
   BOLD=$(tput bold)
@@ -80,9 +52,9 @@ spinny() {
 }
 
 techo() {
-  local _line="${Blue}[${Reset}X${Blue}]${Reset} ${1}:"
+  local _line="${Blue}[${Reset}X${Blue}]${Reset} ${1}:  "
   printf "%s" "${_line}"
-  printf "%*s" $(( ($(tput cols) / 2)-${#_line} )) ""
+  [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 120-${#_line} )) ""
 }
 progress() {
   while true; do
@@ -95,44 +67,46 @@ progress() {
       wait $pid
       retcode=$?
       echo -ne "$pid's retcode: $retcode " >> $LOG
+      [[ $DRYRUN -eq 1 ]] && dry_ok && break
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
-        tested_ok
+        tested_ok "Passed!"
       else
-        error_msg
+        error_msg "Failed!"
       fi
       break
     fi
   done
 }
 
+
+print_line() {
+  # usage: print_line [ char to repeat [ ${colour} ]]
+  [[ -z "$1" ]] && CHAR='-' || CHAR="${1}"
+  [[ -z "$2" ]] || printf "%s\r" "$2"
+  printf "%$(tput cols)s\n" | tr ' ' "$CHAR"
+  tput sgr0
+}
+
+print_title() {
+  clear
+  local _title="${BYellow}${1}${Reset}"
+  print_line "#" "${BBlue}"
+  printf "%*s\n" $(( (${#_title} + $(tput cols)) / 2)) "${_title}"
+  print_line "#" ${BBlue}
+  echo ""
+}
+
+print_info() {
+  T_COLS=`tput cols`
+  echo -e "${BOLD}$1${Reset}\n" | fold -sw $(( $T_COLS - 18 )) | sed 's/^/\t/'
+}
+
 tested_ok () {
-  cecho "${Green}Passed!${Reset}"
+  cecho "${Green}${1}${Reset}"
 }
 
 error_msg () {
-  echo -e "${Red}Failed!${Reset}" >&2
-  echo -e "${Red}Failed!${Reset}" >> "$LOG"
+  echo -e "${Red}${1}${Reset}" >&2
+  echo -e "${Red}${1}${Reset}" >> "$LOG"
   [[ $FORCE_EXIT -eq 1 ]] && echo -e "Forced Exit active!" && exit 1
-}
-
-check_hostname () {
-  techo "${Yellow}Hostname${Reset} set properly"
-  [[ `uname -n` == "${1}" ]] &
-  pid=$!; progress $pid
-}
-
-ping_test () {
-#ping target_ip test_description [ping count]
-  local _target="$1"
-  local _test="$2"
-  local _count=""
-  [[ -z $3 ]] && _count=$defpingc || _count=$3
-  #techo "Ping ${Yellow}${_target}${Reset} (${_test})"
-  techo "Ping ${Yellow}${_target}${Reset} (${_test})"
-  if [[ $VERBOSE -eq 1 ]]; then
-    ping -c ${_count} ${_target}
-  else
-     ping -c ${_count} ${_target} &> /dev/null &
-     pid=$!; progress $pid
-  fi
 }

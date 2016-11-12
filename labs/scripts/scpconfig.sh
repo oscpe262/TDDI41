@@ -9,6 +9,7 @@ for SRC in ${SRCS[@]}; do
   [[ $SRC == "GW" ]] && srca=${gwe}
     for FILE in ${FILES[@]}; do
       techo "$SRC /etc/${FILE}"
+      [[ ! $SRC == "GW" ]] && [[ $FILE == "quagga" ]] && cecho "\b${Blue}Skipping...${Reset}" && continue
       rsync -aruz -e "ssh" root@${srca}:/etc/${FILE} `pwd`/../configs/$SRC/etc/ &> /dev/null &
       pid=$!; progress $pid
     done
