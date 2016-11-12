@@ -1,6 +1,6 @@
 #!/bin/bash
-[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
-source common.sh
+#[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
+#source common.sh
 
 DRYRUN=1
 dry_ok() {
@@ -46,7 +46,7 @@ addUser() {
   # Add the users, default group being the same as the username and extra groups
   # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
   #echo -e "\baddUser $NAME"
-  [[ $DRYRUN -eq 0 ]] && useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
+  [[ $DRYRUN -eq 0 ]] && useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME} 2>${LOG}
 }
 
 pwGen() {
@@ -54,24 +54,26 @@ pwGen() {
   VALCHAR="a-zA-Z0-9!#%&?_-"
   randomString
   PASSWD=${RAND}
-#  sleep .25 # fixing nice output
-
-# Now, this might not work depending on passwd(1) version, due to safety reasons
-# and so on, but as we're going to print it anyway later ...
-  [[ $DRYRUN -eq 0 ]] && passwd "$NAME" --stdin <<< "$PASSWD"
   echo -ne "$PASSWD" > /dev/shm/name
+
+# This isn't very safe, but as we're going to print it anyway later ...
+  [[ $DRYRUN -eq 0 ]] && echo "${NAME}:${PASSWD}" | chpasswd 2>${LOG}
 }
 
 cpFiles() {
   for f in ${CPHOME[@]}; do
-    [[ $DRYRUN -eq 0 ]] && cp -r ${f} /home/${NAME}/$(basename ${f})
     echo -e "cp -r ${f} /home/${NAME}/$(basename ${f})" >> $LOG
+    [[ $DRYRUN -eq 0 ]] && cp -r ${f} /home/${NAME}/$(basename ${f}) 2>${LOG}
   done
 
   for t in ${TOUCH[@]}; do
-    [[ $DRYRUN -eq 0 ]] && touch /home/${NAME}/${t}
     echo -e "touch /home/${NAME}/${t}" >> $LOG
+    [[ $DRYRUN -eq 0 ]] && touch /home/${NAME}/${t} 2>${LOG}
   done
+}
+
+reclaim() {
+  [[ $DRYRUN -eq 0 ]] && chown -R $NAME:$NAME /home/$NAME/ 2>${LOG} 
 }
 
 configServices() {

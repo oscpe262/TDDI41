@@ -1,6 +1,6 @@
 #/bin/bash
-[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
-source common.sh
+#[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
+#source common.sh
 
 defpingc=3 #default amount of ping tries
 
