@@ -2,6 +2,35 @@
 [[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
 source common.sh
 
+[[ -z $1 ]] && echo -e "run with ./`basename $0` <hostname>" && exit 1
+HOST=$1 && shift
+
+while [ $# -ne 0 ]
+do
+  arg="$1"
+  case "$arg" in
+    # Failed tests will force the script to exit.
+    -f)
+      FORCE_EXIT=1
+      ;;
+    -v)
+      VERBOSE=1
+      ;;
+    -fv)
+      FORCE_EXIT=1
+      VERBOSE=1
+      ;;
+    -vf)
+      FORCE_EXIT=1
+      VERBOSE=1
+      ;;
+    *)
+      echo -e "unknown argument '${arg}'"
+      ;;
+  esac
+  shift
+done
+
 tput clear
 check_hostname $HOST
 [[ ! $HOST == "client-2" ]] && ping_test "${c2}" "Client-2 Internal, IP"
