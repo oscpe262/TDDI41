@@ -24,3 +24,5 @@ check_hostname () {
   [[ `uname -n` == "${1}" ]] &
   pid=$!; progress $pid
 }
+
+### EOF ###

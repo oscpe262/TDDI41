@@ -5,9 +5,11 @@
 # This script is for TDDI41:b4 use only. No warranties - you are responsible for
 # any consequence of not knowing what it does.
 # This script is somewhat inspired by oscpe262's revamp of helmuthdu's Arch
-# Ultimate Install , which can be found at https://github.com/helmuthdu/aui . ################################################################################
+# Ultimate Install , which can be found at https://github.com/helmuthdu/aui .
+################################################################################
 
-### Include Dependencies #######################################################
+### INCLUDE DEPENDENCIES #######################################################
+
 [[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
 [[ ! -f tests.sh ]] && echo -e "Missing dependency: tests.sh" && exit 1
 [[ ! -f configs.sh ]] && echo -e "Missing dependency: configs.sh" && exit 1
@@ -15,7 +17,8 @@ source common.sh
 source tests.sh
 source configs.sh
 
-### Main variables #############################################################
+### MAIN VARIABLES #############################################################
+
 checklist=( 0 0 0 )
 testlist=( 0 0 0 )
 configlist=( 0 0 0 )
@@ -25,7 +28,7 @@ main(){
   print_title "${maintitle}"
 }
 
-### Welcome ####################################################################
+### WELCOME ####################################################################
 
 main
 print_info "Welcome! Make sure you have read the documentation before you proceed!"
@@ -38,7 +41,7 @@ echo -e "Cancel at any time with CTRL+C.\n"
 pause
 
 
-### Main Menu ##################################################################
+### MAIN MENU ##################################################################
 
 while true; do
   main
@@ -66,3 +69,5 @@ while true; do
     esac
   done
 done
+
+### EOF ###

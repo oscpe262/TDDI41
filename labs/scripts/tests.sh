@@ -2,6 +2,8 @@
 [[ ! -f NETtest.sh ]] && echo -e "Missing dependency: NETtest.sh" && exit 1
 source NETtest.sh
 
+### TESTS BRANCH ###############################################################
+
 tests() {
   DRYRUN=0
   while true
@@ -28,3 +30,5 @@ tests() {
     eliret
   done
 }
+
+### EOF ###

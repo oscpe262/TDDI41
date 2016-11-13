@@ -7,6 +7,7 @@ source NET_funcs.sh
 #HOST=$1 && shift
 
 HOST=Saiph
+### NET TEST MAIN FUNCTION #####################################################
 
 test_net() {
   check_hostname $HOST
@@ -19,3 +20,5 @@ test_net() {
   ping_test "ida-gw.sysinst.ida.liu.se" "ida-gw"
   ping_test "www.google.com" "World-Wide Connectivity"
 }
+
+### EOF ###

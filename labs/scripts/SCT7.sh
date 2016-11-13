@@ -5,16 +5,18 @@
 
 ### CONFIG VARIABLES
 # These are variables used throughout the script. Adjust to fit your desires.
-declare -A USERS      # Users array (associative).
-CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
-CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
-USUF=5                # Suffix Length in case of conflicting usernames
-PWLENGTH=8            # Length of passwords generated
-CPHOME=()             # Array of files to be copied to homedir of each user
-TOUCH=(".aliases")    # Array of empty files to be created in homedirs
+  declare -A USERS      # Users array (associative).
+  CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
+  CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
+  USUF=5                # Suffix Length in case of conflicting usernames
+  PWLENGTH=8            # Length of passwords generated
+  CPHOME=()             # Array of files to be copied to homedir of each user
+  TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 
 [[ ! -f SCT7_funcs.sh ]] && echo -e "Missing dependency: SCT7_funcs.sh" && exit 1
 source SCT7_funcs.sh
+
+### SCT7 MAIN SCRIPT ###########################################################
 
 userscript() {
   print_title "SCT7 SETUP SCRIPT"
@@ -66,18 +68,20 @@ userscript() {
   done < $INFILE
 
   print_info "Generated ${Blue}users${Reset}${BOLD} and ${Yellow}passwords:"
-  for E in "${!USERS[@]}"; do # Iterate over an array with all USERS keys
-  #  echo -e "\t${BBlue}${E}${Reset} : ${BYellow}${USERS[$E]}${Reset}"
+
+  # Iterate over an array with all USERS keys
+  for E in "${!USERS[@]}"; do
     printf "\t%s" "${BBlue}${E}${Reset} "
-    [[ ${#E} -le 20 ]] && printf "%*s" $(( 20-${#E} )) ""
+    [[ ${#E} -le 20 ]] && printf "%*s" $(( 20-${#E})) ""
     printf "%s\n" "${BYellow}${USERS[$E]}${Reset}"
     unset USERS[$E]
   done; echo ""
 
   techo "${Reset}f) Output the username and password on a single line${Reset}" ; tested_ok "Passed!"
     #Yeah, those resets are just there for looks, literally...
-  print_line
+
   pause
+
   # No user input apart from the list of names is allowed. The script may need to
   # do other things as well. Part of your job is to figure out what. Your script
   # also needs to be as fast as possible. Anything that can be done once for the
@@ -87,3 +91,5 @@ userscript() {
 
   # Report: After the last lab, hand in your script. You will have to demonstrate it as well.
 }
+
+### EOF ###

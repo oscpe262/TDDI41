@@ -2,11 +2,13 @@
 [[ ! -f SCT7.sh ]] && echo -e "Missing dependency: SCT7.sh" && exit 1
 source SCT7.sh
 
+### CONFIGS BRANCH #############################################################
+
 configs() {
   while true
   do
     print_title "Configuration Scripts by oscpe262 and matla782"
-    print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users can still be listed if not already present."
+    print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
     echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset}")"
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset}")"
     echo " b) Back to Main Menu"
@@ -37,3 +39,5 @@ configs() {
     eliret
   done
 }
+
+### EOF ###

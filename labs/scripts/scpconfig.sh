@@ -15,3 +15,5 @@ for SRC in ${SRCS[@]}; do
     done
   done
 rm $LOG
+
+### EOF ###

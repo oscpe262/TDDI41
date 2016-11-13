@@ -4,6 +4,7 @@ VERBOSE=0
 DRYRUN=0
 
 ### TYPE SETTING ###############################################################
+
   BOLD=$(tput bold)
   ULINE=$(tput sgr 0 1)
   Reset=$(tput sgr0)
@@ -26,6 +27,7 @@ DRYRUN=0
   BWhite=${BOLD}$(tput setaf 7)
 
 ### MISC VARS ##################################################################
+
   LOG="`basename ${0}`.log"
   [[ -f $LOG ]] && rm -f $LOG
 
@@ -39,6 +41,7 @@ DRYRUN=0
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
   #prompt3="You have to manually enter the following commands, then press ${BYellow}ctrl+d${Reset} or type ${BYellow}exit${Reset}:"
+
 ### SUPPORT FUNCS ##############################################################
 
 cecho () {
@@ -177,3 +180,5 @@ invalid_option() {
   echo "($1) is an invalid option."
   pause
 }
+
+### EOF ###
