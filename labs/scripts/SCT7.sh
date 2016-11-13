@@ -16,46 +16,6 @@ TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 [[ ! -f SCT7_funcs.sh ]] && echo -e "Missing dependency: SCT7_funcs.sh" && exit 1
 source SCT7_funcs.sh
 
-# Make sure we run this script properly!
-#[[ $1 == "-h" ]] && helpme && exit 0
-#[[ $# -eq 0 ]] && helpme && exit 1
-#[[ "$(id -u)" != "0" ]] && echo -e "ERROR! You must execute the script as 'root'." && exit 1
-#INFILE=$1 #&& shift
-
-#while [ $# -ne 0 ]; do
-#  arg="$1"
-#  case "$arg" in
-#    # Failed tests will force the script to exit.
-#    -h)
-#      helpme
-#      exit 0
-#      ;;
-#    -l)
-#      # To allow testing, DRYRUN is enabled by default.
-#      DRYRUN=0
-#      ;;
-#    -f)
-#      FORCE_EXIT=1
-#      ;;
-#    -v)
-#      VERBOSE=1
-#      ;;
-#    -fv)
-#      FORCE_EXIT=1
-#      VERBOSE=1
-#      ;;
-#    -vf)
-#      FORCE_EXIT=1
-#      VERBOSE=1
-#      ;;
-#    *)
-#      echo -e "Unknown argument ${arg}. Run ${0} -h"
-#      exit 1
-#      ;;
-#  esac
-#  shift
-#done
-### MAIN SCRIPT STARTS HERE
 userscript() {
   print_title "SCT7 SETUP SCRIPT"
   [[ ! -f "${1}" ]] && cecho "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
@@ -106,16 +66,13 @@ userscript() {
   done < $INFILE
 
   print_info "Generated ${Blue}users${Reset}${BOLD} and ${Yellow}passwords:"
-  for E in "${!USERS[@]}"; do
+  for E in "${!USERS[@]}"; do # Iterate over an array with all USERS keys
   #  echo -e "\t${BBlue}${E}${Reset} : ${BYellow}${USERS[$E]}${Reset}"
     printf "\t%s" "${BBlue}${E}${Reset} "
     [[ ${#E} -le 20 ]] && printf "%*s" $(( 20-${#E} )) ""
     printf "%s\n" "${BYellow}${USERS[$E]}${Reset}"
+    unset USERS[$E]
   done; echo ""
-
-  # Clean up associative array
-  unset USERS
-  declare -A USERS
 
   techo "${Reset}f) Output the username and password on a single line${Reset}" ; tested_ok "Passed!"
     #Yeah, those resets are just there for looks, literally...

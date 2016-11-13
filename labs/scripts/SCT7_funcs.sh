@@ -7,15 +7,6 @@ dry_ok() {
   cecho "${Blue}Dryrun!${Reset}"
 }
 
-helpme() {
-  echo -e "Usage: ${0} FILENAME [OPTION]"
-  echo -e "\t-h\tprint this help"
-  echo -e "\t-l\tdeactivate dry-run"
-  echo -e "\t-f\tforces exit on failures"
-  echo -e "\t-v\tincreased verbosity"
-  echo -e "\t-fv, -vf\tas -v -f"
-}
-
 randomString() {
   RAND=$(cat /dev/urandom | tr -dc ${VALCHAR} | fold -w $NOCHARS | head -n 1)
 }
@@ -73,7 +64,7 @@ cpFiles() {
 }
 
 reclaim() {
-  [[ $DRYRUN -eq 0 ]] && chown -R $NAME:$NAME /home/$NAME/ 2>${LOG} 
+  [[ $DRYRUN -eq 0 ]] && chown -R $NAME:$NAME /home/$NAME/ 2>${LOG}
 }
 
 configServices() {
