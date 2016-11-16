@@ -38,6 +38,11 @@ DRYRUN=0
   c1=${nw}.155
   c2=${nw}.156
 
+  nodes=( "${gwe}" "${srv}" "${c1}" "${c2}" )
+  nodenames=( "gw" "server" "client-1" "client-2" "betelgeuse" )
+
+  remote_path="/root"
+  files=()
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
   #prompt3="You have to manually enter the following commands, then press ${BYellow}ctrl+d${Reset} or type ${BYellow}exit${Reset}:"
@@ -58,9 +63,9 @@ spinny() {
 }
 
 techo() {
-  local _line="${Blue}[${Reset}X${Blue}]${Reset} ${1}:  "
-  printf "%s" "${_line}"
-  [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 120-${#_line} )) ""
+  local _line="${1}:  "
+  printf "\n%s" "    ${_line}"
+  [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 40-${#_line} )) ""
 }
 
 progress() {
@@ -74,11 +79,13 @@ progress() {
       wait $pid
       retcode=$?
       echo -ne "$pid's retcode: $retcode " >> $LOG
-      [[ $DRYRUN -eq 1 ]] && dry_ok && break
+      [[ $DRYRUN -eq 1 ]] && dry_ok && return 0
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
         tested_ok "Passed!"
+				return 0
       else
         error_msg "Failed!"
+				return 1
       fi
       break
     fi
@@ -115,6 +122,7 @@ error_msg () {
   echo -e "${Red}${1}${Reset}" >&2
   echo -e "${Red}${1}${Reset}" >> "$LOG"
   [[ $FORCE_EXIT -eq 1 ]] && echo -e "Forced Exit active!" && exit 1
+	return 1
 }
 
 pause() {
@@ -124,23 +132,12 @@ pause() {
 
 checkbox() {
   #display [X] or [ ]
-  [[ "$1" -eq 1 ]] && echo -e "${BBlue}[${BReset}X${BBlue}]${Reset}" || echo -e "${BBlue}[ ${BBlue}]${Reset}";
+  [[ "$1" -eq 0 ]] && echo -e "${BBlue}[${BReset}X${BBlue}]${Reset}" || echo -e "${BBlue}[ ${BBlue}]${Reset}";
 }
-
-#menu_item() {
-#  #check if the number of arguments is less then 2
-#  [[ $# -lt 2 ]] && _package_name="$1" || _package_name="$2";
-#  #list of chars to remove from the package name
-#  local _chars=("Ttf-" "-bzr" "-hg" "-svn" "-git" "-stable" "-icon-theme" "Gnome-shell-theme-" #"Gnome-shell-extension-");
-#  #remove chars from package name
-#  for char in ${_chars[@]}; do _package_name=`echo ${_package_name^} | sed 's/'$char'//'`; done
-#  #display checkbox and package name
-#  echo -e "$(checkbox_package "$1") ${Bold}${_package_name}${Reset}"
-#}
 
 mainmenu_item() {
   #if the task is done make sure we get the state
-  if [ $1 == 1 -a "$3" != "" ]; then
+  if [[ $1 == 1 ]] &&  [[ "$3" != "" ]]; then
     state="${BGreen}[${Reset}$3${BGreen}]${Reset}"
   fi
   echo -e "$(checkbox "$1") ${Bold}$2${Reset} ${state}"
@@ -156,11 +153,23 @@ read_text() {
   OPTION=`echo "$OPTION" | tr '[:upper:]' '[:lower:]'`
 }
 
+prep_opts() {
+	local _array=("$@")
+	local _i=0
+	OPTION=""
+
+	for e in ${_array[@]}; do
+		[[ $e -eq 1 ]] && OPTION+="${_i} "
+		((_i++))
+	done
+}
+
 read_opts() {
   local _line
   local _opts
+	local i=0
 
-  read -p "$prompt1" OPTION
+  [[ -z $1 ]] && read -p "$prompt1" OPTION || OPTION=${1}
   array=("$OPTION")
 
   for _line in ${array[@]/,/ }; do
@@ -179,6 +188,22 @@ invalid_option() {
   print_line
   echo "($1) is an invalid option."
   pause
+}
+
+transfer() {
+  for node in ${nodes[@]}; do
+    for file in ${files[@]}; do
+      scp ${file} root@${node}:${remote_path}/
+    done
+  done
+}
+
+inArray () {
+  local e
+  for e in "${@:2}"; do
+		[[ "$e" == "$1" ]] && return 0
+	done
+  return 1
 }
 
 ### EOF ###

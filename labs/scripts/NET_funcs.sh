@@ -5,24 +5,23 @@
 defpingc=3 #default amount of ping tries
 
 ping_test () {
-#ping target_ip test_description [ping count]
+#ping target_ip [ping count]
   local _target="$1"
-  local _test="$2"
   local _count=""
-  [[ -z $3 ]] && _count=$defpingc || _count=$3
-  techo "Ping ${Yellow}${_target}${Reset} (${_test})"
+  [[ -z $2 ]] && _count=$defpingc || _count=$2
   if [[ $VERBOSE -eq 1 ]]; then
     ping -c ${_count} ${_target}
   else
-     ping -c ${_count} ${_target} &> /dev/null &
-     pid=$!; progress $pid
+		techo "Ping ${Yellow}${_target}${Reset}"
+		ping -c ${_count} ${_target} &> /dev/null &
+    pid=$!; progress $pid
   fi
 }
 
 check_hostname () {
-  techo "${Yellow}Hostname${Reset} set properly"
-  [[ `uname -n` == "${1}" ]] &
-  pid=$!; progress $pid
+	techo "Hostname set to (${Yellow}$1${Reset})"
+  [[ `uname -n` == $1 ]] &
+    pid=$!; progress $pid
 }
 
 ### EOF ###

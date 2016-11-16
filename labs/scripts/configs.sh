@@ -4,23 +4,36 @@ source SCT7.sh
 
 ### CONFIGS BRANCH #############################################################
 
+# add node selections somewhere ...
+
 configs() {
+
+files=( "SCT7.sh" "SCT7_funcs.sh" "DNS_srvconf.sh" )
   while true
   do
     print_title "Configuration Scripts by oscpe262 and matla782"
     print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
-    echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset}")"
+		echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
+
+		echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset}")"
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset}")"
     echo " b) Back to Main Menu"
     read_opts
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
+				0)
+					transfer &
+					pid=$! ; progress $pid
+					configlist[0]=$?
+					;;
         1)
           DRYRUN=1
           print_line
-          read -p "Filepath to list of users: " INFILE
+          read -p "Filepath to list of users on ${Yellow}local host${Reset}: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
-          userscript "${INFILE}" && configlist[1]=1
+# currently in progress ...
+					scp ${INFILE} root@${node}:${remote_path}
+          #userscript "${INFILE}" && configlist[1]=1
           ;;
         2)
           DRYRUN=0

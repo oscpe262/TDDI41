@@ -19,18 +19,14 @@ source configs.sh
 
 ### MAIN VARIABLES #############################################################
 
-checklist=( 0 0 0 )
-testlist=( 0 0 0 )
-configlist=( 0 0 0 )
+checklist=( 1 1 1 )
+testlist=( 1 1 1 1 1 0 0 0 0 1 )
+configlist=( 1 1 1 )
 maintitle="TDDI41 2016 Main Script by oscpe262 and matla782"
-
-main(){
-  print_title "${maintitle}"
-}
 
 ### WELCOME ####################################################################
 
-main
+print_title "${maintitle}"
 print_info "Welcome! Make sure you have read the documentation before you proceed!"
 echo -e "Prerequisites:\n"
 echo ">> Environment set according to TDDI41 first four labs."
@@ -38,27 +34,27 @@ echo ">> UML:s running, with SSH active and connectable."
 echo -e ">> Configurated this set of scripts.\n"
 print_line
 echo -e "Cancel at any time with CTRL+C.\n"
-pause
+#pause
 
 
 ### MAIN MENU ##################################################################
 
 while true; do
-  main
+  print_title "${maintitle}"
+	inArray "1" "${configlist[@]}" || checklist[1]=0
+	inArray "1" "${testlist[@]}" || checklist[2]=0
   print_info "This script has two parts: ${Yellow}Tests${BReset} and ${BYellow}Configs${BReset}. ${Yellow}Tests${BReset} runs tests that are not covered in ${BYellow}Configs${BReset}, such as ${Blue}NET${BReset} configuration checks. ${BYellow}Configs${BReset} runs a series of scripts that configure the environment according to lab instructions."
   echo " 1) $(mainmenu_item "${checklist[1]}" "Configs")"
   echo " 2) $(mainmenu_item "${checklist[2]}" "Tests")"
   echo -e "\n q) Quit\n"
-  read_opts
+  read_opts "2" #testing
   for OPT in ${OPTIONS[@]}; do
     case "$OPT" in
       1)
         configs
-        checklist[1]=1
         ;;
       2)
         tests
-        checklist[2]=1
         ;;
       "q")
         exit 0
