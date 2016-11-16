@@ -143,11 +143,16 @@ a) \begin{verbatim}
 
 %b) What nameservers are consulted when determining the address of update.microsoft.com? Note that the presence of a CNAME record makes this question different from the previous one: you will need to run dig more than once to get the answer.
 b)\begin{verbatim}
-$ dig $(dig update.microsoft.com | grep CNAME |tail -n 1 | sed 's/.*\t//') +trace | grep Received
-;; Received 525 bytes from 130.236.1.9#53(130.236.1.9) in 1 ms
-;; Received 883 bytes from 192.58.128.30#53(j.root-servers.net) in 21 ms
-;; Received 791 bytes from 192.42.93.30#53(g.gtld-servers.net) in 27 ms
-;; Received 283 bytes from 4.27.16.155#53(d.ns.nsatc.net) in 142 ms
+dig update.microsoft.com +trace | grep Received
+
+;; Received 525 bytes from 130.236.1.9#53(130.236.1.9) in 58 ms
+;; Received 872 bytes from 192.36.148.17#53(i.root-servers.net) in 5 ms
+;; Received 790 bytes from 192.54.112.30#53(h.gtld-servers.net) in 21 ms
+;; Received 61 bytes from 208.84.2.53#53(ns2.msft.net) in 61 ms
+
+$ dig update.microsoft.com @ns2.msft.net +trace | grep Received
+;; Received 40 bytes from 208.84.2.53#53(ns2.msft.net) in 22 ms
 \end{verbatim}
+
 
 \end{document}
