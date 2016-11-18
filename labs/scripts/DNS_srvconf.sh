@@ -44,10 +44,10 @@ sed -i '4i\\tallow-query { any; };' ${options}
 sed -i '5i\\trecursion yes;' ${options}
 sed -i '6i\\tallow-recursion { internals; };' ${options}
 
-
 sed -i '7i\\tallow-transfer { none; };' ${options}
 #d) Apart from the queries in (a), it should not respond to any queries from any outside host.
-sed -i '8i\\tforwarders { 8.8.8.8; 8.8.4.4; };' ${options}
+sed -i '8i\\tallow-query-cache { internals; };' ${options}
+sed -i '9i\\tforwarders { 8.8.8.8; 8.8.4.4; };' ${options}
 
 #e) It must contain valid zone data for your zone(s).
 echo -e "zone \"${b4}\" {${br}type master;" >> ${locals}
@@ -89,7 +89,7 @@ echo -e "\n; PTR records" >> ${zinv}
 echo -e "153\tIN\tPTR\tgw.${b4}." >> ${zinv}
 echo -e "154\tIN\tPTR\tserver.${b4}." >> ${zinv}
 echo -e "155\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
-echo -e "155\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
+echo -e "156\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 #f) The cache parameters must be chosen sensibly (i.e. you are expected to be able to motivate your choice).
 #g) It must not be susceptible to the standard cache poisoning attacks. See http:www.kb.cert.org/vuls/id/800113 for details. Test your DNS server using porttest.dns-oarc.net (see http:www.dns-oarc.net/oarc/services/porttest).
 
@@ -97,6 +97,10 @@ echo -e "155\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 #5-2 Install zone data for your normal zone.
 
 # rate limit (tbd)
+### Tweaks ###
+sed -i '10i\\tmax-cache-size 64M;' ${options}
+sed -i '11i\\tmax-cache-ttl 60;' ${options}
+sed -i '12i\\tmax-ncache-ttl 0;' ${options}
 
 ### IPv4 mode ###
 sed -i '/OPTIONS/d' /etc/default/bind9

@@ -1,0 +1,27 @@
+\input{../report.input.tex}
+\chapter{NTP}
+\subsection{3-3}
+% 3-3 Explain the output of ntpq -p.
+\begin{verbatim}
+# ntpq -p
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ida-gw.sysinst. 192.36.143.130   2 u    3   64   37  130.222   55.492  64.905
+ 130.236.178.159 .BCST.          16 u    -   64    0    0.000    0.000   0.031
+\end{verbatim}
+\vspace{1cm}
+\begin{tabular}{l|l}
+  * & current time source \\
+  remote & target of sync \\
+  refid & remote source's sync source \\
+  st & stratum level of source\\
+  t & types available (u = unicast)\\
+  when & time since last received packet\\
+  poll & poll interval (log2 seconds)\\
+  reach & Octal binary history of packets\\
+  delay & roundtrip delay\\
+  offset & server time difference (ms)\\
+  jitter &difference in milliseconds between two samples
+\end{tabular}
+
+\end{document}

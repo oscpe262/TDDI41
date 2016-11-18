@@ -8,7 +8,7 @@ source SCT7.sh
 
 configs() {
 
-files=( "SCT7.sh" "SCT7_funcs.sh" )
+files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" )
   while true
   do
     print_title "Configuration Scripts by oscpe262 and matla782"

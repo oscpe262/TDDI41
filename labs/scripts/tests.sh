@@ -17,6 +17,7 @@ tests() {
     echo " 2) $(mainmenu_item "${testlist[2]}" "Network test server (${Yellow}NET${Reset})")"
     echo " 3) $(mainmenu_item "${testlist[3]}" "Network test client-1 (${Yellow}NET${Reset})")"
     echo " 4) $(mainmenu_item "${testlist[4]}" "Network test client-2 (${Yellow}NET${Reset})")"
+    echo " 5) $(mainmenu_item "${testlist[4]}" "NTP Test (${Yellow}NET${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
@@ -42,6 +43,10 @@ tests() {
         4)
           ssh -t root@${c2} ${remote_path}/remotetest.sh client-2 NET
           testlist[4]=$?
+          ;;
+        5)
+          echo "tba"
+          #[[ `ntpq -p | grep 130.236.178.153 | cut -c 1 ` == "*" ]] for nodes, gw ...
           ;;
 				9)
 					./remotetest.sh `uname -n` NET
