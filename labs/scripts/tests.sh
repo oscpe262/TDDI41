@@ -12,7 +12,7 @@ tests() {
   do
     print_title "Test Scripts by oscpe262 and matla782"
     echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
-		
+
     echo " 1) $(mainmenu_item "${testlist[1]}" "Network test gw (${Yellow}NET${Reset})")"
     echo " 2) $(mainmenu_item "${testlist[2]}" "Network test server (${Yellow}NET${Reset})")"
     echo " 3) $(mainmenu_item "${testlist[3]}" "Network test client-1 (${Yellow}NET${Reset})")"
@@ -44,7 +44,7 @@ tests() {
           testlist[4]=$?
           ;;
 				9)
-					./remotetest.sh betelgeuse NET
+					./remotetest.sh `uname -n` NET
 					testlist[9]=$?
 					;;
         "b")

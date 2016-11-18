@@ -11,7 +11,7 @@ for DEP in ${deps[@]}; do
   source $DEP
 done
 
-if [[ $2 == "NET" ]] && [[ " ${nodenames[@]} " =~ " ${1} " ]]; then
+if [[ $2 == "NET" ]]; then
  	test_net $1
 	exit $?
 fi

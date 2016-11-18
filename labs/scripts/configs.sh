@@ -8,7 +8,7 @@ source SCT7.sh
 
 configs() {
 
-files=( "SCT7.sh" "SCT7_funcs.sh" "DNS_srvconf.sh" )
+files=( "SCT7.sh" "SCT7_funcs.sh" )
   while true
   do
     print_title "Configuration Scripts by oscpe262 and matla782"
@@ -22,6 +22,7 @@ files=( "SCT7.sh" "SCT7_funcs.sh" "DNS_srvconf.sh" )
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
 				0)
+          scp DNS_srvconf.sh root@${srv}:${remote_path}
 					transfer &
 					pid=$! ; progress $pid
 					configlist[0]=$?

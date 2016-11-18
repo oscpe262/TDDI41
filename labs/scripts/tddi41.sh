@@ -47,7 +47,7 @@ while true; do
   echo " 1) $(mainmenu_item "${checklist[1]}" "Configs")"
   echo " 2) $(mainmenu_item "${checklist[2]}" "Tests")"
   echo -e "\n q) Quit\n"
-  read_opts "2" #testing
+  read_opts 
   for OPT in ${OPTIONS[@]}; do
     case "$OPT" in
       1)
