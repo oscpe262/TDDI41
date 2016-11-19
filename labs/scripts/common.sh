@@ -42,6 +42,13 @@ DRYRUN=0
   nodenames=( "gw" "server" "client-1" "client-2" "betelgeuse" )
   confnodes=( 0 0 0 0 0 )
 
+  tboxl="${BBlue}[${Reset}"
+  tboxr="${BBlue}]${Reset}"
+  tdone="${tboxl}${Green}O${tboxr}"
+  tfail="${tboxl}${Red}X${tboxr}"
+  ttodo="${tboxl}${BReset}>${tboxr}"
+  legend="${tdone} = Passed, ${tfail} = Failed, ${ttodo} = Not yet run"
+
   remote_path="/root"
   files=()
   SPIN="/-\|"
@@ -76,7 +83,7 @@ progress() {
       spinny
       sleep 0.25
     else
-      ncecho "\b";
+      echo -ne "\b";
       wait $pid
       retcode=$?
       echo -ne "$pid's retcode: $retcode " >> $LOG
@@ -107,6 +114,7 @@ print_title() {
   print_line "#" "${BBlue}"
   printf "%*s\n" $(( (${#_title} + $(tput cols)) / 2)) "${_title}"
   print_line "#" ${BBlue}
+  echo -e "\n\t${legend}"
   echo ""
 }
 
@@ -116,7 +124,7 @@ print_info() {
 }
 
 tested_ok () {
-  cecho "${Green}${1}${Reset}"
+  echo -e "${Green}${1}${Reset}"
 }
 
 error_msg () {
@@ -127,13 +135,15 @@ error_msg () {
 }
 
 pause() {
+  echo ""
   print_line
   read -e -sn 1 -p "Press enter to continue..."
 }
-
 checkbox() {
-  #display [X] or [ ]
-  [[ "$1" -eq 0 ]] && echo -e "${BBlue}[${BGreen}X${BBlue}]${Reset}" || echo -e "${BBlue}[ ${BBlue}]${Reset}";
+  local _sign
+  [[ $1 -eq 0 ]] && echo -e "${tdone}"
+  [[ $1 -eq 1 ]] && echo -e "${tfail}"
+  [[ $1 -ge 2 ]] && echo -e "${ttodo}"
 }
 
 mainmenu_item() {
@@ -142,10 +152,6 @@ mainmenu_item() {
     state="${BGreen}[${Reset}$3${BGreen}]${Reset}"
   fi
   echo -e "$(checkbox "$1") ${Bold}$2${Reset} ${state}"
-}
-
-eliret() {
-  [[ $OPT == b || $OPT == d ]] && break;
 }
 
 read_text() {
@@ -190,7 +196,6 @@ invalid_option() {
   echo "($1) is an invalid option."
   pause
 }
-
 transfer() {
   for node in ${nodes[@]}; do
     for file in ${files[@]}; do
@@ -208,7 +213,7 @@ inArray () {
 }
 
 atoggle() {
-  [[ $1 == 0 ]] && return 1 || return 0
+  [[ $1 == 0 ]] && return 2 || return 0
 }
 
 node_select() {
@@ -260,4 +265,5 @@ nodeconvert() {
   [[ ${confnodes[3]} -eq 0 ]] && nodes+=" ${c1}"
   [[ ${confnodes[4]} -eq 0 ]] && nodes+=" ${c2}"
 }
+#echo "trace" ; pause
 ### EOF ###

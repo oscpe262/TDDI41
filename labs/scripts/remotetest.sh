@@ -14,6 +14,5 @@ for DEP in ${deps[@]}; do
 done
 
 if [[ $2 == "NET" ]]; then
- 	test_net $1
-	exit $?
+ 	test_net $1 && exit 0 || exit 1
 fi

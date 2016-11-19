@@ -20,7 +20,7 @@ source SCT7_funcs.sh
 
 userscript() {
   print_title "SCT7 SETUP SCRIPT"
-  [[ ! -f "${1}" ]] && cecho "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
+  [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
 
   # This part is for testing purposes only.
   if [[ $DRYRUN -eq 0 ]]; then

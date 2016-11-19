@@ -6,7 +6,7 @@ DRYRUN=1
 ### SCT7 FUNCS #################################################################
 
 dry_ok() {
-  cecho "${Blue}Dryrun!${Reset}"
+  echo "${Blue}Dryrun!${Reset}"
 }
 
 randomString() {

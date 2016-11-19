@@ -18,7 +18,7 @@ tests() {
     echo " 2) $(mainmenu_item "${testlist[2]}" "Network test server (${Yellow}NET${Reset})")"
     echo " 3) $(mainmenu_item "${testlist[3]}" "Network test client-1 (${Yellow}NET${Reset})")"
     echo " 4) $(mainmenu_item "${testlist[4]}" "Network test client-2 (${Yellow}NET${Reset})")"
-    echo " 5) $(mainmenu_item "${testlist[4]}" "NTP Test (${Yellow}NET${Reset})")"
+    echo " 5) $(mainmenu_item "${testlist[5]}" "NTP Test (${Yellow}NET${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
@@ -31,27 +31,32 @@ tests() {
           ;;
         1)
           ssh -t root@${gwi} ${remote_path}/remotetest.sh gw NET
-          testlist[1]=$?
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
           ;;
         2)
           ssh -t root@${srv} ${remote_path}/remotetest.sh server NET
-          testlist[2]=$?
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
           ;;
         3)
           ssh -t root@${c1} ${remote_path}/remotetest.sh client-1 NET
-          testlist[3]=$?
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
           ;;
         4)
           ssh -t root@${c2} ${remote_path}/remotetest.sh client-2 NET
-          testlist[4]=$?
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
           ;;
         5)
-          ntptest
-          testlist[5]=$?
+          ntptest && testlist[5]=0 || testlist[5]=1
+          pause
           ;;
 				9)
 					./remotetest.sh `uname -n` NET
-					testlist[9]=$?
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
 					;;
         "b")
           DRYRUN=1

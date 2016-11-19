@@ -1,12 +1,4 @@
 #!/bin/bash
-[[ ! `uname -n` == "server" ]] && echo "wrong node" exit 1
-#5-1 Install a DNS server on your server and configure it to meet the following requirements.
-packages=("bind9" "bind9-doc" "bind9utils" "dnsutils" "host" )
-
-for PKG in ${packages[@]}; do
-  [[ `dpkg -l ${PKG}` ]] && echo "${PKG} installed" || apt-get install $PKG
-done
-
 ### Files ######################################################################
 bind="/etc/bind/"
 options="${bind}named.conf.options"
@@ -28,6 +20,18 @@ RETRY="600"
 EXPIRE="86400"
 NTTL="600"
 ################################################################################
+
+if [[ ! `uname -n` == "server" ]]; then
+  sed -i '/nameserver/d' ${resolv}
+  echo "nameserver ${nw}.154" >> ${resolv}
+  exit 0
+fi
+#5-1 Install a DNS server on your server and configure it to meet the following requirements.
+packages=("bind9" "bind9-doc" "bind9utils" "dnsutils" "host" )
+
+for PKG in ${packages[@]}; do
+  [[ `dpkg -l ${PKG}` ]] && echo "${PKG} installed" || apt-get install $PKG
+done
 
 # Backup or replace with default
 [[ ! -d /etc/bind/.bak ]] && mkdir /etc/bind/.bak && cp /etc/bind/named.conf* /etc/bind/.bak/
@@ -115,9 +119,9 @@ echo -e "controls { ${br}inet 127.0.0.1 port 953 allow {127.0.0.1; }; \n};" >> $
 echo -e "include \"${bind}ns_b4_rndc-key\";" >>  ${locals}
 
 sed -i '/sysinst/d' ${resolv}
-sed -i '/127/d' ${resolv}
+sed -i '/154/d' ${resolv}
 sed -i '3i\search b4.sysinst.ida.liu.se' ${resolv}
-sed -i '4i\nameserver 127.0.0.1' ${resolv}
+sed -i '4i\nameserver 130.236.178.154' ${resolv}
 
 /etc/init.d/bind9 restart
 [[ ! ${?} -eq 0 ]] && echo "BIND9 Restart Failed, see /var/log/syslog for further details!" && cat /var/log/syslog | tail -n 15 && exit 1
