@@ -19,8 +19,8 @@ source configs.sh
 
 ### MAIN VARIABLES #############################################################
 
-checklist=( 1 1 1 )
-testlist=( 1 1 1 1 1 0 0 0 0 1 )
+checklist=( 1 1 1 1 )
+testlist=( 1 1 1 1 1 1 0 0 0 1 )
 configlist=( 1 1 1 )
 maintitle="TDDI41 2016 Main Script by oscpe262 and matla782"
 
@@ -41,19 +41,23 @@ echo -e "Cancel at any time with CTRL+C.\n"
 
 while true; do
   print_title "${maintitle}"
-	inArray "1" "${configlist[@]}" || checklist[1]=0
-	inArray "1" "${testlist[@]}" || checklist[2]=0
+	inArray "1" "${configlist[@]}" || checklist[2]=0
+	inArray "1" "${testlist[@]}" || checklist[3]=0
   print_info "This script has two parts: ${Yellow}Tests${BReset} and ${BYellow}Configs${BReset}. ${Yellow}Tests${BReset} runs tests that are not covered in ${BYellow}Configs${BReset}, such as ${Blue}NET${BReset} configuration checks. ${BYellow}Configs${BReset} runs a series of scripts that configure the environment according to lab instructions."
-  echo " 1) $(mainmenu_item "${checklist[1]}" "Configs")"
-  echo " 2) $(mainmenu_item "${checklist[2]}" "Tests")"
+  echo " 1) $(mainmenu_item "${checklist[1]}" "Node Selection")"
+  echo " 2) $(mainmenu_item "${checklist[2]}" "Configs")"
+  echo " 3) $(mainmenu_item "${checklist[3]}" "Tests")"
   echo -e "\n q) Quit\n"
-  read_opts 
+  read_opts
   for OPT in ${OPTIONS[@]}; do
     case "$OPT" in
       1)
-        configs
+        node_select
         ;;
       2)
+        configs
+        ;;
+      3)
         tests
         ;;
       "q")

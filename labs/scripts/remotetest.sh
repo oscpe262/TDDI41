@@ -2,6 +2,8 @@
 ### CALL: remotetest.sh ["hostname"] "TEST"
 [[ -f "common.sh" ]] && source common.sh || exit 1
 
+retval=0
+
 [[ $2 == "NET" ]] && deps=( "NETtest.sh" "NET_funcs.sh" )
 [[ $2 == "DNS" ]] && deps=( "DNS_srvconf.sh" )
 [[ $2 == "SCT" ]] && deps=( "SCT7.sh" "SCT7_funcs.sh" "DNS_srvconf.sh" )

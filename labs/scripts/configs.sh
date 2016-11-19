@@ -31,9 +31,9 @@ files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" )
           DRYRUN=1
           print_line
           read -p "Filepath to list of users on ${Yellow}local host${Reset}: " INFILE
-          [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
+#          [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
 # currently in progress ...
-					scp ${INFILE} root@${node}:${remote_path}
+#					scp ${INFILE} root@${node}:${remote_path}
           #userscript "${INFILE}" && configlist[1]=1
           ;;
         2)
@@ -42,15 +42,14 @@ files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" )
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users2"
           userscript "${INFILE}" && configlist[2]=1
           ;;
-        "b")
-          break
+        b)
+          return
           ;;
         *)
           invalid_option "$OPT"
           ;;
       esac
     done
-    eliret
   done
 }
 

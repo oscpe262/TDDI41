@@ -38,8 +38,9 @@ DRYRUN=0
   c1=${nw}.155
   c2=${nw}.156
 
-  nodes=( "${gwe}" "${srv}" "${c1}" "${c2}" )
+  nodes=( "${gwi}" "${srv}" "${c1}" "${c2}" )
   nodenames=( "gw" "server" "client-1" "client-2" "betelgeuse" )
+  confnodes=( 0 0 0 0 0 )
 
   remote_path="/root"
   files=()
@@ -132,7 +133,7 @@ pause() {
 
 checkbox() {
   #display [X] or [ ]
-  [[ "$1" -eq 0 ]] && echo -e "${BBlue}[${BReset}X${BBlue}]${Reset}" || echo -e "${BBlue}[ ${BBlue}]${Reset}";
+  [[ "$1" -eq 0 ]] && echo -e "${BBlue}[${BGreen}X${BBlue}]${Reset}" || echo -e "${BBlue}[ ${BBlue}]${Reset}";
 }
 
 mainmenu_item() {
@@ -159,7 +160,7 @@ prep_opts() {
 	OPTION=""
 
 	for e in ${_array[@]}; do
-		[[ $e -eq 1 ]] && OPTION+="${_i} "
+		[[ $e -eq 2 ]] && OPTION+="${_i} "
 		((_i++))
 	done
 }
@@ -206,4 +207,57 @@ inArray () {
   return 1
 }
 
+atoggle() {
+  [[ $1 == 0 ]] && return 1 || return 0
+}
+
+node_select() {
+confnodes=( 0 0 0 0 0 )
+  while true; do
+    print_title "Node Configuration Selection"
+    print_info "Toggle nodes to be configured (default = all). Nodes can be reselected between configurations if desired."
+    echo -e "\n 1) $(mainmenu_item "${confnodes[1]}" "Gateway (${Yellow}gw${Reset})")"
+    echo -e " 2) $(mainmenu_item "${confnodes[2]}" "Server (${Yellow}server${Reset})")"
+    echo -e " 3) $(mainmenu_item "${confnodes[3]}" "Client-1 (${Yellow}client-1${Reset})")"
+    echo -e " 4) $(mainmenu_item "${confnodes[4]}" "Client-2 (${Yellow}client-2${Reset})")"
+    echo -e " d) Done"
+    read_opts
+    for OPT in ${OPTIONS[@]}; do
+      case "$OPT" in
+        1)
+          atoggle ${confnodes[$OPT]}
+          confnodes[$OPT]=$?
+          ;;
+        2)
+          atoggle ${confnodes[$OPT]}
+          confnodes[$OPT]=$?
+          ;;
+        3)
+          atoggle ${confnodes[$OPT]}
+          confnodes[$OPT]=$?
+          ;;
+        4)
+          atoggle ${confnodes[$OPT]}
+          confnodes[$OPT]=$?
+          ;;
+        "d")
+          nodeconvert
+          return 0
+          ;;
+        *)
+          invalid_option "Node Config Select $OPT"
+          ;;
+      esac
+    done
+    eliret
+  done
+}
+
+nodeconvert() {
+  nodes=()
+  [[ ${confnodes[1]} -eq 0 ]] && nodes+=" ${gwi}"
+  [[ ${confnodes[2]} -eq 0 ]] && nodes+=" ${srv}"
+  [[ ${confnodes[3]} -eq 0 ]] && nodes+=" ${c1}"
+  [[ ${confnodes[4]} -eq 0 ]] && nodes+=" ${c2}"
+}
 ### EOF ###
