@@ -1,0 +1,39 @@
+\input{../report.input.tex}
+\subsection{Exercise 1: Very basic RAID theory}
+\textbf{RAID} originally stood for \emph{"Redundant Array of Independent Disks"}, but
+nowadays, it is commonly known as \emph{"Array of Independent Disks"}, i.e. a
+collection of storage media working as a single logical unit.
+
+\textbf{JBOD} (\emph{"Just a Bunch Of Disks"}) is multiple drives exposed as individual
+devices. Sometimes, the conception of spanned disks is expressed as 'JBOD'.
+
+\textbf{RAID-0} (\emph{"Striping"}) distributes the content (near-) equally across all disks to increase throughput. Any disk failure results in a full array failure.
+
+\textbf{RAID-1} (\emph{"Mirroring"}) writes the data set identically to two drives, basically allowing a "backup" in case of one of the disks failuring.
+
+\textbf{RAID-5} (\emph{"Block-level striping with distributed parity"}) requires at least three disks, distributing data across two with parity on the third. This allows one disk to fail with the possibility to recover the array.
+
+\textbf{RAID-6} (\emph{"Block-level striping with double distributed parity"}) requires at least four disks, distributing data as RAID 5 but with parity on two disks.
+
+\textbf{RAID 1+0} (\emph{"Mirrored stripes"}) stripes data across two sets of disks which are in turn mirrored.
+
+\textbf{RAID 0+1} (\emph{"Stripe of mirrors"}) mirrors data and stripes the mirrored sets.
+
+\textbf{Hot Spare} is a disk added to a failure redunant array, such as RAID-5, which is used only upon an array failure, at which point the array can start to rebuild instantly.
+
+\subsection{Exercise 2: Volume management with LVM2}
+
+A physical disk is divided into one or more \textbf{Physical volumes} (\verb=pv[command]=). Combining these makes  \textbf{Volume groups} (\verb=vg[command]=) which consists of any number of \textbf{Logical volumes} (\verb=lv[command]=).
+
+\subsection{Exercise 3: File Systems}
+
+The main differences between ext2 and ext3 is the addition of journaling (block and metadata) in ext3, and the possibility to grow a mounted file system on the latter.
+
+Ext$n$ file systems are created with the command: \\
+\verb=  mkfs.ext=$n$\verb= <device>=
+
+Ext file systems are resized with:
+\verb=  resize2fs <device> <size>=
+
+\verb=fsck= is used to check and repair Linux file systems.
+\end{document}
