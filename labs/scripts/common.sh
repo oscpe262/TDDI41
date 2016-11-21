@@ -124,7 +124,8 @@ print_info() {
 }
 
 tested_ok () {
-  echo -e "${Green}${1}${Reset}"
+  : #legacy function, yet to be cleaned up
+#  echo -e "${Green}${1}${Reset}"
 }
 
 error_msg () {

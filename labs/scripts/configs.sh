@@ -11,7 +11,7 @@ configs() {
 [[ ${confnodes[3]} -eq 0 ]] && _nodes+="Client-1, "
 [[ ${confnodes[4]} -eq 0 ]] && _nodes+="Client-2, "
 _nodes=${_nodes::-2}
-files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" "DNS_srvconf.sh" )
+files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" "DNS_srvconf.sh" "common.sh" )
 local _tmp=("${files[@]}")
   while true
   do

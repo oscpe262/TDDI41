@@ -31,7 +31,7 @@ fi
 packages=("bind9" "bind9-doc" "bind9utils" "dnsutils" "host" )
 
 for PKG in ${packages[@]}; do
-  [[ `dpkg -l ${PKG}` ]] && echo "${PKG} installed" || apt-get install $PKG
+  [[ `dpkg -l ${PKG}` ]] || apt-get install $PKG
 done
 
 # Backup or replace with default
@@ -58,7 +58,7 @@ sed -i '9i\\tforwarders { 8.8.8.8; 8.8.4.4; };' ${options}
 echo -e "zone \"${b4}\" {${br}type master;" >> ${locals}
 echo -e "\tfile \"${ldb}${b4}\";\n};\n" >> ${locals}
 
-echo -e "zone \"${arpa}\" {${br}type master;" >> ${locals}
+echo -e "zone \"152-159.${arpa}\" {${br}type master;" >> ${locals}
 echo -e "\tfile \"${ldb}${arpa}\";\n};\n" >> ${locals}
 
 [[ -d /etc/bind/zones ]] && rm -r /etc/bind/zones
@@ -66,7 +66,7 @@ mkdir /etc/bind/zones
 
 z1="${ldb}${b4}"
 echo -e "\$TTL\t${TTL}" >> ${z1}
-echo -e "@\tIN\tSOA\tserver.${b4}.\t${b4}. (" >> ${z1}
+echo -e "@\tIN\tSOA\tserver.${b4}.\tHOSTMASTER.${b4}. (" >> ${z1}
 echo -e "\t\t${SERIAL}\t; Serial" >> ${z1}
 echo -e "\t\t${REFRESH}\t\t; Refresh" >> ${z1}
 echo -e "\t\t${RETRY}\t\t; Retry" >> ${z1}
@@ -82,7 +82,7 @@ echo -e "client-2.${b4}.\tIN\tA\t${nw}.156" >> ${z1}
 
 zinv="${ldb}${arpa}"
 echo -e "\$TTL\t${TTL}" >> ${zinv}
-echo -e "@\tIN\tSOA\t${b4.\tHOSTMASTER.${b4}. (" >> ${zinv}
+echo -e "@\tIN\tSOA\tserver.${b4}.\tHOSTMASTER.${b4}. (" >> ${zinv}
 echo -e "\t\t${SERIAL}\t; Serial" >> ${zinv}
 echo -e "\t\t${REFRESH}\t\t; Refresh" >> ${zinv}
 echo -e "\t\t${RETRY}\t\t; Retry" >> ${zinv}
@@ -90,16 +90,12 @@ echo -e "\t\t${EXPIRE}\t\t; Expire" >> ${zinv}
 echo -e "\t\t${NTTL}\t\t; Negative Cache TLL\n);" >> ${zinv}
 echo -e "\n; name servers" >> ${zinv}
 echo -e "\tIN\tNS\tserver.${b4}." >> ${zinv}
-echo -e "\n; Canonical records" >> ${zinv}
+echo -e "\n; PTR records" >> ${zinv}
 echo -e "153.${cname}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
 echo -e "154.${cname}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
 echo -e "155.${cname}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
 echo -e "156.${cname}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
-echo -e "\n; PTR records" >> ${zinv}
-echo -e "153.${arpa}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
-echo -e "154.${arpa}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
-echo -e "155.${arpa}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
-echo -e "156.${arpa}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
+
 #f) The cache parameters must be chosen sensibly (i.e. you are expected to be able to motivate your choice).
 #g) It must not be susceptible to the standard cache poisoning attacks. See http:www.kb.cert.org/vuls/id/800113 for details. Test your DNS server using porttest.dns-oarc.net (see http:www.dns-oarc.net/oarc/services/porttest).
 
