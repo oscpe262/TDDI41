@@ -76,14 +76,14 @@ local _tmp=("${files[@]}")
 
 sshntp() {
   for DEST in ${nodes[@]}; do
-  techo "Configuring ${Blue}NTP${Reset} on node ${Yellow}${DEST}${Reset}."
+  techo "Configuring ${Blue}NTP${Reset} on node ${Yellow}${DEST}${Reset}"
     ssh -t root@${DEST} ${remote_path}/NTP_conf.sh
   done
 }
 
 sshdns() {
   for DEST in ${nodes[@]}; do
-  techo "Configuring ${Blue}DNS${Reset} on node ${Yellow}${DEST}${Reset}."
+  techo "Configuring ${Blue}DNS${Reset} on node ${Yellow}${DEST}${Reset}"
     ssh -t root@${DEST} ${remote_path}/DNS_srvconf.sh
   done
 }
