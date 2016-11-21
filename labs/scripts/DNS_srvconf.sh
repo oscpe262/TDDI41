@@ -82,7 +82,7 @@ echo -e "client-2.${b4}.\tIN\tA\t${nw}.156" >> ${z1}
 
 zinv="${ldb}${arpa}"
 echo -e "\$TTL\t${TTL}" >> ${zinv}
-echo -e "@\tIN\tSOA\tserver.${b4}.\t${b4}. (" >> ${zinv}
+echo -e "@\tIN\tSOA\t${cname}.\t${b4}. (" >> ${zinv}
 echo -e "\t\t${SERIAL}\t; Serial" >> ${zinv}
 echo -e "\t\t${REFRESH}\t\t; Refresh" >> ${zinv}
 echo -e "\t\t${RETRY}\t\t; Retry" >> ${zinv}

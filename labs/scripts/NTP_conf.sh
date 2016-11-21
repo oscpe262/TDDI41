@@ -13,7 +13,7 @@ firstrun=0
 # your router is reasonable as many NTP servers today include NTP servers.
 ################################################################################
 for PKG in ${packages[@]}; do
-  [[ ! `dpkg -l ${PKG}` ]] && apt-get install ${PKG} && firstrun=1
+  [[ ! `dpkg -l ${PKG}` ]] && apt-get install ${PKG}
 done
 [[ -d ${backupdir} ]] || mkdir ${backupdir}
 [[ ! -f ${backupdir}ntp.conf ]] && cp ${conf} ${backupdir} # Backup is nice to have
@@ -31,7 +31,6 @@ if [[ `uname -n` == "gw" ]]; then
   sed -i '/server/d' ${conf}
   echo "server ida-gw.sysinst.ida.liu.se" >> ${conf} # set reference clock
   sed -i "s/#broadcast.*/broadcast ${bca}/g" ${conf} # broadcast to sub nw.
-  [[ $firstrun -eq 1 ]] && ntpdate ida-gw.sysinst.ida.liu.se
 fi
 
 ################################################################################
@@ -43,7 +42,6 @@ if [[ ! `uname -n` == "gw" ]]; then
   sed -i '/server/d' ${conf}
   echo "server gw.b4.sysinst.ida.liu.se" >> ${conf} # set reference clock
   sed -i '/broadcastclient/s/^#//' ${conf} # listen to broadcast
-  [[ $firstrun -eq 1 ]] && ntpdate gw.b4.sysinst.ida.liu.se
 fi
 
 /etc/init.d/ntp restart
