@@ -1,7 +1,18 @@
 \input{../report.input.tex}
 \chapter{NTP}
-\subsection{3-3}
-% 3-3 Explain the output of ntpq -p.
+\subsection{Exercise 2: The Network Time Protocol}
+\subsubsection{2-1 Explain the concept of "stratum" in a clock hierarchy (e.g. NTP, but also synchronized networks and other clock hierarchies).Why is it necessary to have a hierarchy of clocks rather than just a bunch of reference clocks.}
+Stratum 0 are reference clocks, usually atom clocks. An NTP server which gets its time from those are labeled stratum 1, and the servers which sync to stratum 1 are labeled stratum 2, and so on. Stratum 16 is an unsynchronized device.
+Stratum tiers are necessary for backup and "sanity checks".
+
+\subsubsection{2-2 How large a difference between the reference clock and the system clock does NTP accept and attempt to adjust.}
+Less than 1000 s, but greater than 128 ms.
+
+\subsubsection{2-3 NTP usually works by speeding up or slowing down the clock, not setting it outright. Why.}
+Setting the time is a security risk and a reliability risk with time stamps occuring twice or not at all.
+
+\subsection{Exercise 3: Install and configure NTP server and clients}
+\subsubsection{3-3 Explain the output of ntpq -p.}
 \begin{verbatim}
 # ntpq -p
      remote           refid      st t when poll reach   delay   offset  jitter
