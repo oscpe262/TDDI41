@@ -11,6 +11,7 @@ ldb="/etc/bind/zones/db."
 sila="sysinst.ida.liu.se"
 b4="b4.${sila}"
 arpa="178.236.130.in-addr.arpa"
+cname="152-159.${arpa}"
 
 ### Zone Vars ##################################################################
 TTL="3600"
@@ -89,11 +90,16 @@ echo -e "\t\t${EXPIRE}\t\t; Expire" >> ${zinv}
 echo -e "\t\t${NTTL}\t\t; Negative Cache TLL\n);" >> ${zinv}
 echo -e "\n; name servers" >> ${zinv}
 echo -e "\tIN\tNS\tserver.${b4}." >> ${zinv}
+echo -e "\n; Canonical records" >> ${zinv}
+echo -e "153.${cname}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
+echo -e "154.${cname}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
+echo -e "155.${cname}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
+echo -e "156.${cname}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 echo -e "\n; PTR records" >> ${zinv}
-echo -e "153\tIN\tPTR\tgw.${b4}." >> ${zinv}
-echo -e "154\tIN\tPTR\tserver.${b4}." >> ${zinv}
-echo -e "155\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
-echo -e "156\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
+echo -e "153.${arpa}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
+echo -e "154.${arpa}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
+echo -e "155.${arpa}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
+echo -e "156.${arpa}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 #f) The cache parameters must be chosen sensibly (i.e. you are expected to be able to motivate your choice).
 #g) It must not be susceptible to the standard cache poisoning attacks. See http:www.kb.cert.org/vuls/id/800113 for details. Test your DNS server using porttest.dns-oarc.net (see http:www.dns-oarc.net/oarc/services/porttest).
 

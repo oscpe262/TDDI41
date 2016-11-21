@@ -44,9 +44,9 @@ DRYRUN=0
 
   tboxl="${BBlue}[${Reset}"
   tboxr="${BBlue}]${Reset}"
-  tdone="${tboxl}${Green}O${tboxr}"
-  tfail="${tboxl}${Red}X${tboxr}"
-  ttodo="${tboxl}${BReset}>${tboxr}"
+  tdone="${tboxl}${Green} ok ${tboxr}"
+  tfail="${tboxl}${Red}fail${tboxr}"
+  ttodo="${tboxl}${BReset} >> ${tboxr}"
   legend="${tdone} = Passed, ${tfail} = Failed, ${ttodo} = Not yet run"
 
   remote_path="/root"

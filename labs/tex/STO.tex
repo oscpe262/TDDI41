@@ -47,11 +47,13 @@ Now, consider that we have two mirrored sets in RAID 0+1 and three in RAID 1+0. 
 Mirrored setups, such as RAID 1+0, takes less time to recover. Parity schemes require all blocks of the drives in the array, whereas the the earlier only require those of the failed drive. This means that recovery of failed parity-based arrays are more likely to have a second (or third ...) failure during the recovery, rendering the array useless.
 
 \subsubsection{11-3 What is the point of the file system journal in e.g. ext3?}
+One purpose is to reduce the amount of I/O operations by letting multiple operations be done in one go. Another purpose is to get a transaction behavoiur, is case of interruptions in the process.
 
 \subsubsection{11-4 Explain the purpose of using a volume manager, like LVM}
+We'd say there are two main purposes. The first is to allow disks to be added and replaced (hot swap implied) without downtime. The second is to allow snapshots on file systems which does not come with such functionality.
 
 \subsubsection{11-5 Optional: compute the probability of data loss over three years in a RAID-6 array consisting of 24 6TB SAS disks, with two hot spares (i.e. 22 disks in the RAID set). The RAID controller has 150MB/s throughput of which 80\% can be used to rebuild. Assume MTBF of 145000 hours, latent sector error of 10E-13.}
-
+We'll get back to that if there is time ...
 % Report: Answers to the questions above.
 
 \end{document}
