@@ -90,19 +90,19 @@ ntptest() {
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
         0)
-          sshntp "${gwi}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
+          sshntpt "${gwi}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
           break
           ;;
         1)
-          sshntp "${srv}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
+          sshntpt "${srv}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
           break
           ;;
         2)
-          sshntp "${c1}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
+          sshntpt "${c1}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
           break
           ;;
         3)
-          sshntp "${c2}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
+          sshntpt "${c2}" && ntplist[$OPT]=0 || ntplist[$OPT]=1
           break
           ;;
         b)
@@ -122,7 +122,7 @@ ntptest() {
   inArray "1" "${ntplist[@]}" && return 1 || return 0
 }
 
-sshntp() {
+sshntpt() {
   techo "NTP status check (${Yellow}$1${Reset})"
   ssh -t root@${1} ${remote_path}/NTP_test.sh &> /dev/null &
   pid=$!; progress $pid

@@ -40,7 +40,8 @@ fi
 ################################################################################
 if [[ ! `uname -n` == "gw" ]]; then
   sed -i '/server/d' ${conf}
-  echo "server gw.b4.sysinst.ida.liu.se" >> ${conf} # set reference clock
+  echo "server 130.236.178.153" >> ${conf} # set reference clock
+  #echo "server gw.b4.sysinst.ida.liu.se" >> ${conf} # set reference clock
   sed -i '/broadcastclient/s/^#//' ${conf} # listen to broadcast
 fi
 
