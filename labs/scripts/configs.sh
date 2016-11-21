@@ -19,7 +19,7 @@ local _tmp=("${files[@]}")
     print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
     echo -e "\tWhere applicable, configuration will affect the following nodes ( b) to go back and change ):"
     echo -e "${BYellow}${_nodes}${Reset}"
-		echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
+		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
 
 		echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset}")"
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset}")"
@@ -30,9 +30,8 @@ local _tmp=("${files[@]}")
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
 				0)
-					transfer &
-					pid=$! ; progress $pid
-					testlist[0]=$?
+          rsyncto conflist
+					configlist[0]=$?
 					;;
         1)
           DRYRUN=1

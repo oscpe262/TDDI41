@@ -1,0 +1,11 @@
+/etc/hosts
+/etc/hostname
+/etc/network/interfaces
+/etc/sysctl.conf
+/etc/resolv.conf
+/etc/nsswitch.conf
+/etc/quagga
+/etc/bind/named.conf
+/etc/bind/named.conf.local
+/etc/bind/named.conf.options
+/etc/bind/zones

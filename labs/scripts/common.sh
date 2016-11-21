@@ -123,14 +123,16 @@ print_info() {
   echo -e "${BOLD}$1${Reset}\n" | fold -sw $T_COLS | sed 's/^/\t/'
 }
 
+dry_ok() {
+  echo -ne "${Magenta}DryRun!${Reset}"
+}
 tested_ok () {
-  : #legacy function, yet to be cleaned up
-#  echo -e "${Green}${1}${Reset}"
+  echo -ne "${Green}${1}${Reset}"
 }
 
 error_msg () {
-  echo -e "${Red}${1}${Reset}" >&2
-  echo -e "${Red}${1}${Reset}" >> "$LOG"
+  echo -ne "${Red}${1}${Reset}" >&2
+#  echo -e "${Red}${1}${Reset}" >> "$LOG"
   [[ $FORCE_EXIT -eq 1 ]] && echo -e "Forced Exit active!" && exit 1
 	return 1
 }
@@ -197,12 +199,50 @@ invalid_option() {
   echo "($1) is an invalid option."
   pause
 }
+
 transfer() {
+  echo "Using depracated function transfer(), replace with rsyncto"
+  pause
   for node in ${nodes[@]}; do
     for file in ${files[@]}; do
       scp ${file} root@${node}:${remote_path}/
     done
   done
+}
+
+rsyncfrom() {
+  local INFILE=$1
+  local retval=0
+  for srca in ${nodes[@]}; do
+    [[ $srca == ${gwi} ]] && SRC="GW"
+    [[ $srca == ${srv} ]] && SRC="SRV"
+    [[ $srca == ${c1} ]] && SRC="CL1"
+    [[ $srca == ${c2} ]] && SRC="CL2"
+      while read FILE; do
+        [[ ! $SRC == "GW" ]] && [[ $FILE == *"quagga"* ]] && continue
+        [[ ! $SRC == "SRV" ]] && [[ $FILE == *"bind"* ]] && continue
+        techo "$SRC ${FILE}"
+        rsync -aruz -e "ssh" root@${srca}:${FILE} `pwd`/../configs/$SRC${FILE} &> /dev/null &
+        pid=$!; progress $pid
+        [[ ! $? == 0 ]] && retval=1
+      done < ${INFILE}
+      echo ""
+    done
+  return ${retval}
+}
+
+rsyncto(){
+  local INFILE=$1
+  local retval=0
+  for srca in ${nodes[@]}; do
+      while read FILE; do
+        techo "$srca ${FILE}"
+        rsync -aruz -e "ssh" ${FILE} root@${srca}:${remote_path}/ &> /dev/null &
+        pid=$!; progress $pid
+        [[ ! $? == 0 ]] && retval=1
+      done < ${INFILE}
+    done
+  return ${retval}
 }
 
 inArray () {

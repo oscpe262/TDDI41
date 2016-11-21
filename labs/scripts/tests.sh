@@ -1,12 +1,12 @@
 #!/bin/bash
-[[ ! -f NETtest.sh ]] && echo -e "Missing dependency: NETtest.sh" && exit 1
-source NETtest.sh
+#[[ ! -f NETtest.sh ]] && echo -e "Missing dependency: NETtest.sh" && exit 1
+#source NETtest.sh
 ### TESTS BRANCH ###############################################################
 
 tests() {
   local _item=0
   DRYRUN=0
-  files=( "NETtest.sh" "NET_funcs.sh" "common.sh" "remotetest.sh" "NTP_test.sh" )
+  files=( "NETtest.sh" "common.sh" "NTP_test.sh" )
 
   while true
   do
@@ -25,27 +25,26 @@ tests() {
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
         0)
-          transfer &
-          pid=$! ; progress $pid
+          rsyncto testslist
           testlist[0]=$?
           ;;
         1)
-          ssh -t root@${gwi} ${remote_path}/remotetest.sh gw NET
+          ssh -t root@${gwi} ${remote_path}/NETtest.sh
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
           ;;
         2)
-          ssh -t root@${srv} ${remote_path}/remotetest.sh server NET
+          ssh -t root@${srv} ${remote_path}/NETtest.sh
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
           ;;
         3)
-          ssh -t root@${c1} ${remote_path}/remotetest.sh client-1 NET
+          ssh -t root@${c1} ${remote_path}/NETtest.sh
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
           ;;
         4)
-          ssh -t root@${c2} ${remote_path}/remotetest.sh client-2 NET
+          ssh -t root@${c2} ${remote_path}/NETtest.sh
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
           ;;
@@ -54,7 +53,7 @@ tests() {
           pause
           ;;
 				9)
-					./remotetest.sh `uname -n` NET
+					./NETtest.sh `uname -n`
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
 					;;

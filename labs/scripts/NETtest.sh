@@ -1,12 +1,14 @@
 #!/bin/bash
-[[ ! -f NET_funcs.sh ]] && echo -e "Missing dependency: NET_funcs.sh" && exit 1
-source NET_funcs.sh
+#[[ ! -f NET_funcs.sh ]] && echo -e "Missing dependency: NET_funcs.sh" && exit 1
+#source NET_funcs.sh
+source common.sh
 
+defpingc=3 #default amount of ping tries
 ntlist=( 3 2 2 2 2 2 2 2 2 2 )
 
 ### NET TEST MAIN FUNCTION #####################################################
 test_net() {
-  local HOST=$1
+  local HOST="`uname -n`"
 
   [[ $HOST == "client-2" ]] && ntlist[2]=3
   [[ $HOST == "client-1" ]] && ntlist[3]=3
@@ -16,7 +18,7 @@ test_net() {
   while true; do
 	print_title "NET Tests (NETtest.sh) by oscpe262 and matla782"
 	print_info "Tests for NET, currently on $HOST"
-	[[ ${ntlist[1]} -ne 3 ]] && echo "$(mainmenu_item "${ntlist[1]}" "Hostname set to (${Yellow}${1}${Reset})")"
+	[[ ${ntlist[1]} -ne 3 ]] && echo "$(mainmenu_item "${ntlist[1]}" "Hostname set to (${Yellow}${HOST}${Reset})")"
 	[[ ${ntlist[2]} -ne 3 ]] && echo "$(mainmenu_item "${ntlist[2]}" "Ping ${Yellow}${c2}${Reset} (Client-2 Internal, IP)")"
 	[[ ${ntlist[3]} -ne 3 ]] && echo "$(mainmenu_item "${ntlist[3]}" "Ping ${Yellow}${c1}${Reset} (Client-1 Internal, IP)")"
 	[[ ${ntlist[4]} -ne 3 ]] && echo "$(mainmenu_item "${ntlist[4]}" "Ping ${Yellow}${srv}${Reset} (Server Internal, IP)")"
@@ -81,5 +83,28 @@ test_net() {
   sleep 1
   inArray "1" "${ntlist[@]}" && return 1 || return 0
 }
+
+ping_test () {
+#ping target_ip [ping count]
+  local _target="$1"
+  local _count=""
+  [[ -z $2 ]] && _count=$defpingc || _count=$2
+  if [[ $VERBOSE -eq 1 ]]; then
+    ping -c ${_count} ${_target}
+  else
+		techo "Ping ${Yellow}${_target}${Reset}"
+		ping -c ${_count} ${_target} &> /dev/null &
+    pid=$!; progress $pid
+  fi
+}
+
+check_hostname () {
+	techo "Hostname set to (${Yellow}$1${Reset})"
+  [[ `uname -n` == $1 ]] &
+    pid=$!; progress $pid
+}
+
+test_net
+
 
 ### EOF ###

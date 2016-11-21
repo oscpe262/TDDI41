@@ -1,0 +1,30 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+acl internals { 
+	127.0.0.0/8; 
+	130.236.178.153; 
+	130.236.178.154; 
+	130.236.178.155; 
+	130.236.178.156; 
+};
+
+zone "b4.sysinst.ida.liu.se" {
+	type master;
+	file "/etc/bind/zones/db.b4.sysinst.ida.liu.se";
+};
+
+zone "152-159.178.236.130.in-addr.arpa" {
+	type master;
+	file "/etc/bind/zones/db.178.236.130.in-addr.arpa";
+};
+
+controls { 
+	inet 127.0.0.1 port 953 allow {127.0.0.1; }; 
+};
+include "/etc/bind/ns_b4_rndc-key";

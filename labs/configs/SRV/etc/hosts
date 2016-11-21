@@ -5,4 +5,4 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
-130.236.178.155  server.b4.sysinst.ida.liu.se server
+130.236.178.154  server.b4.sysinst.ida.liu.se server

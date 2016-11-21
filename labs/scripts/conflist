@@ -1,0 +1,5 @@
+SCT7.sh
+SCT7_funcs.sh
+NTP_conf.sh
+DNS_srvconf.sh
+common.sh

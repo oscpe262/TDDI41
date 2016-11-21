@@ -1,0 +1,17 @@
+$TTL	3600
+@	IN	SOA	server.b4.sysinst.ida.liu.se.	HOSTMASTER.b4.sysinst.ida.liu.se. (
+		1479735417	; Serial
+		3600		; Refresh
+		600		; Retry
+		86400		; Expire
+		600		; Negative Cache TLL
+);
+
+; name servers
+	IN	NS	server.b4.sysinst.ida.liu.se.
+
+; PTR records
+153.152-159.178.236.130.in-addr.arpa.	IN	PTR	gw.b4.sysinst.ida.liu.se.
+154.152-159.178.236.130.in-addr.arpa.	IN	PTR	server.b4.sysinst.ida.liu.se.
+155.152-159.178.236.130.in-addr.arpa.	IN	PTR	client-1.b4.sysinst.ida.liu.se.
+156.152-159.178.236.130.in-addr.arpa.	IN	PTR	client-2.b4.sysinst.ida.liu.se.
