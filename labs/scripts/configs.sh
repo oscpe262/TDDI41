@@ -42,9 +42,9 @@ local _tmp=("${files[@]}")
           sshsct7
           configlist[$OPT]=$?
           files=(${_tmp[@]})
+          DRYRUN=0
           ;;
         2)
-          DRYRUN=0
           print_line
           read -p "Filepath to list of users: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users2"

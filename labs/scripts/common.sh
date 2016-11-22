@@ -28,8 +28,9 @@ DRYRUN=0
 
 ### MISC VARS ##################################################################
 
-  LOG="`basename ${0}`.log"
-  [[ -f $LOG ]] && rm -f $LOG
+  LOG="/dev/null"
+  #LOG="`basename ${0}`.log"
+  #[[ -f $LOG ]] && rm -f $LOG
 
   nw=130.236.178
   gwe=${nw}.17
@@ -58,10 +59,12 @@ DRYRUN=0
 ### SUPPORT FUNCS ##############################################################
 
 cecho () {
+  echo "Deprecated function, cecho."
   echo -e "$1" && echo -e "$1" >> "$LOG"
   tput sgr0
 }
 ncecho () {
+  echo "Deprecated function, ncecho."
   echo -ne "$1" && echo -ne "$1" >> "$LOG"
   tput sgr0
 }
