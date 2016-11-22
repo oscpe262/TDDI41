@@ -30,7 +30,7 @@ if [[ `uname -n` == "gw" ]]; then
   sed -i 's/\ noquery/\ #noquery/g' ${conf} # Allow queries
   sed -i '/server/d' ${conf}
   echo "server ida-gw.sysinst.ida.liu.se" >> ${conf} # set reference clock
-  sed -i "s/#broadcast.*/broadcast ${bca}/g" ${conf} # broadcast to sub nw.
+  sed -i "s/#broadcast\ .*/broadcast ${bca}/g" ${conf} # broadcast to sub nw.
 fi
 
 ################################################################################

@@ -39,7 +39,7 @@ Ext file systems are resized with:
 
 \subsection{Exercise 11: Some theory}
 \subsubsection{11-1 Why is RAID 1+0 generally considered more reliable than RAID 0+1?}
-Lets assume we have six drives, (1-6). For RAID 0+1 we use disk 1-3 striped, and mirror the stripe to disks 3-6. For RAID 1+0 we mirror disk 1 to disk 2, 3 to 4, and 5 to 6, and stripe the three sets.
+Lets assume we have six drives, (1-6). For RAID 0+1 we use disk 1-3 striped, and mirror the stripe to disks 4-6. For RAID 1+0 we mirror disk 1 to disk 2, 3 to 4, and 5 to 6, and stripe the three sets.
 
 Now, consider that we have two mirrored sets in RAID 0+1 and three in RAID 1+0. Should one disk in the 1-3 array fail in RAID 0+1 and one in the 4-6 during recovery, the array is doomed. However, for the RAID 1+0 array to fail, one disk in each set could fail and we'd still be able to recover the array, increasing the likelyhood of recovering the array before it is too late. So, even though the odds of two (contentwise) identical disks failing, the fault tolerance is increased.
 
