@@ -86,7 +86,7 @@ progress() {
       echo -ne "\b";
       wait $pid
       retcode=$?
-      echo -ne "$pid's retcode: $retcode " >> $LOG
+#      echo -ne "$pid's retcode: $retcode " >> $LOG
       [[ $DRYRUN -eq 1 ]] && dry_ok && return 0
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
         tested_ok "Passed!"
@@ -235,8 +235,9 @@ rsyncto(){
   local INFILE=$1
   local retval=0
   for srca in ${nodes[@]}; do
+    echo -e "\n\n\tSyncing files to ${Yellow}${srca}${Reset}:"
       while read FILE; do
-        techo "$srca ${FILE}"
+        techo "${FILE}"
         rsync -aruz -e "ssh" ${FILE} root@${srca}:${remote_path}/ &> /dev/null &
         pid=$!; progress $pid
         [[ ! $? == 0 ]] && retval=1

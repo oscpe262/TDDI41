@@ -25,6 +25,7 @@ local _tmp=("${files[@]}")
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset}")"
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS configuration (${Yellow}DNS${Reset})")"
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP configuration (${Yellow}NTP${Reset})")"
+    echo " 5) $(mainmenu_item "${configlist[5]}" "Storage configuration (SRV only) (${Yellow}STO${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
     for OPT in ${OPTIONS[@]}; do
@@ -62,6 +63,11 @@ local _tmp=("${files[@]}")
           pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
+        5)
+          sshsto &
+          pid=$! ; progress $pid
+          configlist[$OPT]=$?
+          ;;
         b)
           return
           ;;
@@ -71,6 +77,11 @@ local _tmp=("${files[@]}")
       esac
     done
   done
+}
+
+sshsto() {
+  techo "Configuring ${Blue}STO${Reset} on node ${Yellow}${srv}${Reset}"
+  ssh -t root@${srv} ${remote_path}/STO_conf.sh
 }
 
 sshntp() {
