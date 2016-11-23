@@ -6,13 +6,13 @@
 
 configs() {
   local _nodes="\t"
-[[ ${confnodes[1]} -eq 0 ]] && _nodes+="Gateway, "
-[[ ${confnodes[2]} -eq 0 ]] && _nodes+="Server, "
-[[ ${confnodes[3]} -eq 0 ]] && _nodes+="Client-1, "
-[[ ${confnodes[4]} -eq 0 ]] && _nodes+="Client-2, "
-_nodes=${_nodes::-2}
-files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" "DNS_srvconf.sh" "common.sh" )
-local _tmp=("${files[@]}")
+  [[ ${confnodes[1]} -eq 0 ]] && _nodes+="Gateway, "
+  [[ ${confnodes[2]} -eq 0 ]] && _nodes+="Server, "
+  [[ ${confnodes[3]} -eq 0 ]] && _nodes+="Client-1, "
+  [[ ${confnodes[4]} -eq 0 ]] && _nodes+="Client-2, "
+  _nodes=${_nodes::-2}
+  files=( "SCT7.sh" "SCT7_funcs.sh" "NTP_conf.sh" "DNS_srvconf.sh" "common.sh" )
+  local _tmp=("${files[@]}")
   while true
   do
     print_title "Configuration Scripts by oscpe262 and matla782"
@@ -35,14 +35,14 @@ local _tmp=("${files[@]}")
 					configlist[0]=$?
 					;;
         1)
-          DRYRUN=1
+
           print_line
           read -p "Filepath to list of users on ${Yellow}local host${Reset}: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
-          sshsct7
+          sshsct7 "dry"
           configlist[$OPT]=$?
           files=(${_tmp[@]})
-          DRYRUN=0
+
           ;;
         2)
           print_line
@@ -99,11 +99,13 @@ sshdns() {
 }
 
 sshsct7() {
+  local _arg2=""
+  [[ $1 == "dry" ]] && DRYRUN=1 && _arg2="dry" || DRYRUN=0
   files=( "${INFILE}" )
     transfer &
     pid$! ; progress $pid
     for DEST in ${nodes[@]}; do
-      ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) || return 1
+      ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) ${arg2} || return 1
     done
   return 0
 }

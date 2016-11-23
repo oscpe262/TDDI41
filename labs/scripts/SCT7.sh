@@ -18,7 +18,6 @@ source SCT7_funcs.sh
 
 ### SCT7 MAIN SCRIPT ###########################################################
 
-userscript() {
   print_title "SCT7 SETUP SCRIPT"
   [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
 
@@ -90,6 +89,5 @@ userscript() {
   # Data files for testing are available in /home/TDDI09.
 
   # Report: After the last lab, hand in your script. You will have to demonstrate it as well.
-}
 
 ### EOF ###

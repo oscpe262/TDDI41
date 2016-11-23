@@ -4,21 +4,15 @@
 ### TESTS BRANCH ###############################################################
 
 tests() {
-  local _item=0
-  DRYRUN=0
-  files=( "NETtest.sh" "common.sh" "NTP_test.sh" )
 
   while true
   do
     print_title "Test Scripts by oscpe262 and matla782"
-    echo -e "\n $_item) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
+    echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
 
 # Make dependent on node select
-    echo " 1) $(mainmenu_item "${testlist[1]}" "Network test gw (${Yellow}NET${Reset})")"
-    echo " 2) $(mainmenu_item "${testlist[2]}" "Network test server (${Yellow}NET${Reset})")"
-    echo " 3) $(mainmenu_item "${testlist[3]}" "Network test client-1 (${Yellow}NET${Reset})")"
-    echo " 4) $(mainmenu_item "${testlist[4]}" "Network test client-2 (${Yellow}NET${Reset})")"
-    echo " 5) $(mainmenu_item "${testlist[5]}" "NTP Test (${Yellow}NET${Reset})")"
+    echo " 1) $(mainmenu_item "${testlist[1]}" "Network test (${Yellow}NET${Reset})")"
+    echo " 2) $(mainmenu_item "${testlist[5]}" "NTP Test (${Yellow}NET${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
@@ -29,31 +23,17 @@ tests() {
           testlist[0]=$?
           ;;
         1)
-          ssh -t root@${gwi} ${remote_path}/NETtest.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
-          pause
+          for target in ${nodes[@]}; do
+            sshnet ${target} && testlist[$OPT]=0 && continue
+            testlist[$OPT]=1 && break
+          done
           ;;
         2)
-          ssh -t root@${srv} ${remote_path}/NETtest.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
-          pause
-          ;;
-        3)
-          ssh -t root@${c1} ${remote_path}/NETtest.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
-          pause
-          ;;
-        4)
-          ssh -t root@${c2} ${remote_path}/NETtest.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
-          pause
-          ;;
-        5)
           ntptest && testlist[5]=0 || testlist[5]=1
           pause
           ;;
 				9)
-					./NETtest.sh `uname -n`
+					./NET_test.sh
           [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
 					;;
@@ -125,5 +105,10 @@ sshntpt() {
   techo "NTP status check (${Yellow}$1${Reset})"
   ssh -t root@${1} ${remote_path}/NTP_test.sh &> /dev/null &
   pid=$!; progress $pid
+}
+
+sshnet() {
+  techo "NET status check (${Yellow}$1${Reset})"
+  ssh -t root@${1} ${remote_path}/NET_test.sh && return 0 || return 1
 }
 ### EOF ###
