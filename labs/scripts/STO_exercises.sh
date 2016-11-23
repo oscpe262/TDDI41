@@ -179,7 +179,7 @@ mount /home1
 
 # 10-2 Use LVM to create a device on which you place an ext2 file system optimized for a smaller number of large files, that you mount as /home2 on the server. Make sure that /home2 is correctly mounted at boot.
 pvcreate /dev/ubd{f,g}
-vgcreate -s 4K vg1 /dev/md2
+vgcreate -s 4K vg1 /dev/ubdf /dev/ubdf
 lvcreate -l 100%FREE vg1 -n home2
 mkdir /home2
 mkfs.ext2 -b 1024 /dev/vg1/home2

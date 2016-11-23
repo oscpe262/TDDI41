@@ -1,3 +1,4 @@
 NTP_test.sh
 NET_test.sh
+STO_test.sh
 common.sh

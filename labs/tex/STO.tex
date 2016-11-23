@@ -15,9 +15,9 @@ devices. Sometimes, the conception of spanned disks is expressed as 'JBOD'.
 
 \textbf{RAID-6} (\emph{"Block-level striping with double distributed parity"}) requires at least four disks, distributing data as RAID 5 but with parity on two disks.
 
-\textbf{RAID 1+0} (\emph{"Mirrored stripes"}) stripes data across two sets of disks which are in turn mirrored.
+\textbf{RAID 0+1} (\emph{"Mirrored stripes"}) stripes data across two sets of disks which are in turn mirrored.
 
-\textbf{RAID 0+1} (\emph{"Stripe of mirrors"}) mirrors data and stripes the mirrored sets.
+\textbf{RAID 1+0} (\emph{"Stripe of mirrors"}) mirrors data and stripes the mirrored sets.
 
 \textbf{Hot Spare} is a disk added to a failure redunant array, such as RAID-5, which is used only upon an array failure, at which point the array can start to rebuild instantly.
 
@@ -44,7 +44,7 @@ Lets assume we have six drives, (1-6). For RAID 0+1 we use disk 1-3 striped, and
 Now, consider that we have two mirrored sets in RAID 0+1 and three in RAID 1+0. Should one disk in the 1-3 array fail in RAID 0+1 and one in the 4-6 during recovery, the array is doomed. However, for the RAID 1+0 array to fail, one disk in each set could fail and we'd still be able to recover the array, increasing the likelyhood of recovering the array before it is too late. So, even though the odds of two (contentwise) identical disks failing, the fault tolerance is increased.
 
 \subsubsection{11-2 As individual disk sizes grow, RAID-5 is no longer considered useful, and RAID-6 is also rapidly becoming obsolete. Why?}
-Mirrored setups, such as RAID 1+0, takes less time to recover. Parity schemes require all blocks of the drives in the array, whereas the the earlier only require those of the failed drive. This means that recovery of failed parity-based arrays are more likely to have a second (or third ...) failure during the recovery, rendering the array useless.
+Mirrored setups, such as RAID 1+0, takes less time to recover. Parity schemes require all blocks of the drives in the array, whereas the the earlier only require those of the failed drive. This means that recovery of failed parity-based arrays are more likely to have a second (or third ...) failure during the recovery, rendering the array useless. All this assumes that read and write speeds does not follow the increase in disk sizes, but when did that happen last? ;)
 
 \subsubsection{11-3 What is the point of the file system journal in e.g. ext3?}
 One purpose is to reduce the amount of I/O operations by letting multiple operations be done in one go. Another purpose is to get a transaction behavoiur, is case of interruptions in the process.

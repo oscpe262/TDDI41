@@ -12,7 +12,8 @@ tests() {
 
 # Make dependent on node select
     echo " 1) $(mainmenu_item "${testlist[1]}" "Network test (${Yellow}NET${Reset})")"
-    echo " 2) $(mainmenu_item "${testlist[5]}" "NTP Test (${Yellow}NET${Reset})")"
+    echo " 2) $(mainmenu_item "${testlist[2]}" "NTP Test (${Yellow}NET${Reset})")"
+		echo " 3) $(mainmenu_item "${testlist[3]}" "RAID/LVM Test (${Yellow}STO${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
@@ -29,7 +30,12 @@ tests() {
           done
           ;;
         2)
-          ntptest && testlist[5]=0 || testlist[5]=1
+          ntptest && testlist[$OPT]=0 || testlist[$OPT]=1
+          pause
+          ;;
+        3)
+          ssh -t root@${srv} ${remote_path}/STO_test.sh
+          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
           pause
           ;;
 				9)

@@ -90,7 +90,7 @@ progress() {
       wait $pid
       retcode=$?
 #      echo -ne "$pid's retcode: $retcode " >> $LOG
-      [[ $DRYRUN -eq 1 ]] && dry_ok && return 0
+      #[[ $DRYRUN -eq 1 ]] && dry_ok && return 0
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
         tested_ok "Passed!"
 				return 0
