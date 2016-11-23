@@ -31,6 +31,23 @@ lvmcreate() {
   return 0
 }
 
+storageundo() {
+  techo "Removing Configs, STO"
+  umount /home1
+  umount /home2
+  lvremove /dev/vg1/*
+  vgremove /dev/vg1
+  pvremove /dev/ubd{f,g}
+  mdadm -S /dev/md0
+  mdadm --zero-superblock /dev/ubd/{d,e}
+  sed '/home/d' /etc/fstab
+}
+
+if [[ $1 == "erase" ]]; then
+  storageundo & pid=$! ; progress $pid
+  exit $?
+fi
+
 local retval=0
 raidmake & pid=$! ; progress $pid
 [[ $? -eq 0 ]] || retval=1
