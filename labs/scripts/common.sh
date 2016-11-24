@@ -235,18 +235,43 @@ rsyncfrom() {
 }
 
 rsyncto(){
-  local INFILE=$1
+  # Överväg att tar:a ihop, skicka, extrahera, ta bort arkiv
+  # f1: tar:a från lista, f2: skicka, ext, rm
   local retval=0
+  local FILES=""
+  FILES+="-T $1 "
+  [[ ! -z $2 ]] && FILES+="-T $2"
+  techo "Packing files"
+  tar -cf transfer.tar ${FILES} &
+  pid=$!; progress $pid
   for srca in ${nodes[@]}; do
     echo -e "\n\n\tSyncing files to ${Yellow}${srca}${Reset}:"
+    techo "Transferring"
+    rsync -aruz -e "ssh" transfer.tar root@${srca}:${remote_path}/ &> /dev/null &
+    pid=$!; progress $pid
+    [[ ! $? == 0 ]] && retval=1
+    techo "Unpacking"
+    ssh -t root@${srca} tar -xf transfer.tar &> /dev/null &
+    pid=$!; progress $pid
+    [[ ! $? == 0 ]] && retval=1
+  done
+  return ${retval}
+}
+
+tarit() {
+  local INFILE=$!
+  local retval=0
+  for srca in ${nodes[@]}; do
+    echo -e "\n\n\tPacking files for ${Yellow}${srca}${Reset}:" #to be removed
       while read FILE; do
         techo "${FILE}"
-        rsync -aruz -e "ssh" ${FILE} root@${srca}:${remote_path}/ &> /dev/null &
+        &> /dev/null &
         pid=$!; progress $pid
         [[ ! $? == 0 ]] && retval=1
       done < ${INFILE}
     done
   return ${retval}
+
 }
 
 inArray () {

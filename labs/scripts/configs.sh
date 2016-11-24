@@ -26,6 +26,7 @@ configs() {
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS configuration (${Yellow}DNS${Reset})")"
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP configuration (${Yellow}NTP${Reset})")"
     echo " 5) $(mainmenu_item "${configlist[5]}" "Storage configuration (SRV only) (${Yellow}STO${Reset})")"
+    echo " 6) $(mainmenu_item "${configlist[6]}" "Storage undo configs (SRV only) (${Yellow}STO${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
     for OPT in ${OPTIONS[@]}; do
@@ -68,6 +69,11 @@ configs() {
           pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
+        6)
+          sshsto erase &
+          pid=$! ; progress $pid
+          configlist[$OPT]=$?
+          ;;
         b)
           return
           ;;
@@ -81,7 +87,8 @@ configs() {
 
 sshsto() {
   techo "Configuring ${Blue}STO${Reset} on node ${Yellow}${srv}${Reset}"
-  ssh -t root@${srv} ${remote_path}/STO_conf.sh
+  ssh -t root@${srv} ${remote_path}/STO_conf.sh $1 &> /dev/null &
+  pid=$! ; progress $pid
 }
 
 sshntp() {

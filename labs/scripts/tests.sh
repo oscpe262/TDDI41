@@ -25,22 +25,22 @@ tests() {
           ;;
         1)
           for target in ${nodes[@]}; do
-            sshnet ${target} && testlist[$OPT]=0 && continue
-            testlist[$OPT]=1 && break
+            sshnet ${target} && testlist[1]=0 && continue
+            testlist[1]=1 && break
           done
           ;;
         2)
-          ntptest && testlist[$OPT]=0 || testlist[$OPT]=1
+          ntptest && testlist[2]=0 || testlist[2]=1
           pause
           ;;
         3)
           ssh -t root@${srv} ${remote_path}/STO_test.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          [[ $? == 0 ]] && testlist[3]=0 || testlist[3]=1
           pause
           ;;
 				9)
 					./NET_test.sh
-          [[ $? == 0 ]] && testlist[$OPT]=0 || testlist[$OPT]=1
+          [[ $? == 0 ]] && testlist[4]=0 || testlist[4]=1
           pause
 					;;
         "b")

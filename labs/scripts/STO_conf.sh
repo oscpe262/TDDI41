@@ -4,11 +4,6 @@ source common.sh
 [[ `dpkg -l mdadm` ]] || apt-get install mdadm
 [[ `dpkg -l lvm2` ]] || apt-get install lvm2
 
-# Is it properly configured already?
-[[ `cat /etc/fstab | grep home1 |sed '/home1/s/\/home.*//'` == "/dev/md1 " ]] && \
-[[ `cat /etc/fstab | grep home2 |sed '/home2/s/\/home.*//'` == "/dev/vg1" ]] && \
-exit 0
-
 raidmake() {
   techo "Setting up RAID 1 ${Yellow}/dev/md1${Reset}"
   mdadm --create --level=1 --metadata=1.2 --raid-devices=2 /dev/md1 /dev/ubdd /dev/ubde || return 1
@@ -33,22 +28,31 @@ lvmcreate() {
 
 storageundo() {
   techo "Removing Configs, STO"
-  umount /home1
-  umount /home2
-  lvremove /dev/vg1/*
-  vgremove /dev/vg1
-  pvremove /dev/ubd{f,g}
-  mdadm -S /dev/md0
-  mdadm --zero-superblock /dev/ubd/{d,e}
-  sed '/home/d' /etc/fstab
+  umount -f /home1
+  umount -f /home2
+  lvremove -f /dev/vg1/home2
+  vgremove -f /dev/vg1
+  pvremove -f /dev/ubd{f,g}
+  mdadm -S /dev/md1
+  mdadm --zero-superblock /dev/ubd{d,e}
+  sed -i '/home/d' /etc/fstab
 }
 
 if [[ $1 == "erase" ]]; then
+# Is it properly configured already?
+  [[ `cat /etc/fstab | grep home1 |sed '/home1/s/\/home.*//'` == "/dev/md1 " ]] && \
+  [[ `cat /etc/fstab | grep home2 |sed '/home2/s/\/home.*//'` == "/dev/vg1" ]] || \
+  exit 1
   storageundo & pid=$! ; progress $pid
   exit $?
 fi
 
-local retval=0
+retval=0
+# Is it properly configured already?
+[[ `cat /etc/fstab | grep home1 |sed '/home1/s/\/home.*//'` == "/dev/md1 " ]] && \
+[[ `cat /etc/fstab | grep home2 |sed '/home2/s/\/home.*//'` == "/dev/vg1" ]] && \
+exit 0
+
 raidmake & pid=$! ; progress $pid
 [[ $? -eq 0 ]] || retval=1
 lvmcreate & pid=$! ; progress $pid
