@@ -11,5 +11,6 @@ retval=0
 [[ -z `dig client-1.${b4}` ]] && ((retval++))
 [[ -z `dig client-1.${b4} @server.$b4` ]] && ((retval++))
 [[ -z `dig ptr 154.$arpa` ]] && ((retval++))
+[[ -z `dig ptr -x 130.236.178.155` ]] && ((retval++))
 [[ -z 'dig ns $arpa' ]] && ((retval++))
 exit $retval
