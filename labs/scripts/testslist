@@ -1,5 +1,4 @@
 NTP_test.sh
 NET_test.sh
-DNS_test.sh
 STO_test.sh
 common.sh

@@ -12,8 +12,9 @@ tests() {
 
 # Make dependent on node select
     echo " 1) $(mainmenu_item "${testlist[1]}" "Network test (${Yellow}NET${Reset})")"
-    echo " 2) $(mainmenu_item "${testlist[2]}" "NTP Test (${Yellow}NET${Reset})")"
-		echo " 3) $(mainmenu_item "${testlist[3]}" "RAID/LVM Test (${Yellow}STO${Reset})")"
+    echo " 2) $(mainmenu_item "${testlist[2]}" "DNS test (${Yellow}DNS${Reset})")"
+    echo " 3) $(mainmenu_item "${testlist[3]}" "NTP Test (${Yellow}NTP${Reset})")"
+		echo " 5) $(mainmenu_item "${testlist[5]}" "RAID/LVM Test (${Yellow}STO${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo " b) Back to Main Menu"
     read_opts
@@ -30,17 +31,24 @@ tests() {
           done
           ;;
         2)
-          ntptest && testlist[2]=0 || testlist[2]=1
+          techo "Testing DNS"
+          ./DNS_test.sh &
+          pid=$! ; progress $pid
+          [[ $? == 0 ]] && testlist[2]=0 || testlist[2]=1
           pause
           ;;
         3)
+          ntptest && testlist[3]=0 || testlist[3]=1
+          pause
+          ;;
+        5)
           ssh -t root@${srv} ${remote_path}/STO_test.sh
-          [[ $? == 0 ]] && testlist[3]=0 || testlist[3]=1
+          [[ $? == 0 ]] && testlist[5]=0 || testlist[5]=1
           pause
           ;;
 				9)
 					./NET_test.sh
-          [[ $? == 0 ]] && testlist[4]=0 || testlist[4]=1
+          [[ $? == 0 ]] && testlist[9]=0 || testlist[9]=1
           pause
 					;;
         "b")

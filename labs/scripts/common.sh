@@ -47,7 +47,7 @@ DRYRUN=0
   tboxr="${BBlue}]${Reset}"
   tdone="${tboxl}${Green} ok ${tboxr}"
   tfail="${tboxl}${Red}fail${tboxr}"
-  ttodo="${tboxl}${BReset} >> ${tboxr}"
+  ttodo="${tboxl}${Reset} -- ${tboxr}"
   legend="${tdone} = Passed, ${tfail} = Failed, ${ttodo} = Not yet run"
 
   remote_path="/root"
@@ -95,7 +95,7 @@ progress() {
         tested_ok "Passed!"
 				return 0
       else
-        error_msg "Failed!"
+        error_msg "Failed! ($retcode)"
 				return 1
       fi
       break
@@ -290,7 +290,7 @@ node_select() {
 confnodes=( 0 0 0 0 0 )
   while true; do
     print_title "Node Configuration Selection"
-    print_info "Toggle nodes to be configured (default = all). Nodes can be reselected between configurations if desired."
+    print_info "${Yellow}Toggle${BReset} nodes to be configured and tested (default = all). Nodes can be reselected between configurations if desired. Some tests and configurations are bound to certain nodes and will override this selection."
     echo -e "\n 1) $(mainmenu_item "${confnodes[1]}" "Gateway (${Yellow}gw${Reset})")"
     echo -e " 2) $(mainmenu_item "${confnodes[2]}" "Server (${Yellow}server${Reset})")"
     echo -e " 3) $(mainmenu_item "${confnodes[3]}" "Client-1 (${Yellow}client-1${Reset})")"

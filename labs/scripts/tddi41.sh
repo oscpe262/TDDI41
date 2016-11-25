@@ -20,7 +20,7 @@ source configs.sh
 ### MAIN VARIABLES #############################################################
 
 checklist=( 2 2 2 2 2 2 )
-testlist=( 3 2 2 2 0 0 0 0 0 2 )
+testlist=( 3 2 2 2 0 2 0 0 0 2 )
 configlist=( 2 2 2 2 2 2 2 2 2)
 maintitle="TDDI41 2016 Main Script by oscpe262 and matla782"
 

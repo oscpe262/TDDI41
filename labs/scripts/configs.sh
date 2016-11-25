@@ -21,8 +21,8 @@ configs() {
     echo -e "${BYellow}${_nodes}${Reset}"
 		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
 
-		echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset}")"
-    echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset}")"
+		echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
+    echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset} Not yet implemented")"
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS configuration (${Yellow}DNS${Reset})")"
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP configuration (${Yellow}NTP${Reset})")"
     echo " 5) $(mainmenu_item "${configlist[5]}" "Storage configuration (SRV only) (${Yellow}STO${Reset})")"
@@ -36,16 +36,16 @@ configs() {
 					configlist[0]=$?
 					;;
         1)
-
+          break
           print_line
           read -p "Filepath to list of users on ${Yellow}local host${Reset}: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
           sshsct7 "dry"
           configlist[$OPT]=$?
           files=(${_tmp[@]})
-
           ;;
         2)
+          break
           print_line
           read -p "Filepath to list of users: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users2"

@@ -11,11 +11,11 @@ testdevice() {
   [[ -z $STRING ]] && return 1 || return 0
 }
 
-echo -e "\tTest"
+echo ""
 for DEV in ${DEVICES[@]}; do
   testdevice "${DEV}" &
   pid=$! ; progress $pid
   [[ ! $? == 0 ]] && echo "" && exit 1
 done
-echo ""
+echo -e "\n\n"
 exit 0
