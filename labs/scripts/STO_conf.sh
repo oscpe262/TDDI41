@@ -1,7 +1,7 @@
 #!/bin/bash
 [[ ! `uname -n` == "server" ]] && exit 1
 source common.sh
-[[ `dpkg -l mdadm` ]] || apt-get install mdadm
+[[ `dpkg -l mdadm` ]] || apt-get -q -y install mdadm --no-install-recommends
 [[ `dpkg -l lvm2` ]] || apt-get install lvm2
 
 raidmake() {

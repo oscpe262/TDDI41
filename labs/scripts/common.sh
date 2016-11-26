@@ -248,6 +248,28 @@ rsyncfrom() {
   return ${retval}
 }
 
+rsynccfgto() {
+  local INFILE=$1
+  local retval=0
+  for srca in ${nodes[@]}; do
+    [[ $srca == ${gwi} ]] && SRC="GW"
+    [[ $srca == ${srv} ]] && SRC="SRV"
+    [[ $srca == ${c1} ]] && SRC="CL1"
+    [[ $srca == ${c2} ]] && SRC="CL2"
+    ntecho "Uploading files to ${Yellow}${srca}${Reset} (${Yellow}$SRC${Reset}):"
+      while read FILE; do
+        [[ ! $SRC == "GW" ]] && [[ $FILE == *"quagga"* ]] && continue
+        [[ ! $SRC == "SRV" ]] && [[ $FILE == *"bind"* ]] && continue
+        techo "${FILE}"
+        rsync -aruz -e "ssh" `pwd`/../configs/$SRC${FILE} root@${srca}:${FILE} &> /dev/null &
+        pid=$!; progress $pid
+        [[ ! $? == 0 ]] && retval=1
+      done < ${INFILE}
+      echo ""
+    done
+  return ${retval}
+}
+
 rsyncto(){
   local retval=0
   local FILES=""

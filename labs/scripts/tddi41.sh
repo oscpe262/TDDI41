@@ -19,7 +19,7 @@ source configs.sh
 
 ### MAIN VARIABLES #############################################################
 
-checklist=( 2 2 2 2 2 2 )
+checklist=( 2 2 2 2 2 2 2 2 2 2)
 testlist=( 3 2 2 2 0 2 0 0 0 2 )
 configlist=( 2 2 2 2 2 2 2 2 2)
 maintitle="TDDI41 2016 Main Script"
@@ -61,6 +61,7 @@ while true; do
   echo " 3) $(mainmenu_item "${checklist[3]}" "Tests")"
   echo " 4) $(mainmenu_item "${checklist[4]}" "Backup Configs")"
   echo " 5) $(mainmenu_item "${checklist[5]}" "Transfer files to UMLs")"
+  echo " 6) $(mainmenu_item "${checklist[6]}" "Upload Backup Configs to UMLs")"
   echo -e "\n q) Quit\n"
   read_opts
   for OPT in ${OPTIONS[@]}; do
@@ -85,6 +86,11 @@ while true; do
         setval=$?
         testlist[0]=$setval
 			  configlist[0]=$setval
+        ;;
+      6)
+        print_title "Configuration Files Upload"
+        rsynccfgto cfgfileslist
+        checklist[6]=$?
         ;;
       "q")
         exit 0

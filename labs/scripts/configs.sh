@@ -106,7 +106,7 @@ sshntp() {
 sshdns() {
   for DEST in ${nodes[@]}; do
   techo "Configuring ${Blue}DNS${Reset} on node ${Yellow}${DEST}${Reset}"
-    ssh -t root@${DEST} ${remote_path}/DNS_srvconf.sh
+    ssh -t root@${DEST} ${remote_path}/DNS_conf.sh
   done
 }
 

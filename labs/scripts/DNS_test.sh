@@ -3,6 +3,8 @@ source common.sh
 shopt -s expand_aliases
 alias dig='dig +noall +answer'
 
+[[ -f DNS_srvconf.sh ]] && rm DNS_srvconf.sh
+
 b4="b4.sysinst.ida.liu.se"
 arpa="152-159.178.236.130.in-addr.arpa"
 recreq="recursion requested but not available"

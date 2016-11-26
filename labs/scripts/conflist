@@ -1,6 +1,6 @@
 SCT7.sh
 SCT7_funcs.sh
 NTP_conf.sh
-DNS_srvconf.sh
+DNS_conf.sh
 common.sh
 STO_conf.sh
