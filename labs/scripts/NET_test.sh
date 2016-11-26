@@ -15,13 +15,9 @@ defpingc=2 #default amount of ping tries
   local _target="$1"
   local _count=""
   [[ -z $2 ]] && _count=$defpingc || _count=$2
-  if [[ $VERBOSE -eq 1 ]]; then
-    ping -c ${_count} ${_target}
-  else
-		techo "Ping ${Yellow}${_target}${Reset}"
-		ping -c ${_count} ${_target} &> /dev/null &
-    pid=$!; progress $pid
-  fi
+	techo "Ping ${Yellow}${_target}${Reset}"
+	ping -c ${_count} ${_target} &> /dev/null &
+  pid=$!; progress $pid
 }
 
 check_hostname () {
@@ -29,9 +25,6 @@ check_hostname () {
   [[ `uname -n` == $1 ]] &
     pid=$!; progress $pid
 }
-
-print_title "NET Tests (NETtest.sh) by oscpe262 and matla782"
-print_info "Tests for NET, currently on $HOST"
 
 check_hostname $HOST && ntlist[1]=0 || ntlist[1]=1
 

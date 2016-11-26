@@ -39,9 +39,9 @@ DRYRUN=0
   c1=${nw}.155
   c2=${nw}.156
 
-  nodes=( "${gwi}" "${srv}" "${c1}" "${c2}" )
+  #nodes=( "${gwi}" "${srv}" "${c1}" "${c2}" )
   nodenames=( "gw" "server" "client-1" "client-2" "betelgeuse" )
-  confnodes=( 0 0 0 0 0 )
+  confnodes=( 0 2 0 2 2 )
 
   tboxl="${BBlue}[${Reset}"
   tboxr="${BBlue}]${Reset}"
@@ -69,6 +69,10 @@ ncecho () {
   tput sgr0
 }
 
+ntecho () {
+  echo -e "\n\n\t${1}"
+}
+
 spinny() {
   echo -ne "\b${SPIN:i++%${#SPIN}:1}"
 }
@@ -76,7 +80,7 @@ spinny() {
 techo() {
   local _line="${1}:  "
   printf "\n%s" "    ${_line}"
-  [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 40-${#_line} )) ""
+  [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 60-${#_line} )) ""
 }
 
 progress() {
@@ -111,14 +115,23 @@ print_line() {
   tput sgr0
 }
 
-print_title() {
+print_select_title() {
   tput clear
-  local _title="${BYellow}${1}${Reset}"
+  local _title="${BYellow}${1} by oscpe262 and matla782${Reset}"
   print_line "#" "${BBlue}"
   printf "%*s\n" $(( (${#_title} + $(tput cols)) / 2)) "${_title}"
   print_line "#" ${BBlue}
-  echo -e "\n\t${legend}"
+  ntecho "${legend}"
   echo ""
+}
+
+print_title() {
+  tput clear
+  local _title="${BYellow}${1} by oscpe262 and matla782${Reset}"
+  print_line "#" "${BBlue}"
+  printf "%*s\n" $(( (${#_title} + $(tput cols)) / 2)) "${_title}"
+  print_line "#" ${BBlue}
+  ntecho ""
 }
 
 print_info() {
@@ -221,10 +234,11 @@ rsyncfrom() {
     [[ $srca == ${srv} ]] && SRC="SRV"
     [[ $srca == ${c1} ]] && SRC="CL1"
     [[ $srca == ${c2} ]] && SRC="CL2"
+    ntecho "Downloading files from ${Yellow}${srca}${Reset} (${Yellow}$SRC${Reset}):"
       while read FILE; do
         [[ ! $SRC == "GW" ]] && [[ $FILE == *"quagga"* ]] && continue
         [[ ! $SRC == "SRV" ]] && [[ $FILE == *"bind"* ]] && continue
-        techo "$SRC ${FILE}"
+        techo "${FILE}"
         rsync -aruz -e "ssh" root@${srca}:${FILE} `pwd`/../configs/$SRC${FILE} &> /dev/null &
         pid=$!; progress $pid
         [[ ! $? == 0 ]] && retval=1
@@ -235,17 +249,16 @@ rsyncfrom() {
 }
 
 rsyncto(){
-  # Överväg att tar:a ihop, skicka, extrahera, ta bort arkiv
-  # f1: tar:a från lista, f2: skicka, ext, rm
   local retval=0
   local FILES=""
   FILES+="-T $1 "
   [[ ! -z $2 ]] && FILES+="-T $2"
+  print_info "Configurations and some tests need to be made on the UMLs. To make this efficient, we prime the nodes with the scripts needed, and run them remotely. This might take a while, but needs only to be done when the remotely run scripts are updated."
   techo "Packing files"
   tar -cf transfer.tar ${FILES} &
   pid=$!; progress $pid
   for srca in ${nodes[@]}; do
-    echo -e "\n\n\tSyncing files to ${Yellow}${srca}${Reset}:"
+    ntecho "Syncing files to ${Yellow}${srca}${Reset}:"
     techo "Transferring"
     rsync -aruz -e "ssh" transfer.tar root@${srca}:${remote_path}/ &> /dev/null &
     pid=$!; progress $pid
@@ -287,7 +300,6 @@ atoggle() {
 }
 
 node_select() {
-confnodes=( 0 0 0 0 0 )
   while true; do
     print_title "Node Configuration Selection"
     print_info "${Yellow}Toggle${BReset} nodes to be configured and tested (default = all). Nodes can be reselected between configurations if desired. Some tests and configurations are bound to certain nodes and will override this selection."

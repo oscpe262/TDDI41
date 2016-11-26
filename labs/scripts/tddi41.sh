@@ -22,7 +22,7 @@ source configs.sh
 checklist=( 2 2 2 2 2 2 )
 testlist=( 3 2 2 2 0 2 0 0 0 2 )
 configlist=( 2 2 2 2 2 2 2 2 2)
-maintitle="TDDI41 2016 Main Script by oscpe262 and matla782"
+maintitle="TDDI41 2016 Main Script"
 
 ### WELCOME ####################################################################
 
@@ -36,11 +36,12 @@ print_line
 echo -e "Cancel at any time with CTRL+C.\n"
 #pause
 
+nodeconvert
 
 ### MAIN MENU ##################################################################
 
 while true; do
-  print_title "${maintitle}"
+  print_select_title "${maintitle}"
 	inArray "0" "${configlist[@]}" && checklist[2]=0
   inArray "2" "${configlist[@]}" && checklist[2]=2
   inArray "1" "${configlist[@]}" && checklist[2]=1
@@ -74,10 +75,12 @@ while true; do
         tests
         ;;
       4)
+        print_title "Configuration Files Backup"
         rsyncfrom cfgfileslist
         checklist[4]=$?
         ;;
       5)
+        print_title "Remote Scripts Sync"
         rsyncto testslist conflist
         setval=$?
         testlist[0]=$setval

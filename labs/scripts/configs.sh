@@ -15,7 +15,7 @@ configs() {
   local _tmp=("${files[@]}")
   while true
   do
-    print_title "Configuration Scripts by oscpe262 and matla782"
+    print_select_title "Configuration Scripts"
     print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
     echo -e "\tWhere applicable, configuration will affect the following nodes ( b) to go back and change ):"
     echo -e "${BYellow}${_nodes}${Reset}"
@@ -32,8 +32,7 @@ configs() {
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
 				0)
-          rsyncto conflist
-					configlist[0]=$?
+          csync
 					;;
         1)
           break
@@ -83,6 +82,12 @@ configs() {
       esac
     done
   done
+}
+
+csync() {
+  print_title "Remote Configuration Script Files Syncronization"
+  rsyncto conflist
+	configlist[0]=$?
 }
 
 sshsto() {
