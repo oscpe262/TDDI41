@@ -32,16 +32,11 @@ DRYRUN=0
   #LOG="`basename ${0}`.log"
   #[[ -f $LOG ]] && rm -f $LOG
 
-  nw=130.236.178
-  gwe=${nw}.17
-  gwi=${nw}.153
-  srv=${nw}.154
-  c1=${nw}.155
-  c2=${nw}.156
 
-  #nodes=( "${gwi}" "${srv}" "${c1}" "${c2}" )
-  nodenames=( "gw" "server" "client-1" "client-2" "betelgeuse" )
+  nodenames=( "gw" "server" "client-1" "client-2" )
   confnodes=( 0 2 0 2 2 )
+  dynarray=( 0 0 0 0 0 0 0 )
+
 
   tboxl="${BBlue}[${Reset}"
   tboxr="${BBlue}]${Reset}"
@@ -156,10 +151,10 @@ error_msg () {
 pause() {
   echo ""
   print_line
-  read -e -sn 1 -p "Press enter to continue..."
+  read -rsn1 -p"Press any key to continue "
 }
+
 checkbox() {
-  local _sign
   [[ $1 -eq 0 ]] && echo -e "${tdone}"
   [[ $1 -eq 1 ]] && echo -e "${tfail}"
   [[ $1 -ge 2 ]] && echo -e "${ttodo}"
@@ -171,6 +166,23 @@ mainmenu_item() {
     state="${BGreen}[${Reset}$3${BGreen}]${Reset}"
   fi
   echo -e "$(checkbox "$1") ${Bold}$2${Reset} ${state}"
+}
+
+nodebox() {
+  #echo -e "fpp $1"
+  [[ $1 -eq 0 ]] && echo -e "${ttodo}"
+  [[ $1 -eq 1 ]] && echo -e "${tboxl} ${Yellow}gw${Reset} ${tboxr}"
+  [[ $1 -eq 2 ]] && echo -e "${tboxl} ${Yellow}sr${Reset} ${tboxr}"
+  [[ $1 -eq 3 ]] && echo -e "${tboxl} ${Yellow}c1${Reset} ${tboxr}"
+  [[ $1 -eq 4 ]] && echo -e "${tboxl} ${Yellow}c2${Reset} ${tboxr}"
+}
+
+dynmenu_item() {
+  #if the task is done make sure we get the state
+  if [[ $1 == 1 ]] &&  [[ "$3" != "" ]]; then
+    state="${BGreen}[${Reset}$3${BGreen}]${Reset}"
+  fi
+  echo -e "$(nodebox "$1") ${Bold}$2${Reset} ${state}"
 }
 
 read_text() {
@@ -293,22 +305,6 @@ rsyncto(){
   return ${retval}
 }
 
-tarit() {
-  local INFILE=$!
-  local retval=0
-  for srca in ${nodes[@]}; do
-    echo -e "\n\n\tPacking files for ${Yellow}${srca}${Reset}:" #to be removed
-      while read FILE; do
-        techo "${FILE}"
-        &> /dev/null &
-        pid=$!; progress $pid
-        [[ ! $? == 0 ]] && retval=1
-      done < ${INFILE}
-    done
-  return ${retval}
-
-}
-
 inArray () {
   local e
   for e in "${@:2}"; do
@@ -329,9 +325,8 @@ node_select() {
     echo -e " 2) $(mainmenu_item "${confnodes[2]}" "Server (${Yellow}server${Reset})")"
     echo -e " 3) $(mainmenu_item "${confnodes[3]}" "Client-1 (${Yellow}client-1${Reset})")"
     echo -e " 4) $(mainmenu_item "${confnodes[4]}" "Client-2 (${Yellow}client-2${Reset})")"
-    echo -e " d) Done"
-    read_opts
-    for OPT in ${OPTIONS[@]}; do
+    echo -e "\n d) Done\n\n"
+    read -rsn 1 OPT
       case "$OPT" in
         1)
           atoggle ${confnodes[$OPT]}
@@ -359,7 +354,60 @@ node_select() {
       esac
     done
     eliret
+}
+
+dynassign() {
+  # To solve: remove statics, init on launch, avoid common.sh-sourcing collisions.
+  print_select_title "Dynamic Script Config"
+  print_info "Meep"
+  local _grp
+  [[ ! -z $1 ]] && _grp="$(cat nodes.conf)" || read -p "Group number:" _grp
+  local _ip
+  GROUP="$(echo $_grp | tr 'A-F' 'a-f')"
+  DDNAME="${GROUP}.sysinst.ida.liu.se"
+  local _ENTRY="$(cat NETWORKS | grep ${DDNAME})"
+  STARTADDRESS="$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*\.//' )"
+  nw="130.236$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*236//' | cut -c 1-4 )" #$nw
+  EXTIF="$(echo ${_ENTRY} | awk '{print $4}')"
+
+  IPRANGE=()
+  for _ip in {1..6}; do
+    IPRANGE+=("$nw.$(($STARTADDRESS + $_ip)) ")
   done
+  [[ ! -z $1 ]] && gw=${IPRANGE[0]} && srv=${IPRANGE[1]} && c1=${IPRANGE[2]} && c2=${IPRANGE[3]} && return 0
+  local dnodes=( "Gateway/Router" "Server" "Client-1" "Client-2" )
+  local it=0
+
+  while true; do
+    print_select_title "Dynamic Script Config"
+    print_info "Meep"
+    echo -e " 1) $(dynmenu_item "${dynarray[1]}" "${IPRANGE[0]}")"
+    echo -e " 2) $(dynmenu_item "${dynarray[2]}" "${IPRANGE[1]}")"
+    echo -e " 3) $(dynmenu_item "${dynarray[3]}" "${IPRANGE[2]}")"
+    echo -e " 4) $(dynmenu_item "${dynarray[4]}" "${IPRANGE[3]}")"
+    echo -e " 5) $(dynmenu_item "${dynarray[5]}" "${IPRANGE[4]}")"
+    echo -e " 6) $(dynmenu_item "${dynarray[6]}" "${IPRANGE[5]}")"
+    echo ""
+    [[ $it == 4 ]] && break;
+    read -rsn 1 -p "Assign ${dnodes[$it]} an IP address " OPTION
+    case "$OPTION" in
+      [1-6])
+        [[ ${dynarray[$OPTION]} -ne 0 ]] && continue
+        dynarray[$OPTION]=$(($it+1))
+        ;;
+      *)
+        continue
+        ;;
+    esac
+    #echo $it ${IPRANGE[$(($OPTION - 1))]}
+    [[ $it == 0 ]] && gw="${IPRANGE[$(($OPTION - 1))]}"
+    [[ $it == 1 ]] && srv="${IPRANGE[$(($OPTION - 1))]}"
+    [[ $it == 2 ]] && c1="${IPRANGE[$(($OPTION - 1))]}"
+    [[ $it == 3 ]] && c2="${IPRANGE[$(($OPTION - 1))]}"
+    ((it++))
+  done
+  echo -e "$GROUP" > nodes.conf
+  pause
 }
 
 nodeconvert() {
@@ -369,5 +417,14 @@ nodeconvert() {
   [[ ${confnodes[3]} -eq 0 ]] && nodes+=" ${c1}"
   [[ ${confnodes[4]} -eq 0 ]] && nodes+=" ${c2}"
 }
+
+[[ -f nodes.conf ]] && dynassign "`cat nodes.conf`" || dynassign "b4"
+  #nw=130.236.178
+  gwe=${nw}.17
+  #gwi=${nw}.153
+  #srv=${nw}.154
+  #c1=${nw}.155
+  #c2=${nw}.156
+
 #echo "trace" ; pause
 ### EOF ###

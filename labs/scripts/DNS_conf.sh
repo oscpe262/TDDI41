@@ -1,4 +1,5 @@
 #!/bin/bash
+### TO BE MADE DYNAMIC, IF THERE IS TIME
 ### Files ######################################################################
 bind="/etc/bind/"
 options="${bind}named.conf.options"

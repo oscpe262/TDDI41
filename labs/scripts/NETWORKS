@@ -1,0 +1,53 @@
+GROUP INFORMATION
+-----------------------------------------------------------------------------------------------
+Group  DNS domain name         Internal network      Router's ext if
+-----------------------------------------------------------------------------------------------
+IDA	      sysinst.ida.liu.se   130.236.178.0/24	     130.236.178.1    ida-gw.sysinst.ida.liu.se
+A1     a1.sysinst.ida.liu.se   130.236.178.64/29     130.236.178.6     a1-gw.sysinst.ida.liu.se
+A2     a2.sysinst.ida.liu.se   130.236.178.72/29     130.236.178.7     a2-gw.sysinst.ida.liu.se
+A3     a3.sysinst.ida.liu.se   130.236.178.80/29     130.236.178.8     a3-gw.sysinst.ida.liu.se
+A4     a4.sysinst.ida.liu.se   130.236.178.88/29     130.236.178.9     a4-gw.sysinst.ida.liu.se
+A5     a5.sysinst.ida.liu.se   130.236.178.96/29     130.236.178.10    a5-gw.sysinst.ida.liu.se
+A6     a6.sysinst.ida.liu.se   130.236.178.104/29    130.236.178.11    a6-gw.sysinst.ida.liu.se
+A7     a7.sysinst.ida.liu.se   130.236.178.112/29    130.236.178.12    a7-gw.sysinst.ida.liu.se
+A8     a8.sysinst.ida.liu.se   130.236.178.120/29    130.236.178.13    a8-gw.sysinst.ida.liu.se
+B1     b1.sysinst.ida.liu.se   130.236.178.128/29    130.236.178.14    b1-gw.sysinst.ida.liu.se
+B2     b2.sysinst.ida.liu.se   130.236.178.136/29    130.236.178.15    b2-gw.sysinst.ida.liu.se
+B3     b3.sysinst.ida.liu.se   130.236.178.144/29    130.236.178.16    b3-gw.sysinst.ida.liu.se
+B4     b4.sysinst.ida.liu.se   130.236.178.152/29    130.236.178.17    b4-gw.sysinst.ida.liu.se
+B5     b5.sysinst.ida.liu.se   130.236.178.160/29    130.236.178.18    b5-gw.sysinst.ida.liu.se
+B6     b6.sysinst.ida.liu.se   130.236.178.168/29    130.236.178.19    b6-gw.sysinst.ida.liu.se
+B7     b7.sysinst.ida.liu.se   130.236.178.176/29    130.236.178.20    b7-gw.sysinst.ida.liu.se
+B8     b8.sysinst.ida.liu.se   130.236.178.184/29    130.236.178.21    b8-gw.sysinst.ida.liu.se
+C1     c1.sysinst.ida.liu.se   130.236.178.192/29    130.236.178.22    c1-gw.sysinst.ida.liu.se
+C2     c2.sysinst.ida.liu.se   130.236.178.200/29    130.236.178.23    c2-gw.sysinst.ida.liu.se
+C3     c3.sysinst.ida.liu.se   130.236.178.208/29    130.236.178.24    c3-gw.sysinst.ida.liu.se
+C4     c4.sysinst.ida.liu.se   130.236.178.216/29    130.236.178.25    c4-gw.sysinst.ida.liu.se
+C5     c5.sysinst.ida.liu.se   130.236.178.224/29    130.236.178.26    c5-gw.sysinst.ida.liu.se
+C6     c6.sysinst.ida.liu.se   130.236.178.232/29    130.236.178.27    c6-gw.sysinst.ida.liu.se
+C7     c7.sysinst.ida.liu.se   130.236.178.240/29    130.236.178.28    c7-gw.sysinst.ida.liu.se
+C8     c8.sysinst.ida.liu.se   130.236.178.248/29    130.236.178.29    c8-gw.sysinst.ida.liu.se
+D1     d1.sysinst.ida.liu.se   130.236.179.64/29     130.236.178.30    d1-gw.sysinst.ida.liu.se
+D2     d2.sysinst.ida.liu.se   130.236.179.72/29     130.236.178.31    d2-gw.sysinst.ida.liu.se
+D3     d3.sysinst.ida.liu.se   130.236.179.80/29     130.236.178.32    d3-gw.sysinst.ida.liu.se
+D4     d4.sysinst.ida.liu.se   130.236.179.88/29     130.236.178.33    d4-gw.sysinst.ida.liu.se
+D5     d5.sysinst.ida.liu.se   130.236.179.96/29     130.236.178.34    d5-gw.sysinst.ida.liu.se
+D6     d6.sysinst.ida.liu.se   130.236.179.104/29    130.236.178.35    d6-gw.sysinst.ida.liu.se
+D7     d7.sysinst.ida.liu.se   130.236.179.112/29    130.236.178.36    d7-gw.sysinst.ida.liu.se
+D8     d8.sysinst.ida.liu.se   130.236.179.120/29    130.236.178.37    d8-gw.sysinst.ida.liu.se
+E1     e1.sysinst.ida.liu.se   130.236.179.128/29    130.236.178.38    e1-gw.sysinst.ida.liu.se
+E2     e2.sysinst.ida.liu.se   130.236.179.136/29    130.236.178.39    e2-gw.sysinst.ida.liu.se
+E3     e3.sysinst.ida.liu.se   130.236.179.144/29    130.236.178.40    e3-gw.sysinst.ida.liu.se
+E4     e4.sysinst.ida.liu.se   130.236.179.152/29    130.236.178.41    e4-gw.sysinst.ida.liu.se
+E5     e5.sysinst.ida.liu.se   130.236.179.160/29    130.236.178.42    e5-gw.sysinst.ida.liu.se
+E6     e6.sysinst.ida.liu.se   130.236.179.168/29    130.236.178.43    e6-gw.sysinst.ida.liu.se
+E7     e7.sysinst.ida.liu.se   130.236.179.176/29    130.236.178.44    e7-gw.sysinst.ida.liu.se
+E8     e8.sysinst.ida.liu.se   130.236.179.184/29    130.236.178.45    e8-gw.sysinst.ida.liu.se
+F1     f1.sysinst.ida.liu.se   130.236.179.192/29    130.236.178.46    f1-gw.sysinst.ida.liu.se
+F2     f2.sysinst.ida.liu.se   130.236.179.200/29    130.236.178.47    f2-gw.sysinst.ida.liu.se
+F3     f3.sysinst.ida.liu.se   130.236.179.208/29    130.236.178.48    f3-gw.sysinst.ida.liu.se
+F4     f4.sysinst.ida.liu.se   130.236.179.216/29    130.236.178.49    f4-gw.sysinst.ida.liu.se
+F5     f5.sysinst.ida.liu.se   130.236.179.224/29    130.236.178.50    f5-gw.sysinst.ida.liu.se
+F6     f6.sysinst.ida.liu.se   130.236.179.232/29    130.236.178.51    f6-gw.sysinst.ida.liu.se
+F7     f7.sysinst.ida.liu.se   130.236.179.240/29    130.236.178.52    f7-gw.sysinst.ida.liu.se
+F8     f8.sysinst.ida.liu.se   130.236.179.248/29    130.236.178.53    f8-gw.sysinst.ida.liu.se

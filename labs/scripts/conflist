@@ -4,3 +4,5 @@ NTP_conf.sh
 DNS_conf.sh
 common.sh
 STO_conf.sh
+nodes.conf
+NETWORKS

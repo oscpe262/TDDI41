@@ -17,5 +17,4 @@ for DEV in ${DEVICES[@]}; do
   pid=$! ; progress $pid
   [[ ! $? == 0 ]] && echo "" && exit 1
 done
-ntecho ""
 exit 0

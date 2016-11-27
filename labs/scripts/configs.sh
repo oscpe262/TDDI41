@@ -27,7 +27,7 @@ configs() {
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP configuration (${Yellow}NTP${Reset})")"
     echo " 5) $(mainmenu_item "${configlist[5]}" "Storage configuration (SRV only) (${Yellow}STO${Reset})")"
     echo " 6) $(mainmenu_item "${configlist[6]}" "Storage undo configs (SRV only) (${Yellow}STO${Reset})")"
-    echo " b) Back to Main Menu"
+    echo -e "\n b) Back to Main Menu\n"
     read_opts
     for OPT in ${OPTIONS[@]}; do
       case "$OPT" in
@@ -54,13 +54,13 @@ configs() {
           files=(${_tmp[@]})
           ;;
         3)
-          sshdns &
-          pid=$! ; progress $pid
+          sshdns #&
+          #pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
         4)
-          sshntp &
-          pid=$! ; progress $pid
+          sshntp #&
+          #pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
         5)
@@ -86,28 +86,49 @@ configs() {
 
 csync() {
   print_title "Remote Configuration Script Files Syncronization"
+  print_info "Updating configuration scripts on remote hosts."
   rsyncto conflist
 	configlist[0]=$?
 }
 
 sshsto() {
+  local _retval
+  print_title "RAID and LVM Setup Script"
+  print_info "Currently configuring a RAID 1 array and an LVM setup on the server."
   techo "Configuring ${Blue}STO${Reset} on node ${Yellow}${srv}${Reset}"
   ssh -t root@${srv} ${remote_path}/STO_conf.sh $1 &> /dev/null &
   pid=$! ; progress $pid
+  retval=$?
+  sleep 1
+  return $_retval
 }
 
 sshntp() {
+  local _retval=0
+  print_title "NTP Configuration Script"
+  print_info "Currently configuring the UMLs to sync their time through NTP."
   for DEST in ${nodes[@]}; do
   techo "Configuring ${Blue}NTP${Reset} on node ${Yellow}${DEST}${Reset}"
-    ssh -t root@${DEST} ${remote_path}/NTP_conf.sh
+    ssh -t root@${DEST} ${remote_path}/NTP_conf.sh &> /dev/null &
+    pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((_retval++))
   done
+  sleep 1
+  [[ $_retval -ne 0 ]] && return 1 || return 0
 }
 
 sshdns() {
+  local _retval=0
+  print_title "DNS Configuration Script"
+  print_info "Currently configuring the server to be the internal network's name server, and the other nodes to use it accordingly."
   for DEST in ${nodes[@]}; do
   techo "Configuring ${Blue}DNS${Reset} on node ${Yellow}${DEST}${Reset}"
-    ssh -t root@${DEST} ${remote_path}/DNS_conf.sh
+    ssh -t root@${DEST} ${remote_path}/DNS_conf.sh &> /dev/null &
+    pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((_retval++))
   done
+  sleep 1
+  [[ $_retval -ne 0 ]] && return 1 || return 0
 }
 
 sshsct7() {

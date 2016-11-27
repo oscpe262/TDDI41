@@ -18,7 +18,7 @@ tests() {
 		echo " 5) $(mainmenu_item "${testlist[5]}" "RAID/LVM Test (${Yellow}STO${Reset})")"
     echo " 6) $(mainmenu_item "${testlist[6]}" "NFS Test (${Yellow}NFS${Reset})")"
 		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
-    echo " b) Back to Main Menu"
+    echo -e "\n b) Back to Main Menu\n"
     read_opts
     for OPT in ${OPTIONS[@]}; do
       setval=0
@@ -40,7 +40,7 @@ tests() {
           print_title "DNS Test Suite"
           print_info "Testing DNS. Further description TBA."
           dnstest
-          [[ $? == 0 ]] && testlist[2]=0 || testlist[2]=1
+          [[ $? == 0 ]] && testlist[2]=0 && configlist[3]=0 || testlist[2]=1
           sleep 1
           ;;
         3)
@@ -50,6 +50,7 @@ tests() {
             ntptest ${target} || setval=1
           done
           testlist[3]=$setval
+          [[ $setval -eq 0 ]] && configlist[4]=0
           sleep 1
           ;;
         4)
@@ -60,13 +61,15 @@ tests() {
           print_info "Testing storage configuration. We check if the RAID array, Virtual Group and Logical Volume can be found in ${Blue}/dev${BReset}."
           techo "Connecting, please wait"
           ssh -t root@${srv} ${remote_path}/STO_test.sh
-          [[ $? == 0 ]] && testlist[5]=0 || testlist[5]=1
+          [[ $? == 0 ]] && testlist[5]=0 && configlist[5]=0 || testlist[5]=1
           sleep 1
           ;;
         6)
           echo "TBA"
           ;;
 				9)
+          print_title "NET Test Local"
+          print_info "Performing a set of network tests from localhost, testing connectivity to the UMLs."
 					./NET_test.sh
           [[ $? == 0 ]] && testlist[9]=0 || testlist[9]=1
           sleep 1

@@ -2,7 +2,7 @@
 source common.sh
 HOST="`uname -n`"
 ntlist=( 3 2 2 2 2 2 2 2 2 2 )
-TARGETS=( "${c2}" "${c1}" "${srv}" "${gwi}" "${gwe}" "${nw}.1" "ida-gw.sysinst.ida.liu.se" "www.google.com" )
+TARGETS=( "${c2}" "${c1}" "${srv}" "${gwi}" "${gwe}" "130.236.178.1" "ida-gw.sysinst.ida.liu.se" "www.google.com" )
 foo=1
 
 [[ $HOST == "client-2" ]] && ntlist[2]=0
