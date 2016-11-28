@@ -6,3 +6,4 @@ common.sh
 STO_conf.sh
 nodes.conf
 NETWORKS
+NIS_conf.sh

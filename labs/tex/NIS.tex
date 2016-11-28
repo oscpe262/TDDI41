@@ -1,0 +1,52 @@
+\input{../report.input.tex}
+\chapter{NIS}
+\section{Exercise 1: Review and preparation}
+\subsection{1-1 Read about NIS and answer the following questions.}
+\subsubsection{a) What is a NIS map?}
+A NIS map is essentially a map structure with a key and a corresponding value.
+
+\subsubsection{b) What is a NIS domain? What is the NIS domain of your server and clients.}
+A network of a master server, optional slave servers, and a set of clients. For us, the B4-server will act as NIS server and the rest will be clients.
+
+\subsubsection{c) What is the name of the map that is used to look up users by name.}
+netgroup
+
+\subsubsection{d) How do users change passwords when NIS is in use? How does that work.}
+Preferrably, they use \verb=rpasswd= which changes the password over a SSL connection.
+
+\subsection{1-2 Read the documentation for the commands ypcat, ypwhich and ypbind and answer the following questions.}
+\subsubsection{a) What is ypcat used for.}
+Print values of all keys from the NIS database specified by mapname.
+
+\subsubsection{b) What is ypwhich used for.}
+Returns the NIS server name.
+
+\subsubsection{c) What is ypbind used for.}
+Maintaining NIS binding information.
+
+\subsubsection{d) What does the -k command-line option to ypcat do.}
+Displays map keys.
+
+\subsubsection{e) If you want to list all users on a NIS client, what command would you use.}
+\verb=ypcat netgroup= %? passwd?
+
+\subsubsection{f) If you want to see which NIS server a client is bound to, which command would you use.}
+\verb=ypwhich [hostname]= (empty for localhost)
+
+\subsubsection{g) If you want to see the NIS domain of a client, what command would you use.}
+\verb=ypdomainname= %?
+
+%Report: No report required.
+
+\subsection{Exercise 2: Directory services}
+\subsubsection{2-1 Why use a directory service?}
+Why not? It's quite handy ...
+
+\subsubsection{ Name one alternative to a directory service.}
+No directory service.
+
+\subsubsection{2-2 Name at least two common directory services other than NIS.}
+Microsoft Active Directory, LDAP
+
+%Report: Answers to the questions above.
+\end{document}

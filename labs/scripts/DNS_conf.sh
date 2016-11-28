@@ -1,16 +1,17 @@
 #!/bin/bash
 ### TO BE MADE DYNAMIC, IF THERE IS TIME
+source common.sh
 ### Files ######################################################################
 bind="/etc/bind/"
 options="${bind}named.conf.options"
 locals="${bind}named.conf.local"
 resolv="/etc/resolv.conf"
 ################################################################################
-nw="130.236.178"
+#nw="130.236.178"
 br="\n\t"
 ldb="/etc/bind/zones/db."
 sila="sysinst.ida.liu.se"
-b4="b4.${sila}"
+b4="$GROUP.${sila}"
 arpa="178.236.130.in-addr.arpa"
 cname="152-159.${arpa}"
 
