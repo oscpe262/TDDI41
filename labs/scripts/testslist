@@ -1,6 +1,7 @@
 NTP_test.sh
 NET_test.sh
 STO_test.sh
+NIS_test.sh
 common.sh
 nodes.conf
 NETWORKS
