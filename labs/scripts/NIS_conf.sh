@@ -5,7 +5,7 @@ source common.sh
 ### 3-1 Install the NIS server software on your server.
 PKGS=( "nis" )
 for PKG in ${PKGS[@]}; do
-  [[ `dpkg -l $PKG` ]] && apt-get -q -y install $PKG --no-install-recommends
+  [[ `dpkg -l $PKG` ]] || apt-get -q -y install $PKG --no-install-recommends
 done
 
 

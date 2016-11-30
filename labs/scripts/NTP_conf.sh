@@ -1,12 +1,11 @@
 #!/bin/bash
-#[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
-#source common.sh
+source common.sh
 
+### VARS #######################################################################
 packages=( "ntp" "ntpdate" )
 backupdir="/etc/.bak/"
 conf="/etc/ntp.conf"
-bca="130.236.178.159"
-firstrun=0
+bca="${nw}.$((${STARTADDRESS}+7))"
 
 ################################################################################
 # The NTP server should be installed on your router. Placing the NTP server on
@@ -40,7 +39,7 @@ fi
 ################################################################################
 if [[ ! `uname -n` == "gw" ]]; then
   sed -i '/server/d' ${conf}
-  echo "server 130.236.178.153" >> ${conf} # set reference clock
+  echo "server ${gw}" >> ${conf} # set reference clock
   #echo "server gw.b4.sysinst.ida.liu.se" >> ${conf} # set reference clock
   sed -i '/broadcastclient/s/^#//' ${conf} # listen to broadcast
 fi

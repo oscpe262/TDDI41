@@ -1,5 +1,4 @@
 #!/bin/bash
-### TO BE MADE DYNAMIC, IF THERE IS TIME
 source common.sh
 ### Files ######################################################################
 bind="/etc/bind/"
@@ -7,13 +6,12 @@ options="${bind}named.conf.options"
 locals="${bind}named.conf.local"
 resolv="/etc/resolv.conf"
 ################################################################################
-#nw="130.236.178"
 br="\n\t"
 ldb="/etc/bind/zones/db."
 sila="sysinst.ida.liu.se"
 b4="$GROUP.${sila}"
-arpa="178.236.130.in-addr.arpa"
-cname="152-159.${arpa}"
+[[ $nw == "130.236.178" ]] && arpa="178.236.130.in-addr.arpa" || arpa="179.236.130.in-addr.arpa"
+cname="${STARTADDRESS}-$((${STARTADDRESS+7})).${arpa}"
 
 ### Zone Vars ##################################################################
 TTL="3600"
@@ -26,7 +24,7 @@ NTTL="600"
 
 if [[ ! `uname -n` == "server" ]]; then
   sed -i '/nameserver/d' ${resolv}
-  echo "nameserver ${nw}.154" >> ${resolv}
+  echo "nameserver ${srv}" >> ${resolv}
   exit 0
 fi
 #5-1 Install a DNS server on your server and configure it to meet the following requirements.
@@ -42,8 +40,8 @@ cp /etc/bind/.bak/named.conf.local /etc/bind/
 cp /etc/bind/.bak/named.conf.options /etc/bind/
 
 #a) It must respond authoritatively to all non-recursive queries for names in the zones you are authoritative for.
-echo -e "acl internals { ${br}127.0.0.0/8; ${br}${nw}.153; ${br}${nw}.154; ${br}${nw}.155; ${br}${nw}.156; \n};\n" >> ${locals}
-sed -i '3i\\tlisten-on { 130.236.178.154; };' ${options}
+echo -e "acl internals { ${br}127.0.0.0/8; ${br}${nw}.${STARTADDRESS}/29; \n};\n" >> ${locals}
+sed -i "3i\\tlisten-on { ${srv}; };" ${options}
 sed -i '4i\\tallow-query { any; };' ${options}
 
 #b) It must respond to all recursive queries from the hosts on your own network.
@@ -60,7 +58,7 @@ sed -i '9i\\tforwarders { 8.8.8.8; 8.8.4.4; };' ${options}
 echo -e "zone \"${b4}\" {${br}type master;" >> ${locals}
 echo -e "\tfile \"${ldb}${b4}\";\n};\n" >> ${locals}
 
-echo -e "zone \"152-159.${arpa}\" {${br}type master;" >> ${locals}
+echo -e "zone \"${STARTADDRESS}-$(($STARTADDRESS+7)).${arpa}\" {${br}type master;" >> ${locals}
 echo -e "\tfile \"${ldb}${arpa}\";\n};\n" >> ${locals}
 
 [[ -d /etc/bind/zones ]] && rm -r /etc/bind/zones
@@ -76,11 +74,11 @@ echo -e "\t\t${EXPIRE}\t\t; Expire" >> ${z1}
 echo -e "\t\t${NTTL}\t\t; Negative Cache TLL\n);" >> ${z1}
 echo -e "\n; name servers - NS records" >> ${z1}
 echo -e "\tIN\tNS\tserver.${b4}." >> ${z1}
-echo -e "\n; ${nw}.152/29 - A records" >> ${z1}
-echo -e "server.${b4}.\tIN\tA\t${nw}.154" >> ${z1}
-echo -e "gw.${b4}.\tIN\tA\t${nw}.153" >> ${z1}
-echo -e "client-1.${b4}.\tIN\tA\t${nw}.155" >> ${z1}
-echo -e "client-2.${b4}.\tIN\tA\t${nw}.156" >> ${z1}
+echo -e "\n; ${nw}.${STARTADDRESS}/29 - A records" >> ${z1}
+echo -e "server.${b4}.\tIN\tA\t${srv}" >> ${z1}
+echo -e "gw.${b4}.\tIN\tA\t${gw}" >> ${z1}
+echo -e "client-1.${b4}.\tIN\tA\t${c1}" >> ${z1}
+echo -e "client-2.${b4}.\tIN\tA\t${c2}" >> ${z1}
 
 zinv="${ldb}${arpa}"
 echo -e "\$TTL\t${TTL}" >> ${zinv}
@@ -93,10 +91,10 @@ echo -e "\t\t${NTTL}\t\t; Negative Cache TLL\n);" >> ${zinv}
 echo -e "\n; name servers" >> ${zinv}
 echo -e "\tIN\tNS\tserver.${b4}." >> ${zinv}
 echo -e "\n; PTR records" >> ${zinv}
-echo -e "153.${cname}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
-echo -e "154.${cname}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
-echo -e "155.${cname}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
-echo -e "156.${cname}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
+echo -e "`echo $gw | cut -c 13-`.${cname}.\tIN\tPTR\tgw.${b4}." >> ${zinv}
+echo -e "`echo $srv | cut -c 13-`.${cname}.\tIN\tPTR\tserver.${b4}." >> ${zinv}
+echo -e "`echo $c1 | cut -c 13-`.${cname}.\tIN\tPTR\tclient-1.${b4}." >> ${zinv}
+echo -e "`echo $c2 | cut -c 13-`.${cname}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 
 #f) The cache parameters must be chosen sensibly (i.e. you are expected to be able to motivate your choice).
 #g) It must not be susceptible to the standard cache poisoning attacks. See http:www.kb.cert.org/vuls/id/800113 for details. Test your DNS server using porttest.dns-oarc.net (see http:www.dns-oarc.net/oarc/services/porttest).
@@ -123,9 +121,9 @@ echo -e "controls { ${br}inet 127.0.0.1 port 953 allow {127.0.0.1; }; \n};" >> $
 echo -e "include \"${bind}ns_b4_rndc-key\";" >>  ${locals}
 
 sed -i '/sysinst/d' ${resolv}
-sed -i '/154/d' ${resolv}
-sed -i '3i\search b4.sysinst.ida.liu.se' ${resolv}
-sed -i '4i\nameserver 130.236.178.154' ${resolv}
+sed -i "/${srv}/d" ${resolv}
+sed -i "3i\search ${GROUP}.sysinst.ida.liu.se" ${resolv}
+sed -i "4i\nameserver ${srv}" ${resolv}
 
 /etc/init.d/bind9 restart
 [[ ! ${?} -eq 0 ]] && echo "BIND9 Restart Failed, see /var/log/syslog for further details!" && cat /var/log/syslog | tail -n 15 && exit 1
