@@ -8,7 +8,7 @@ tests() {
   while true
   do
     print_select_title "Test Scripts"
-    echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
+    echo -e "\n 0) $(mainmenu_item "${testlist[0]}" "Transfer Files to UMLs (${Yellow}Prereq.${Reset})")\n"
 
 # Make dependent on node select
     echo " 1) $(mainmenu_item "${testlist[1]}" "Network test (${Yellow}NET${Reset})")"

@@ -358,12 +358,11 @@ node_select() {
 }
 
 dynassign() {
-  # To solve: remove statics, init on launch, avoid common.sh-sourcing collisions.
-  print_select_title "Dynamic Script Config"
-  print_info "Meep"
   local _grp
-  [[ ! -z $1 ]] && _grp="$(cat nodes.conf)" || read -p "Group number:" _grp
   local _ip
+  [[ ! -z $1 ]] && _grp="$1" || read -p "Group number: " _grp
+  print_select_title "Dynamic Script Config"
+  print_info "Meep $1 $_grp"
   GROUP="$(echo $_grp | tr 'A-F' 'a-f')"
   DDNAME="${GROUP}.sysinst.ida.liu.se"
   local _ENTRY="$(cat NETWORKS | grep ${DDNAME})"

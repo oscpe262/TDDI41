@@ -61,7 +61,7 @@ while true; do
   echo " 3) $(mainmenu_item "${checklist[3]}" "Tests")"
   echo " 4) $(mainmenu_item "${checklist[4]}" "Backup Configs")"
   echo " 5) $(mainmenu_item "${checklist[5]}" "Upload Backup Configs to UMLs")"
-  echo " 6) $(mainmenu_item "${checklist[6]}" "Transfer files to UMLs")"
+  echo " 6) $(mainmenu_item "${checklist[6]}" "Transfer Files to UMLs")"
   echo -e "\n q) Quit\n"
   read_opts
   for OPT in ${OPTIONS[@]}; do

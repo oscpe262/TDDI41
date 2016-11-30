@@ -19,14 +19,14 @@ configs() {
     print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
     echo -e "\tWhere applicable, configuration will affect the following nodes ( b) to go back and change ):"
     echo -e "${BYellow}${_nodes}${Reset}"
-		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer files to nodes (${Yellow}Prereq.${Reset})")\n"
+		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer Files to UMLs (${Yellow}Prereq.${Reset})")\n"
 
-		echo " 1) $(mainmenu_item "${configlist[1]}" "Add users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
-    echo " 2) $(mainmenu_item "${configlist[2]}" "Add users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset} Not yet implemented")"
-    echo " 3) $(mainmenu_item "${configlist[3]}" "DNS configuration (${Yellow}DNS${Reset})")"
-    echo " 4) $(mainmenu_item "${configlist[4]}" "NTP configuration (${Yellow}NTP${Reset})")"
-    echo " 5) $(mainmenu_item "${configlist[5]}" "Storage configuration (SRV only) (${Yellow}STO${Reset})")"
-    echo " 6) $(mainmenu_item "${configlist[6]}" "Storage undo configs (SRV only) (${Yellow}STO${Reset})")"
+		echo " 1) $(mainmenu_item "${configlist[1]}" "Add Users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
+    echo " 2) $(mainmenu_item "${configlist[2]}" "Add Users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset} Not yet implemented")"
+    echo " 3) $(mainmenu_item "${configlist[3]}" "DNS Configuration (${Yellow}DNS${Reset})")"
+    echo " 4) $(mainmenu_item "${configlist[4]}" "NTP Configuration (${Yellow}NTP${Reset})")"
+    echo " 5) $(mainmenu_item "${configlist[5]}" "Storage Configuration (SRV only) (${Yellow}STO${Reset})")"
+    echo " 6) $(mainmenu_item "${configlist[6]}" "Storage Undo Configs (SRV only) (${Yellow}STO${Reset})")"
     echo -e "\n b) Back to Main Menu\n"
     read_opts
     for OPT in ${OPTIONS[@]}; do
