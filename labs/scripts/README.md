@@ -8,7 +8,7 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 
 `Node Selection`: toggle the UMLs to be targeted.
 
-`Configs`: cofigure UMLs. *Proceed with caution!*
+`Configs`: configure UMLs. *Proceed with caution!*
 
 `Tests`: test UMLs.
 
@@ -25,7 +25,7 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 
 `DNS Configuration`: configures the server to act as a DNS-server and nodes to use it.
 
-`NTP Configuration`: configures the router/gw to act as an NTP-server and all nodes as NTP clients.
+`NTP Configuration`: configures the router/gw to act as an NTP-server and all nodes as NTP peers.
 
 `Storage Configuration`: creates a RAID1 array and an LVM group according to STO lab instructions.
 
@@ -34,19 +34,19 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 ## Tests Screen
 `Transfer Files to UMLs`: syncs remote scripts on the UMLs to current local version.
 
-`Network Test`:
+`Network Test`: tests connectivity on selected UMLs.
 
-`DNS Test`:
+`DNS Test`: tests DNS configuration externally and internally.
 
-`NTP Test`:
+`NTP Test`: tests NTP configuration. *Might return false negatives if peers have yet to be synced.*
 
-`NIS Test`:
+`NIS Test`: tests NIS configuration. *TBA*
 
-`RAID/LVM Test`:
+`RAID/LVM Test`: tests STO configuration.
 
-`NFS Test`:
+`NFS Test`: tests NFS configuration. *TBA*
 
-`Local Script Development Test`:
+`Local Script Development Test`: NET test run locally. (*Development purposes only, to be removed ...*)
 
 ***
 ## Files Overview
