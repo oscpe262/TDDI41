@@ -302,6 +302,7 @@ rsyncto(){
     pid=$!; progress $pid
     [[ ! $? == 0 ]] && retval=1
   done
+  rm transfer.tar
   return ${retval}
 }
 
