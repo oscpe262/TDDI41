@@ -51,6 +51,8 @@ restart_services() {
 read -p "Enter hostname (i.e. gw, server, client-1, or client-2): " HOST
 echo "$HOST" > $BASEPATH/hostname
 echo "auto" > $BASEPATH/resolv.conf
+echo "deb http://ftp.se.debian.org/debian wheezy main" > /etc/apt/sources.conf
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553 7638D0442B90D010 6FB2A1C265FFB764
 
 edit_resolv
 sed -i "s/^hosts.*$/hosts:\t\tfiles dns/g" $BASEPATH/nsswitch.conf

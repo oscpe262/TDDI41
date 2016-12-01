@@ -7,3 +7,4 @@ STO_conf.sh
 common.sh
 nodes.conf
 NETWORKS
+installpkgs.sh

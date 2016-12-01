@@ -9,3 +9,4 @@
 /etc/bind/named.conf.local
 /etc/bind/named.conf.options
 /etc/bind/zones
+/etc/apt/sources.conf
