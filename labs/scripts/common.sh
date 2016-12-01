@@ -49,7 +49,6 @@ DRYRUN=0
   files=()
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
-  #prompt3="You have to manually enter the following commands, then press ${BYellow}ctrl+d${Reset} or type ${BYellow}exit${Reset}:"
 
 ### SUPPORT FUNCS ##############################################################
 
@@ -361,26 +360,24 @@ dynassign() {
   local _grp
   local _ip
   [[ ! -z $1 ]] && _grp="$1" || read -p "Group number: " _grp
-  print_select_title "Dynamic Script Config"
-  print_info "Meep $1 $_grp"
   GROUP="$(echo $_grp | tr 'A-F' 'a-f')"
   DDNAME="${GROUP}.sysinst.ida.liu.se"
   local _ENTRY="$(cat NETWORKS | grep ${DDNAME})"
   STARTADDRESS="$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*\.//' )"
-  nw="130.236$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*236//' | cut -c 1-4 )" #$nw
+  nw="130.236$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*236//' | cut -c 1-4 )"
   EXTIF="$(echo ${_ENTRY} | awk '{print $4}')"
 
   IPRANGE=()
   for _ip in {1..6}; do
     IPRANGE+=("$nw.$(($STARTADDRESS + $_ip)) ")
   done
-  [[ ! -z $1 ]] && gw=${IPRANGE[0]} && srv=${IPRANGE[1]} && c1=${IPRANGE[2]} && c2=${IPRANGE[3]} && return 0
+  [[ ! -z $1 ]] && gwi=${IPRANGE[0]} && srv=${IPRANGE[1]} && c1=${IPRANGE[2]} && c2=${IPRANGE[3]} && return 0
   local dnodes=( "Gateway/Router" "Server" "Client-1" "Client-2" )
   local it=0
 
   while true; do
     print_select_title "Dynamic Script Config"
-    print_info "Meep"
+    print_info "${Red}Warning:${BReset} Functionality has not been tested if nodes are not assigned in the order 1, 2, 3, 4."
     echo -e " 1) $(dynmenu_item "${dynarray[1]}" "${IPRANGE[0]}")"
     echo -e " 2) $(dynmenu_item "${dynarray[2]}" "${IPRANGE[1]}")"
     echo -e " 3) $(dynmenu_item "${dynarray[3]}" "${IPRANGE[2]}")"
@@ -399,8 +396,8 @@ dynassign() {
         continue
         ;;
     esac
-    #echo $it ${IPRANGE[$(($OPTION - 1))]}
-    [[ $it == 0 ]] && gw="${IPRANGE[$(($OPTION - 1))]}"
+
+    [[ $it == 0 ]] && gwi="${IPRANGE[$(($OPTION - 1))]}"
     [[ $it == 1 ]] && srv="${IPRANGE[$(($OPTION - 1))]}"
     [[ $it == 2 ]] && c1="${IPRANGE[$(($OPTION - 1))]}"
     [[ $it == 3 ]] && c2="${IPRANGE[$(($OPTION - 1))]}"
@@ -416,6 +413,10 @@ nodeconvert() {
   [[ ${confnodes[2]} -eq 0 ]] && nodes+=" ${srv}"
   [[ ${confnodes[3]} -eq 0 ]] && nodes+=" ${c1}"
   [[ ${confnodes[4]} -eq 0 ]] && nodes+=" ${c2}"
+}
+
+pkginstall() {
+  [[ `dpkg-query -W -f='${Status}' $1 2>/dev/null` ]] || apt-get -q -y install $1 --no-install-recommends --force-yes
 }
 
 [[ -f nodes.conf ]] && dynassign "`cat nodes.conf`" || dynassign "b4"

@@ -16,7 +16,7 @@ c1=$nw.155
 c2=$nw.156
 sila="sysinst.ida.liu.se"
 b4="b4.$sila"
-BASEPATH="/home/splatrat/test"
+BASEPATH="/etc"
 
 ### HELP FUNCTIONS #############################################################
 ifaces() {
@@ -39,7 +39,7 @@ edit_resolv() {
 }
 
 install_pkg() {
-  [[ `dpkg -l $1` ]] || apt-get -q -y install $1 --no-install-recommends
+  [[ `dpkg -s $1` ]] || apt-get -q -y install $1 --no-install-recommends
 }
 
 restart_services() {

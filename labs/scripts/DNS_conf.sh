@@ -11,7 +11,7 @@ ldb="/etc/bind/zones/db."
 sila="sysinst.ida.liu.se"
 b4="$GROUP.${sila}"
 [[ $nw == "130.236.178" ]] && arpa="178.236.130.in-addr.arpa" || arpa="179.236.130.in-addr.arpa"
-cname="${STARTADDRESS}-$((${STARTADDRESS+7})).${arpa}"
+cname="${STARTADDRESS}-$((${STARTADDRESS}+7)).${arpa}"
 
 ### Zone Vars ##################################################################
 TTL="3600"
@@ -31,7 +31,7 @@ fi
 packages=("bind9" "bind9-doc" "bind9utils" "dnsutils" "host" )
 
 for PKG in ${packages[@]}; do
-  [[ `dpkg -l ${PKG}` ]] || apt-get install $PKG
+  pkginstall $PKG
 done
 
 # Backup or replace with default
@@ -40,8 +40,8 @@ cp /etc/bind/.bak/named.conf.local /etc/bind/
 cp /etc/bind/.bak/named.conf.options /etc/bind/
 
 #a) It must respond authoritatively to all non-recursive queries for names in the zones you are authoritative for.
-echo -e "acl internals { ${br}127.0.0.0/8; ${br}${nw}.${STARTADDRESS}/29; \n};\n" >> ${locals}
-sed -i "3i\\tlisten-on { ${srv}; };" ${options}
+echo -e "acl internals { ${br}127.0.0.0/8; ${br}${nw}.$(($STARTADDRESS+1)); ${br}${nw}.$(($STARTADDRESS+2)); ${br}${nw}.$(($STARTADDRESS+3)); ${br}${nw}.$(($STARTADDRESS+4)); ${br}${nw}.$(($STARTADDRESS+5)); \n};\n" >> ${locals}
+sed -i '3i\\tlisten-on { '$srv'; };' ${options}
 sed -i '4i\\tallow-query { any; };' ${options}
 
 #b) It must respond to all recursive queries from the hosts on your own network.
@@ -55,10 +55,10 @@ sed -i '8i\\tallow-query-cache { internals; };' ${options}
 sed -i '9i\\tforwarders { 8.8.8.8; 8.8.4.4; };' ${options}
 
 #e) It must contain valid zone data for your zone(s).
-echo -e "zone \"${b4}\" {${br}type master;" >> ${locals}
+echo -e "zone \"${b4}\" {${br}type master;" >> ${locals}  #check omg!
 echo -e "\tfile \"${ldb}${b4}\";\n};\n" >> ${locals}
 
-echo -e "zone \"${STARTADDRESS}-$(($STARTADDRESS+7)).${arpa}\" {${br}type master;" >> ${locals}
+echo -e "zone \"${STARTADDRESS}-$(($STARTADDRESS+7)).${arpa}\" {${br}type master;" >> ${locals} # check omg!
 echo -e "\tfile \"${ldb}${arpa}\";\n};\n" >> ${locals}
 
 [[ -d /etc/bind/zones ]] && rm -r /etc/bind/zones

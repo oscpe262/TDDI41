@@ -1,11 +1,13 @@
 #!/bin/bash
 source common.sh
 
+# Add backups
+
 ### Exercise 3: Install and configure the NIS server ###########################
 ### 3-1 Install the NIS server software on your server.
 PKGS=( "nis" )
 for PKG in ${PKGS[@]}; do
-  [[ `dpkg -l $PKG` ]] || apt-get -q -y install $PKG --no-install-recommends
+  pkginstall $PKG
 done
 
 
@@ -37,13 +39,11 @@ if [[ ! `uname -n` == "server" ]]; then
   sed -i 's/NISSERVER.*/NISSERVER=false' /etc/default/nis
   [[ ! -d /var/yp ]] && mkdir /var/yp
   ypbind
-  sed -i '/order/d' >> /etc/host.conf
-  sed -i '/hosts/d' >>
+  sed -i '/order/d' /etc/host.conf
+  sed -i '/hosts/d' /etc/nsswitch.conf
   echo "order nis" >> /etc/host.conf
   echo "+::::::" >> /etc/passwd
   echo -e "hosts\t\tfiles nis dns" >> /etc/nsswitch.conf
-
-
   /etc/init.d/nis restart
 fi
 

@@ -1,6 +1,7 @@
 .latex
 tmptest*
 info*
+nodes.conf
 *.synctex*
 *.aux
 *.fdb_latexmk

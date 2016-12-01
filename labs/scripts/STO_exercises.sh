@@ -1,7 +1,7 @@
 #!/bin/bash
 [[ ! `uname -n` == "server" ]] && exit 1
-[[ `dpkg -l mdadm` ]] || apt-get install mdadm
-[[ `dpkg -l lvm2` ]] || apt-get install lvm2
+[[ `dpkg-query -W -f='${Status}' mdadm 2>/dev/null` ]] || apt-get install mdadm
+[[ `dpkg-query -W -f='${Status}' lvm2 2>/dev/null` ]] || apt-get install lvm2
 
 ################################################################################
 ### Part 1: RAID ###############################################################

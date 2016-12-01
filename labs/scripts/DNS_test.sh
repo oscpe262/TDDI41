@@ -53,7 +53,7 @@ pid=$! ; progress $pid
 retval=$(($retval+$?))
 
 techo "(${Yellow}5-1 d${Reset}) No ext. queries about ext. nw."
-[[ -z `dig google.com @server.$b4` ]] &
+[[ ! -z `dig google.com @server.$b4` ]] &
 pid=$! ; progress $pid
 retval=$(($retval+$?))
 

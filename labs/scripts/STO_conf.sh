@@ -1,8 +1,10 @@
 #!/bin/bash
 [[ ! `uname -n` == "server" ]] && exit 1
 source common.sh
-[[ `dpkg -l mdadm` ]] || apt-get -q -y install mdadm --no-install-recommends
-[[ `dpkg -l lvm2` ]] || apt-get install lvm2
+packages=( "mdadm" "lvm2" )
+for PKG in ${packages[@]}; do
+  pkginstall $PKG
+done
 
 raidmake() {
   techo "Setting up RAID 1 ${Yellow}/dev/md1${Reset}"

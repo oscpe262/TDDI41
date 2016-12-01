@@ -12,7 +12,7 @@ bca="${nw}.$((${STARTADDRESS}+7))"
 # your router is reasonable as many NTP servers today include NTP servers.
 ################################################################################
 for PKG in ${packages[@]}; do
-  [[ ! `dpkg -l ${PKG}` ]] && apt-get install ${PKG}
+  pkginstall $PKG
 done
 [[ -d ${backupdir} ]] || mkdir ${backupdir}
 [[ ! -f ${backupdir}ntp.conf ]] && cp ${conf} ${backupdir} # Backup is nice to have

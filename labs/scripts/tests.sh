@@ -38,7 +38,6 @@ tests() {
           ;;
         2)
           print_title "DNS Test Suite"
-          print_info "Testing DNS. Further description TBA."
           dnstest
           [[ $? == 0 ]] && testlist[2]=0 && configlist[3]=0 || testlist[2]=1
           sleep 1
@@ -88,8 +87,12 @@ tests() {
 }
 
 dnstest() {
-  #techo "Annotate me omg!"
-  ./DNS_test.sh
+  local retval=0
+  print_info "Testing DNS - ${Yellow}External${Reset} tests:"
+  ./DNS_test.sh || ((retval++))
+  #print_info "Testing DNS - ${Yellow}Internal${Reset} tests:"
+  return $retval
+  #ssh -t root@${c1} ${remote_path}/DNS_remotetest.sh
 }
 
 ntptest() {

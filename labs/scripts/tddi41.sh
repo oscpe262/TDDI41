@@ -48,13 +48,14 @@ while true; do
   inArray "2" "${testlist[@]}" && checklist[3]=2
   inArray "1" "${testlist[@]}" && checklist[3]=1
   if [[ ${testlist[0]} -eq 1 ]] || [[ ${configlist[0]} -eq 1 ]]; then
-    checklist[5]=1
+    checklist[6]=1
   else
     if [[ ${testlist[0]} -eq 0 ]] && [[ ${configlist[0]} -eq 0 ]]; then
-      checklist[5]=0
+      checklist[6]=0
     fi
   fi
   print_info "This script has two parts: ${Yellow}Tests${BReset} and ${BYellow}Configs${BReset}. ${Yellow}Tests${BReset} runs tests that are not covered in ${BYellow}Configs${BReset}, such as ${Blue}NET${BReset} configuration checks. ${BYellow}Configs${BReset} runs a series of scripts that configure the environment according to lab instructions."
+  print_info "Trace: gw:$gwi $gwe srv:$srv c1:$c1 c2:$c2"
   echo -e " 0) $(mainmenu_item "${checklist[0]}" "Change group (${Yellow}Beta${Reset})\n")"
   echo " 1) $(mainmenu_item "${checklist[1]}" "Node Selection")"
   echo " 2) $(mainmenu_item "${checklist[2]}" "Configs")"
@@ -83,7 +84,7 @@ while true; do
       5)
         print_title "Configuration Files Upload"
         rsynccfgto cfgfileslist
-        checklist[6]=$?
+        checklist[5]=$?
         ;;
       6)
         print_title "Remote Scripts Sync"
@@ -96,7 +97,7 @@ while true; do
         dynassign
         ;;
       "q")
-        [[ -f nodes.conf ]] && rm nodes.conf
+        #[[ -f nodes.conf ]] && rm nodes.conf
         exit 0
         ;;
       *)
