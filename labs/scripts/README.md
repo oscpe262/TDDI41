@@ -12,11 +12,10 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 
 `Tests`: test UMLs.
 
-`Backup Configs`: downloads (**and overwrites current backups**) current config files from UMLs. Use this only when stuff works as expected.
-
-`Upload Backup Configs to UMLs`: restore backed up config files to UMLs.
-
 `Transfer Files to UMLs`: syncs remote scripts on the UMLs to current local version.
+
+`Backup Management`: uploads/downloads (**and overwrites current backups**) current config files to/from UMLs. Use these with caution.
+
 
 ## Configs Screen
 `Transfer Files to UMLs`: syncs remote scripts on the UMLs to current local version.
