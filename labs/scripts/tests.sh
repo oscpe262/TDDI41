@@ -17,7 +17,7 @@ tests() {
     echo " 4) $(mainmenu_item "${testlist[4]}" "NIS Test (${Yellow}NIS${Reset})")"
 		echo " 5) $(mainmenu_item "${testlist[5]}" "RAID/LVM Test (${Yellow}STO${Reset})")"
     echo " 6) $(mainmenu_item "${testlist[6]}" "NFS Test (${Yellow}NFS${Reset})")"
-		echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
+		#echo " 9) $(mainmenu_item "${testlist[9]}" "Local Script Development Test (${Red}DEV${Reset})")"
     echo -e "\n b) Back to Main Menu\n"
     read_opts
     for OPT in ${OPTIONS[@]}; do
@@ -66,14 +66,7 @@ tests() {
         6)
           echo "TBA"
           ;;
-				9)
-          print_title "NET Test Local"
-          print_info "Performing a set of network tests from localhost, testing connectivity to the UMLs."
-					./NET_test.sh
-          [[ $? == 0 ]] && testlist[9]=0 || testlist[9]=1
-          sleep 1
-					;;
-        "b")
+		    "b")
           DRYRUN=1
 					return 0
           ;;

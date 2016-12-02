@@ -49,6 +49,7 @@ DRYRUN=0
   files=()
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
+  prompt2="Enter option: "
 
 ### SUPPORT FUNCS ##############################################################
 

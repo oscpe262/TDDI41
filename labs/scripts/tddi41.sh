@@ -19,9 +19,10 @@ source configs.sh
 
 ### MAIN VARIABLES #############################################################
 
-checklist=( 2 2 2 2 2 2 2 2 2 2)
-testlist=( 3 2 2 2 0 2 0 0 0 2 )
-configlist=( 2 2 2 2 2 2 2 2 2)
+checklist=( 2 2 2 2 2 2 2 2 2 2 )
+testlist=( 3 2 2 2 0 2 0 0 0 0 )
+configlist=( 2 2 2 2 2 2 2 2 2 )
+backuplist=( 0 2 2 )
 maintitle="TDDI41 2016 Main Script"
 
 ### WELCOME ####################################################################
@@ -37,10 +38,43 @@ pause
 
 nodeconvert
 
+### MAIN SUPPORT FUNCTION ######################################################
+backups() {
+  OPT=""
+  while true; do
+    print_select_title "UML Config Backup Scripts"
+    echo " 1) $(mainmenu_item "${backuplist[1]}" "Backup Configs")"
+    echo " 2) $(mainmenu_item "${backuplist[2]}" "Upload Backup Configs to UMLs")"
+    echo -e "\n b) Back to Main Menu \n"
+    read -rsn 1 -p "$prompt2" OPT
+    case $OPT in
+      1)
+        print_title "Configuration Files Backup"
+        rsyncfrom cfgfileslist
+        backuplist[$OPT]=$?
+        ;;
+      2)
+        print_title "Configuration Files Upload"
+        rsynccfgto cfgfileslist
+        backuplist[$OPT]=$?
+        ;;
+      "b")
+        break
+        ;;
+      *)
+        ;;
+    esac
+  done
+  inArray "0" "${backuplist[@]}" && checklist[9]=0
+  inArray "2" "${backuplist[@]}" && checklist[9]=2
+  inArray "1" "${backuplist[@]}" && checklist[9]=1
+}
+
 ### MAIN MENU ##################################################################
 
 while true; do
   print_select_title "${maintitle}"
+  ## Cascaded status levels
 	inArray "0" "${configlist[@]}" && checklist[2]=0
   inArray "2" "${configlist[@]}" && checklist[2]=2
   inArray "1" "${configlist[@]}" && checklist[2]=1
@@ -54,19 +88,22 @@ while true; do
       checklist[6]=0
     fi
   fi
+
   print_info "This script has two parts: ${Yellow}Tests${BReset} and ${BYellow}Configs${BReset}. ${Yellow}Tests${BReset} runs tests that are not covered in ${BYellow}Configs${BReset}, such as ${Blue}NET${BReset} configuration checks. ${BYellow}Configs${BReset} runs a series of scripts that configure the environment according to lab instructions."
-  print_info "Trace: gw:$gwi $gwe srv:$srv c1:$c1 c2:$c2"
+  #print_info "Trace: gw:$gwi $gwe srv:$srv c1:$c1 c2:$c2" # debugging
   echo -e " 0) $(mainmenu_item "${checklist[0]}" "Change group (${Yellow}Beta${Reset})\n")"
   echo " 1) $(mainmenu_item "${checklist[1]}" "Node Selection")"
   echo " 2) $(mainmenu_item "${checklist[2]}" "Configs")"
   echo " 3) $(mainmenu_item "${checklist[3]}" "Tests")"
-  echo " 4) $(mainmenu_item "${checklist[4]}" "Backup Configs")"
-  echo " 5) $(mainmenu_item "${checklist[5]}" "Upload Backup Configs to UMLs")"
-  echo " 6) $(mainmenu_item "${checklist[6]}" "Transfer Files to UMLs")"
+  echo " 4) $(mainmenu_item "${checklist[4]}" "Transfer Files to UMLs")"
+  echo " 9) $(mainmenu_item "${checklist[9]}" "Backup Management")"
   echo -e "\n q) Quit\n"
   read_opts
   for OPT in ${OPTIONS[@]}; do
     case "$OPT" in
+      0)
+        dynassign
+        ;;
       1)
         node_select
         ;;
@@ -77,24 +114,14 @@ while true; do
         tests
         ;;
       4)
-        print_title "Configuration Files Backup"
-        rsyncfrom cfgfileslist
-        checklist[4]=$?
-        ;;
-      5)
-        print_title "Configuration Files Upload"
-        rsynccfgto cfgfileslist
-        checklist[5]=$?
-        ;;
-      6)
         print_title "Remote Scripts Sync"
         rsyncto testslist conflist
         setval=$?
         testlist[0]=$setval
 			  configlist[0]=$setval
         ;;
-      0)
-        dynassign
+      9)
+        backups
         ;;
       "q")
         #[[ -f nodes.conf ]] && rm nodes.conf
@@ -106,5 +133,6 @@ while true; do
     esac
   done
 done
+
 
 ### EOF ###
