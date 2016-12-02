@@ -34,7 +34,7 @@ DRYRUN=0
 
 
   nodenames=( "gw" "server" "client-1" "client-2" )
-  confnodes=( 0 2 0 2 2 )
+  confnodes=( 0 0 0 0 0 )
   dynarray=( 0 0 0 0 0 0 0 )
 
 

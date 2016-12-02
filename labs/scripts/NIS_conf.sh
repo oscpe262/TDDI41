@@ -65,9 +65,9 @@ fi
 
 
 if [[ ! `uname -n` == "server" ]]; then
-  sednssw "passwd"    "compat"
+  sednssw "passwd"    "files nis"
   sednssw "group"     "compat"
-  sednssw "shadow"    "compat"
+  sednssw "shadow"    "files nis"
   sednssw "hosts"     "files nis dns"
   sednssw "networks"  "files nis"
   sednssw "protocols" "db files nis"
