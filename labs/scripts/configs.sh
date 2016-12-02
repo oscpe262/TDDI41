@@ -27,6 +27,7 @@ configs() {
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP Configuration (${Yellow}NTP${Reset})")"
     echo " 5) $(mainmenu_item "${configlist[5]}" "Storage Configuration (SRV only) (${Yellow}STO${Reset})")"
     echo " 6) $(mainmenu_item "${configlist[6]}" "Storage Undo Configs (SRV only) (${Yellow}STO${Reset})")"
+    echo " 7) $(mainmenu_item "${configlist[7]}" "NIS Configs (${Yellow}NIS${Reset})")"
     echo -e "\n b) Back to Main Menu\n"
     read_opts
     for OPT in ${OPTIONS[@]}; do
@@ -73,6 +74,11 @@ configs() {
           pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
+        7)
+          sshnis &
+          pid=$! ; progress $pid
+          configlist[$OPT]=$?
+          ;;
         b)
           return
           ;;
@@ -82,6 +88,19 @@ configs() {
       esac
     done
   done
+}
+
+sshnis() {
+  print_title "NIS Setup Script"
+  print_info " "
+  for DEST in ${nodes[@]}; do
+    techo "Configuring ${Blue}NIS${Reset} on node ${Yellow}${DEST}${Reset}"
+    ssh -t root@${DEST} ${remote_path}/NIS_conf.sh # &> /dev/null &
+    #pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((_retval++))
+  done
+  sleep 3
+  [[ $_retval -ne 0 ]] && return 1 || return 0
 }
 
 csync() {

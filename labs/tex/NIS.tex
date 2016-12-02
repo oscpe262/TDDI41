@@ -52,11 +52,14 @@ Microsoft Active Directory, LDAP
 
 \subsection{Exercise 5: Configure the clients' name service switch}
 \subsubsection{5-1 What is the difference between using "compat" and using "files nis" as the list of sources for e.g. passwords in the name service switch.}
+Compat adds the possibility of special entries which enables partial (rows and/or columns) fetching of NIS maps. The local files remain the primary source, and the special entries are read from these.
 
-\subsubsection{5-2 Configure the name service switch on your clients so they use NIS for as much as possible. Note that you should still use local files as the first information source. Please do not use compat unless you intend to use the special features it provides.}
+%\subsubsection{5-2 Configure the name service switch on your clients so they use NIS for as much as possible. Note that you should still use local files as the first information source. Please do not use compat unless you intend to use the special features it provides.}
 
 \subsubsection{5-3 Why should you use local files as the first information source instead of NIS.}
+A strong argument for at least reading local login files, before querying the respective NIS map, is that if that map has a user entry for 'root' (a mistake), the opposite would effectively impose a network-global login for root.
 
+However, even if a 'root' entry did not exist in the NIS map, using a "NIS first, local second" setup opens up for the same problem in case an attacker gains access to the NIS server, editing such an entry in.
 
 %Report: Automated tests that show that the clients are now using NIS as expected. Answer to the question above.
 
