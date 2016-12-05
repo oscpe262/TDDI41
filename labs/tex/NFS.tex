@@ -28,7 +28,7 @@ In \verb=/etc/nsswitch.conf=:\\
 An automounter mounts file systems on demand by intercepting access to the file system in question.
 
 \subsection{2-2 Explain what an automount map is, and the difference between direct and indirect maps.}
-An automount map describes how file systems are to be mounted. Direct maps list a remote path's an absolute path, whereas indirect maps list a remote path's relative subtree root. The indirect maps are then used to mount the subtree listed in a specific path.
+An automount map describes how file systems are to be mounted. Direct maps list a remote path's absolute mount path, whereas indirect maps list a remote path's relative subtree root. The indirect maps are then used to mount the subtree listed in a specific path.
 
 \subsection{2-3 What is the purpose of an automounter? Why not use static network mounts instead.}
 Scalability, both resource-wise and administration-wise.
