@@ -31,13 +31,21 @@ if [[ `uname -u` ==  "server" ]]; then
   cp /etc/.bak/exports /etc
 
   echo "/usr/local ${nw.$STARTADDRESS}/29(nfsvers=3,rw,sync,no_root_squash)" >> /etc/exports
+  # add auto.usrloc to nis
+  /usr/lib/yp/ypinit -m
+  /etc/init.d/nis restart
 fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
 if [[ ! `uname -u` == "server"]]; then
   [[ `uname -u` == "gw" ]] && exit 0
   echo "3-3 Configure your clients to automatically mount /usr/local from the server at boot. TBA"
+  sed -i '/automount/d' /etc/nsswitch.conf
+  sed -i '/usrloc/d' /etc/auto.master
+  echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
+  echo -e "/usr/local auto.usrloc" >> /etc/auto.master
 fi
 ### Report: Automated test cases that demonstrate that your NFS service is working properly.
+## See NFS_test.sh
 
 #[!] Due to a quirk in some versions of Linux, you may need to set the fsid option when exporting directories from the server, or the client will ignore all but the first set of mount options (e.g. read-only, read-write) used to mount those directories. For example, imagine that the server has a file system named /nfs and exports /nfs/local and /nfs/home, and the client mounts /nfs/local read-only as /usr/local and /nfs/home read-write as /home. Because of this problem in some Linux versions, /home will actually be read-only, and no warnings issued, because the two directories by default have the same file system ID. By explicitly setting distinct file system IDs on the server (using the fsid option), this can be avoided.
 
