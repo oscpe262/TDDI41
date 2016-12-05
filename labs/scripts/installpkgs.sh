@@ -14,7 +14,7 @@ pkginstall() {
 
 packages=()
 if [[ `uname -n` == "server" ]]; then
-  packages=( "bind9" "bind9-doc" "bind9utils" "host" )
+  packages=( "bind9" "bind9-doc" "bind9utils" "host" "nfs-kerner-server" )
 elif [[ `uname -n` == "gw" ]]; then
   packages=( "quagga" )
 fi
@@ -23,6 +23,7 @@ packages+="ntp"
 packages+="ntpdate"
 packages+="nis"
 packages+="dnsutils"
+packages+="autofs"
 for PKG in ${packages[@]}; do
   pkginstall $PKG
 done

@@ -3,27 +3,35 @@
 \section{Exercise 1: Review and preparation}
 \em Most of this documentation will not be available on marsix or on your systems (until you install the appropriate packages), but they are available on the Internet. The man pages for autofs are not very good, and autofs is notoriously finicky. Read the documentation carefully. If you miss a single word in the wrong place you can end up wasting huge amounts of time.\em
 
-\subsection{1-1 Review the documentation for the Linux kernel NFS server.}
+% \subsection{1-1 Review the documentation for the Linux kernel NFS server.}
 
-\subsection{1-2 Review the documentation for the Linux automounter (autofs).}
+% \subsection{1-2 Review the documentation for the Linux automounter (autofs).}
 
 \subsection{1-3 What is an automount map.}
+An automount map describes how file systems are to be mounted.
 
 \subsection{1-4 What is the name of the main configuration file for autofs.}
+\verb=/etc/auto.master=
 
 \subsection{1-5 How can you refer to an automount map in NIS from the main configuration file.}
+\verb=+<automount.map>=
+
 
 \subsection{1-6 How do you configure the system so it looks for the main configuration file in NIS instead of looking for a regular file.}
+In \verb=/etc/nsswitch.conf=:\\
+\verb=automount:  files nis=
 
 %Report: Nothing to report.
 
 \section{Exercise 2: Configuration}
 \subsection{2-1 Explain what the automounter is and how it works.}
+An automounter mounts file systems on demand by intercepting access to the file system in question.
 
 \subsection{2-2 Explain what an automount map is, and the difference between direct and indirect maps.}
+An automount map describes how file systems are to be mounted. Direct maps list a remote path's an absolute path, whereas indirect maps list a remote path's relative subtree root. The indirect maps are then used to mount the subtree listed in a specific path.
 
 \subsection{2-3 What is the purpose of an automounter? Why not use static network mounts instead.}
-
+Scalability, both resource-wise and administration-wise.
 %Report: Answers to the questions above.
 
 \end{document}
