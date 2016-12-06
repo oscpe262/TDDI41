@@ -9,7 +9,7 @@ A NIS map is essentially a map structure with a key and a corresponding value.
 A network of a master server, optional slave servers, and a set of clients. For us, the B4-server will act as NIS server and the rest will be clients.
 
 \subsubsection{c) What is the name of the map that is used to look up users by name.}
-netgroup
+passwd
 
 \subsubsection{d) How do users change passwords when NIS is in use? How does that work.}
 Preferrably, they use \verb=rpasswd= which changes the password over a SSL connection.
@@ -28,13 +28,13 @@ Maintaining NIS binding information.
 Displays map keys.
 
 \subsubsection{e) If you want to list all users on a NIS client, what command would you use.}
-\verb=ypcat netgroup= %? passwd?
+\verb=ypcat passwd=
 
 \subsubsection{f) If you want to see which NIS server a client is bound to, which command would you use.}
 \verb=ypwhich [hostname]= (empty for localhost)
 
 \subsubsection{g) If you want to see the NIS domain of a client, what command would you use.}
-\verb=ypdomainname= %?
+\verb=ypdomainname=
 
 %Report: No report required.
 

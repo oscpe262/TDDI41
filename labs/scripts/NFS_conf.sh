@@ -18,6 +18,9 @@ source common.sh
 
 # Linux supports two different NFS servers: the user space server and the kernel space server. Use the kernel space server for this lab.
 
+# 5-1 Install an automounter on the clients and on the server. The autofs package is recommended, but you may try amd or some other automounter if you prefer. Note the warning above.
+[[ `dpkg -s autofs` ]] || pkginstall "autofs"
+
 ### Exercise 3: Configure a file server ########################################
 # 3-1 Set your server up as a file server using NFS (or the network file system of your choice).
 if [[ `uname -u` ==  "server" ]]; then
@@ -30,19 +33,24 @@ if [[ `uname -u` ==  "server" ]]; then
   [[ ! -f /etc/.bak/exports ]] && cp /etc/exports /etc/.bak/exports
   cp /etc/.bak/exports /etc
 
-  echo "/usr/local ${nw.$STARTADDRESS}/29(nfsvers=3,rw,sync,no_root_squash)" >> /etc/exports
+  echo "/usr/local ${nw}.${STARTADDRESS}/29(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports
+  exportfs -rav
   # add auto.usrloc to nis
-  /usr/lib/yp/ypinit -m
-  /etc/init.d/nis restart
+  #/usr/lib/yp/ypinit -m
+  #/etc/init.d/nis restart
+  /etc/init.d/nfs-kernel-server restart
 fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
 if [[ ! `uname -u` == "server"]]; then
   [[ `uname -u` == "gw" ]] && exit 0
   echo "3-3 Configure your clients to automatically mount /usr/local from the server at boot. TBA"
-  sed -i '/automount/d' /etc/nsswitch.conf
-  sed -i '/usrloc/d' /etc/auto.master
-  echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
-  echo -e "/usr/local auto.usrloc" >> /etc/auto.master
+  pkginstall "nfs-common"
+  # TEMP mount:
+  mount -t nfs ${srv}:/usr/local /usr/local vers=3
+  #sed -i '/automount/d' /etc/nsswitch.conf
+  #sed -i '/usr\/local/d' /etc/auto.master
+  #echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
+  #echo -e "/usr/local \t-rw\t${srv}:/usr/local" >> /etc/auto.master
 fi
 ### Report: Automated test cases that demonstrate that your NFS service is working properly.
 ## See NFS_test.sh
@@ -69,6 +77,7 @@ fi
 
 ### Exercise 4: Preparations ###################################################
 # 4-1 If you have not completed the storage lab, do so now.
+# see STO_(conf|test)
 
 # 4-2 Create two new users, but move one user's home directory to /home2/USERNAME and the other user's home directory to /home1/USERNAME (you will probably have to create the /home1 and /home2 directories first). Ensure that no home directories remain in /home. Do not change the home directory location in the user database.
 
@@ -85,14 +94,13 @@ fi
 ##### Depending on the version of Debian you are using, some unexpected configuration may be required. In particular, some versions of Debian default to NFS version 4 in the automounter, even when the server does not support it. We recommend that you explicitly configure the automount maps so the automounter uses NFS version 3 by adding "-vers=3" between the key and the path in the automount maps.
 
 ### Exercise 5: Configure the automounter ######################################
-# 5-1 Install an automounter on the clients and on the server. The autofs package is recommended, but you may try amd or some other automounter if you prefer. Note the warning above.
-[[ `dpkg -s autofs` ]] || pkginstall "autofs"
 
 # 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
 
 # 5-3 Verify that all users can log on to the client and that the correct home directories are mounted.
-
+## See NFS_test.sh
 # Report: Automated test cases that show that the automounter is working properly.
+## See NFS_test.sh
 
 # Note that the only automounter configuration that may reside in local files on the client are configuration files that are guaranteed to never change when new automounts are added or old ones removed. In other words, the master map and any map it references must be stored in the directory service. If you have a single local configuration file, you probably have too many. If you have more than one, you definitely have too many.
 

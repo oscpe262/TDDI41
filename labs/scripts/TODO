@@ -1,3 +1,4 @@
 NIS_test: Implementera tester
 DNS_test: Definiera och implementera remotetest
 SCT7: Modifiera för att fungera med NIS
+NFS_conf: add-user (reuse SCT7), homedir to (random?) /home1|2 on srv, mount on /home, implement autofs with nis
