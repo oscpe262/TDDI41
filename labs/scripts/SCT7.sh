@@ -15,7 +15,7 @@
 
 [[ ! -f SCT7_funcs.sh ]] && echo -e "Missing dependency: SCT7_funcs.sh" && exit 1
 source SCT7_funcs.sh
-
+source common.sh
 ### SCT7 MAIN SCRIPT ###########################################################
 
   print_title "SCT7 SETUP SCRIPT"

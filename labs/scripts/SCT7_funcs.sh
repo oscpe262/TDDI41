@@ -1,8 +1,8 @@
 #!/bin/bash
-[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
-source common.sh
+#[[ ! -f common.sh ]] && echo -e "Missing dependency: common.sh" && exit 1
+#source common.sh
 
-DRYRUN=1
+DRYRUN=0
 ### SCT7 FUNCS #################################################################
 
 dry_ok() {
@@ -53,6 +53,7 @@ pwGen() {
 }
 
 cpFiles() {
+  # lista antal entries i home1/2, flytta home till rätt
   for f in ${CPHOME[@]}; do
     [[ $DRYRUN -eq 0 ]] && cp -r ${f} /home/${NAME}/$(basename ${f})
   done
@@ -67,7 +68,7 @@ reclaim() {
 }
 
 configServices() {
-:
+ :
 }
 
 ### EOF ###
