@@ -42,18 +42,18 @@ retval=$(($retval+$?))
 
 # 5-1, a2 non recursive
 techo "(${Yellow}5-1 a${Reset}) Auth. answer, non-recursive"
-[[ ! -z `dig +all +aaonly +norecurse client-1.${b4} @server.$b4` ]]&
+[[ ! -z `dig +all +aaonly +norecurse client-1.${b4} @server.$b4 | grep -e "flags:.*aa"` ]]&
 pid=$! ; progress $pid
 retval=$(($retval+$?))
 # 5-1 c,d
 
 techo "(${Yellow}5-1 c${Reset}) No ext. recursive q:s about int. nw."
-[[ ! -z `dig +all client-1.${b4} @server.$b4 | grep "${recreq}"` ]] &
+[[ ! -z `dig +all +recurse client-1.${b4} @server.$b4 | grep "${recreq}"` ]] &
 pid=$! ; progress $pid
 retval=$(($retval+$?))
 
 techo "(${Yellow}5-1 d${Reset}) No ext. queries about ext. nw."
-[[ -z `dig google.com @server.$b4` ]] &
+[[ -z `dig rojband.se @server.$b4` ]] &
 pid=$! ; progress $pid
 retval=$(($retval+$?))
 

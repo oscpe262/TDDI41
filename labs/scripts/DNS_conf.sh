@@ -105,7 +105,7 @@ echo -e "`echo $c2 | cut -c 13-`.${cname}.\tIN\tPTR\tclient-2.${b4}." >> ${zinv}
 # rate limit (tbd)
 ### Tweaks ###
 sed -i '10i\\tmax-cache-size 64M;' ${options}
-sed -i '11i\\tmax-cache-ttl 60;' ${options}
+sed -i "11i\\tmax-cache-ttl ${CTTL};" ${options}
 sed -i '12i\\tmax-ncache-ttl 0;' ${options}
 
 ### IPv4 mode ###
