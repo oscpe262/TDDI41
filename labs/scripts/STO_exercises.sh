@@ -115,7 +115,7 @@ mount /dev/vg1/lvol1 /lv1
 # One of the advantages of using logical, rather than physical, volumes, is that they can be resized. Additionally, if the volume group does not have sufficient free space, additional physical volumes can be added.
 
 # 8-1 Attempt to create a 2.5MB file on /lv1. This should fail.
-[[ `dd if=/dev/zero of=/lv1/foo bs=2.5M count=1` ]] && echo "8-1 Failed as expected."
+[[ `dd if=/dev/zero of=/lv1/foo bs=2500000 count=1` ]] && echo "8-1 Failed as expected."
 
 # 8-2 Resize lvol0 to 3MB in size. Don't forget to resize the ext3 file system that it contains as well (using resize2fs). Mount it and attempt to create a 2.5MB file again. This time it should work.
 rm /lv1/foo
