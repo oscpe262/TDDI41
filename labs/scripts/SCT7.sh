@@ -8,7 +8,7 @@
   declare -A USERS      # Users array (associative).
   CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
   CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
-  USUF=5                # Suffix Length in case of conflicting usernames
+  USUF=3                # Suffix Length in case of conflicting usernames
   PWLENGTH=8            # Length of passwords generated
   CPHOME=()             # Array of files to be copied to homedir of each user
   TOUCH=(".aliases")    # Array of empty files to be created in homedirs
@@ -17,6 +17,8 @@
 source SCT7_funcs.sh
 source common.sh
 ### SCT7 MAIN SCRIPT ###########################################################
+
+  [[ ! `uname -u` == "server" ]] && exit 0
 
   print_title "SCT7 SETUP SCRIPT"
   [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
@@ -27,6 +29,7 @@ source common.sh
     [[ ! ${OPTION} == y ]] && return 1
   fi
   # End of dry-run option.
+
 
   # Read the usernames from file.
   print_title "ADDING USERS (${INFILE})"
@@ -59,10 +62,6 @@ source common.sh
     configServices &
     pid=$! ; progress $pid
 
-    techo "Setting owner for home dir and its contents (${Yellow}chown${Reset})"
-    reclaim &
-    pid=$! ; progress $pid
-
     print_line
   done < $INFILE
 
@@ -80,6 +79,8 @@ source common.sh
     #Yeah, those resets are just there for looks, literally...
 
   pause
+  /usr/lib/yp/ypinit -m
+  /etc/init.d/nis restart
 
   # No user input apart from the list of names is allowed. The script may need to
   # do other things as well. Part of your job is to figure out what. Your script

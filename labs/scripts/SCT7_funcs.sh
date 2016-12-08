@@ -23,7 +23,7 @@ userGen() {
     # make sure it does not exist.
     while [ ${_LOOP} = true ];
     do
-      VALCHAR="a-z"
+      VALCHAR="0-9"
       NOCHARS=$USUF
       randomString
       NAME="${NAME}-${RAND}"
@@ -53,7 +53,9 @@ pwGen() {
 }
 
 cpFiles() {
-  # lista antal entries i home1/2, flytta home till rätt
+  local newhome
+  local temp
+
   for f in ${CPHOME[@]}; do
     [[ $DRYRUN -eq 0 ]] && cp -r ${f} /home/${NAME}/$(basename ${f})
   done
@@ -61,10 +63,12 @@ cpFiles() {
   for t in ${TOUCH[@]}; do
     [[ $DRYRUN -eq 0 ]] && touch /home/${NAME}/${t}
   done
-}
 
-reclaim() {
-  [[ $DRYRUN -eq 0 ]] && chown -R $NAME:$NAME /home/$NAME/
+  temp=`ls /home2 | wc -l`
+  [[ $temp -ge `ls /home1 | wc -l` ]] && newhome="/home1" || newhome="/home2"
+
+  mv /home/${NAME} ${newhome}/
+  chown -R $NAME:$NAME /home/$NAME/
 }
 
 configServices() {
