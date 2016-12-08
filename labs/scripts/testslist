@@ -1,3 +1,4 @@
+DNS_remotetest.sh
 NTP_test.sh
 NET_test.sh
 STO_test.sh

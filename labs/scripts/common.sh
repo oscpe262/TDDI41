@@ -1,4 +1,5 @@
 #!/bin/bash
+CTTL=10 #Setting to less than 2 might fuck up DNS and/or DNS tests. :p
 FORCE_EXIT=0
 VERBOSE=0
 DRYRUN=0

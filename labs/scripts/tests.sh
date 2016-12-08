@@ -83,9 +83,12 @@ dnstest() {
   local retval=0
   print_info "Testing DNS - ${Yellow}External${Reset} tests:"
   ./DNS_test.sh || ((retval++))
-  #print_info "Testing DNS - ${Yellow}Internal${Reset} tests:"
+  echo -e "\n\n\n"
+  print_info "Testing DNS - ${Yellow}Internal${Reset} tests:"
+  techo "Internal tests at ${Yellow}Client-1"${Reset}
+  ssh -t root@${c1} ${remote_path}/DNS_remotetest.sh &> /dev/null &
+  pid=$!; progress $pid
   return $retval
-  #ssh -t root@${c1} ${remote_path}/DNS_remotetest.sh
 }
 
 ntptest() {

@@ -9,3 +9,4 @@ common.sh
 nodes.conf
 NETWORKS
 installpkgs.sh
+wipeuseradd.sh
