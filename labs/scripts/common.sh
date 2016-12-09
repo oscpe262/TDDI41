@@ -27,6 +27,16 @@ DRYRUN=0
   BCyan=${BOLD}$(tput setaf 6)
   BWhite=${BOLD}$(tput setaf 7)
 
+### USERADD CONFIG VARIABLES ###################################################
+# These are variables used throughout the script. Adjust to fit your desires.
+  declare -A USERS      # Users array (associative).
+  CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
+  CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
+  USUF=3                # Suffix Length in case of conflicting usernames
+  PWLENGTH=8            # Length of passwords generated
+  CPHOME=()             # Array of files to be copied to homedir of each user
+  TOUCH=(".aliases")    # Array of empty files to be created in homedirs
+
 ### MISC VARS ##################################################################
 
   LOG="/dev/null"
@@ -51,6 +61,7 @@ DRYRUN=0
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
   prompt2="Enter option: "
+
 
 ### SUPPORT FUNCS ##############################################################
 

@@ -27,6 +27,7 @@ ahome="/etc/auto.home"
 [[ ! -f /etc/.bak/auto.master ]] && cp ${amaster} /etc/.bak/auto.master
   cp /etc/.bak/auto.master /etc
 
+
   ### Exercise 3: Configure a file server ########################################
 # 3-1 Set your server up as a file server using NFS (or the network file system of your choice).
 if [[ `uname -u` ==  "server" ]]; then
@@ -59,6 +60,7 @@ if [[ `uname -u` ==  "server" ]]; then
   /etc/init.d/nfs-kernel-server restart
 fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
+# 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
 techo "3-3 Configure your clients to automatically mount /usr/local from the server at boot."
 pkginstall "nfs-common"
 sed -i '/automount/d' /etc/nsswitch.conf
@@ -98,7 +100,13 @@ echo -e "+auto.master" >> ${amaster}
 
 # 4-2 Create two new users, but move one user's home directory to /home2/USERNAME and the other user's home directory to /home1/USERNAME (you will probably have to create the /home1 and /home2 directories first). Ensure that no home directories remain in /home. Do not change the home directory location in the user database.
 if [[ `uname -u` == "server" ]]; then
-  ./SCT7_funcs.sh "userfile"
+  # MOVE TO TESTS?
+  users=( "matteus" "oscar" )
+  for NAME in ${users[@]}; do
+    addUser
+    echo "${NAME}:${NAME}" | chpasswd
+    cpFiles
+  done
 fi
 
 ### Report: Automated test cases that show that /home1 and /home2 are being exported with appropriate permissions.
@@ -112,8 +120,6 @@ fi
 ##### Depending on the version of Debian you are using, some unexpected configuration may be required. In particular, some versions of Debian default to NFS version 4 in the automounter, even when the server does not support it. We recommend that you explicitly configure the automount maps so the automounter uses NFS version 3 by adding "-vers=3" between the key and the path in the automount maps.
 
 ### Exercise 5: Configure the automounter ######################################
-
-# 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
 
 # 5-3 Verify that all users can log on to the client and that the correct home directories are mounted.
 ## See NFS_test.sh

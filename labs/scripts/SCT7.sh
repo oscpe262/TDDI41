@@ -4,16 +4,6 @@ source common.sh
 # accept input consisting of one name per line. Names can contain multiple
 # words, unusual characters, anything.
 
-### CONFIG VARIABLES
-# These are variables used throughout the script. Adjust to fit your desires.
-  declare -A USERS      # Users array (associative).
-  CGROUPS="users"       # Comma-separated list of groups. Default: GROUPS=users
-  CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
-  USUF=3                # Suffix Length in case of conflicting usernames
-  PWLENGTH=8            # Length of passwords generated
-  CPHOME=()             # Array of files to be copied to homedir of each user
-  TOUCH=(".aliases")    # Array of empty files to be created in homedirs
-
 ### SCT7 MAIN SCRIPT ###########################################################
 
   [[ ! `uname -u` == "server" ]] && exit 0
