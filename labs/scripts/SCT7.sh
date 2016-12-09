@@ -1,4 +1,5 @@
 #!/bin/bash
+source common.sh
 # 7-1 Write a script that can add users in bulk to your system. It needs to
 # accept input consisting of one name per line. Names can contain multiple
 # words, unusual characters, anything.
@@ -13,23 +14,12 @@
   CPHOME=()             # Array of files to be copied to homedir of each user
   TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 
-[[ ! -f SCT7_funcs.sh ]] && echo -e "Missing dependency: SCT7_funcs.sh" && exit 1
-source SCT7_funcs.sh
-source common.sh
 ### SCT7 MAIN SCRIPT ###########################################################
 
   [[ ! `uname -u` == "server" ]] && exit 0
 
   print_title "SCT7 SETUP SCRIPT"
   [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
-
-  # This part is for testing purposes only.
-  if [[ $DRYRUN -eq 0 ]]; then
-    read_text "${BRed}YOU ARE LIVE! CHANGES WILL BE MADE TO THE SYSTEM. PROCEED? "
-    [[ ! ${OPTION} == y ]] && return 1
-  fi
-  # End of dry-run option.
-
 
   # Read the usernames from file.
   print_title "ADDING USERS (${INFILE})"
@@ -51,7 +41,6 @@ source common.sh
     pwGen &
     pid=$! ; progress $pid ; PASSWD=`cat /dev/shm/name` ; rm /dev/shm/name
 
-    echo "trace: ${NAME}"
     USERS[${NAME}]=${PASSWD}
 
     techo "d) Copy standard files to home dir. (${Yellow}cpFiles${Reset})"

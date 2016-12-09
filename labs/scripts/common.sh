@@ -138,6 +138,7 @@ print_info() {
 dry_ok() {
   echo -ne "${Magenta}DryRun!${Reset}"
 }
+
 tested_ok () {
   echo -ne "${Green}${1}${Reset}"
 }
@@ -367,7 +368,7 @@ dynassign() {
   local _ENTRY="$(cat NETWORKS | grep ${DDNAME})"
   STARTADDRESS="$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*\.//' )"
   nw="130.236$(echo ${_ENTRY} | awk '{print $3}' | sed 's/\/..// ; s/.*236//' | cut -c 1-4 )"
-  EXTIF="$(echo ${_ENTRY} | awk '{print $4}')"
+  gwe="$(echo ${_ENTRY} | awk '{print $4}')"
 
   IPRANGE=()
   for _ip in {1..6}; do
@@ -421,13 +422,78 @@ pkginstall() {
   [[ `dpkg-query -W -f='${Status}' $1 2>/dev/null` ]] || apt-get -q -y install $1 --no-install-recommends --force-yes
 }
 
+randomString() {
+  RAND=$(cat /dev/urandom | tr -dc ${VALCHAR} | fold -w $NOCHARS | head -n 1)
+}
+
+userGen() {
+  local _LOOP=true
+  # Check if user exists ... Returns UID or -1.
+  if [ `id -u "$NAME"  2>/dev/null || echo -1` -ge 0 ]; then
+
+    # If existing:
+    # Generate a random string, append as USERNAME-STRING,
+    # make sure it does not exist.
+    while [ ${_LOOP} = true ];
+    do
+      VALCHAR="0-9"
+      NOCHARS=$USUF
+      randomString
+      NAME="${NAME}-${RAND}"
+      if [ `id -u "$NAME" 2>/dev/null || echo -1` -eq -1 ]; then
+         _LOOP=false
+      fi
+    done
+  fi
+  echo -ne "$NAME" > /dev/shm/name
+}
+
+addUser() {
+  # Add the users, default group being the same as the username and extra groups
+  # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
+  useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
+}
+
+pwGen() {
+  NOCHARS=$PWLENGTH
+  VALCHAR="a-zA-Z0-9!#%&?_-"
+  randomString
+  PASSWD=${RAND}
+  echo -ne "$PASSWD" > /dev/shm/name
+
+# This isn't very safe, but as we're going to print it anyway later ...
+  echo "${NAME}:${PASSWD}" | chpasswd
+}
+
+cpFiles() {
+  local newhome
+  local temp
+
+  for f in ${CPHOME[@]}; do
+    cp -r ${f} /home/${NAME}/$(basename ${f})
+  done
+
+  for t in ${TOUCH[@]}; do
+    touch /home/${NAME}/${t}
+  done
+
+  temp=`ls /home2 | wc -l`
+  [[ $temp -ge `ls /home1 | wc -l` ]] && newhome="/home1" || newhome="/home2"
+
+  mv /home/${NAME} ${newhome}/
+  chown -R $NAME:$NAME /home/$NAME/
+}
+
+configServices() {
+ :
+}
+
+
+
+
+
+
 [[ -f nodes.conf ]] && dynassign "`cat nodes.conf`" || dynassign "b4"
-  #nw=130.236.178
-  gwe=${nw}.17
-  #gwi=${nw}.153
-  #srv=${nw}.154
-  #c1=${nw}.155
-  #c2=${nw}.156
 
 #echo "trace" ; pause
 ### EOF ###
