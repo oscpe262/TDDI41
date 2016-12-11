@@ -27,8 +27,7 @@ if [[ `uname -n` == "server" ]]; then
 
 ### 3-3 Populate the NIS tables with data from your local files.
   ypserv
-  /usr/lib/yp/ypinit -m
-  /etc/init.d/nis restart
+  nisrestart
 fi
 
 ### Report: Automated tests that show that the NIS server is running and contains the appropriate data.
@@ -53,7 +52,7 @@ if [[ ! `uname -n` == "server" ]]; then
   echo "order nis" >> /etc/host.conf
   echo -e "hosts:\t\tfiles nis dns" >> /etc/nsswitch.conf
   echo "+::::::" >> /etc/passwd
-  /etc/init.d/nis restart
+  nisrestart
 fi
 
 ### Report: Automated tests that show that the clients bind to the NIS server at startup. At this point your clients are NIS clients but do not use NIS for anything.

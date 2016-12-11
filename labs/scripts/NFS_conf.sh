@@ -5,6 +5,7 @@ source common.sh
 amaster="/etc/auto.master"
 alocal="/etc/auto.local"
 ahome="/etc/auto.home"
+maps="passwd group hosts rpc services netid protocols netgrp auto.master auto.home auto.local"
 
 /etc/init.d/autofs stop
 
@@ -22,54 +23,65 @@ ahome="/etc/auto.home"
 
 # Linux supports two different NFS servers: the user space server and the kernel space server. Use the kernel space server for this lab.
 
-# 5-1 Install an automounter on the clients and on the server. The autofs package is recommended, but you may try amd or some other automounter if you prefer. Note the warning above.
+ print_info "${Yellow}5-1${BReset} Install an automounter on the clients and on the server"#.  The autofs package is recommended, but you may try amd or some other automounter if you prefer. Note the warning above.
 [[ `dpkg -s autofs` ]] || pkginstall "autofs"
 [[ ! -f /etc/.bak/auto.master ]] && cp ${amaster} /etc/.bak/auto.master
   cp /etc/.bak/auto.master /etc
 
 
   ### Exercise 3: Configure a file server ########################################
-# 3-1 Set your server up as a file server using NFS (or the network file system of your choice).
-if [[ `uname -u` ==  "server" ]]; then
-  techo "Set server as file server (NFS)"
+if [[ `uname -n` ==  "server" ]]; then
+  print_info "${Yellow}3-1${BReset} Set your server up as a file server using NFS (or the network file system of your choice)"
   pkginstall "nfs-kernel-server"
   #[[ -f /etc/default/portmap ]] && sed -i 's/^OPTIONS/#OPTIONS/' /etc/default/portmap
   sed -i '/^portmap/d' /etc/hosts.allow
   echo "portmap: ${nw}.$STARTADDRESS/255.255.255.248\n\t127.0.0.1" >> /etc/hosts.allow
   echo "portmap: 0.0.0.0" >> /etc/hosts.deny
-# 3-2 Configure your server to export the /usr/local directory to all clients. It must not be possible to access /usr/local from any other system. Your server must not treat root users on the client as root on the exported file system.
+  print_info "${Yellow}3-2${BReset} Configure your server to export the /usr/local directory to all clients. It must not be possible to access /usr/local from any other system."
+  print_info "Your server must not treat root users on the client as root on the exported file system"
 
-  echo -e "/home\t auto.home" > ${amaster}
+  echo -e "/home\t\t auto.home" > ${amaster}
   echo -e "/usr/local\t auto.local" >> ${amaster}
 
-  echo -e "*\t server.${DDNAME}:/usr/local/&" > ${alocal} ###
+  echo -e "*\t server.${DDNAME}:/srv/nfs/local/&" > ${alocal} ###
 
   echo -e "*\t server.${DDNAME}:/home1/&" > ${ahome}
   echo -e "*\t server.${DDNAME}:/home2/&" >> ${ahome}
 
   [[ ! -f /etc/.bak/exports ]] && cp /etc/exports /etc/.bak/exports
   cp /etc/.bak/exports /etc
+  [[ ! -d /srv/nfs/local ]] && mkdir -p /srv/nfs/local
+  sed -i '/usr/d' /etc/fstab
+  echo "/usr/local/ /srv/nfs/local none bind,defaults 0 0" >> /etc/fstab
+  mount /srv/nfs/local
+
   mntopts="(fsid=0,rw,sync,no_root_squash,no_subtree_check)"
-  echo "/usr/local ${nw}.${STARTADDRESS}/29(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports
-# 4-3 Configure your NFS server to export /home1 and /home2 with the appropriate permissions to your clients (and only your clients).
+  echo "/srv/nfs/local ${nw}.${STARTADDRESS}/29(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports
+  print_info "${Yellow}4-3${BReset} Configure your NFS server to export /home1 and /home2 with the appropriate permissions to your clients (and only your clients)."
 # For more clients, we would of course mask out ...
   echo "/home1 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
   echo "/home2 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
-  exportfs -rav
+  #exportfs -rav #done in service script?
 
+  sed -i "s/^ALL\ =.*/ALL\ =\ \ ${maps}/" /var/yp/Makefile
+  print_info "${Yellow}NFS server restart${Reset}"
   /etc/init.d/nfs-kernel-server restart
 fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
 # 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
-techo "3-3 Configure your clients to automatically mount /usr/local from the server at boot."
+print_info "${Yellow}3-3${BReset} Configure your clients to automatically mount /usr/local from the server at boot."
 pkginstall "nfs-common"
 sed -i '/automount/d' /etc/nsswitch.conf
 echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
 sed -i '/auto\.master/d' ${amaster}
 echo -e "+auto.master" >> ${amaster}
 
-[[ `uname -n == "server"` ]] && /usr/lib/yp/ypinit -m
-/etc/init.d/nis restart
+print_info "${Yellow}NIS restart${Reset}"
+nisrestart
+print_info "${Yellow}Autofs restart${Reset}"
+/etc/init.d/autofs start
+
+### END OF SCRIPT ##############################################################
 
 ### Report: Automated test cases that demonstrate that your NFS service is working properly.
 ## See NFS_test.sh
@@ -99,15 +111,7 @@ echo -e "+auto.master" >> ${amaster}
 # see STO_(conf|test)
 
 # 4-2 Create two new users, but move one user's home directory to /home2/USERNAME and the other user's home directory to /home1/USERNAME (you will probably have to create the /home1 and /home2 directories first). Ensure that no home directories remain in /home. Do not change the home directory location in the user database.
-if [[ `uname -u` == "server" ]]; then
-  # MOVE TO TESTS?
-  users=( "matteus" "oscar" )
-  for NAME in ${users[@]}; do
-    addUser
-    echo "${NAME}:${NAME}" | chpasswd
-    cpFiles
-  done
-fi
+# see NFS_test.sh
 
 ### Report: Automated test cases that show that /home1 and /home2 are being exported with appropriate permissions.
 
@@ -129,4 +133,3 @@ fi
 # Note that the only automounter configuration that may reside in local files on the client are configuration files that are guaranteed to never change when new automounts are added or old ones removed. In other words, the master map and any map it references must be stored in the directory service. If you have a single local configuration file, you probably have too many. If you have more than one, you definitely have too many.
 
 # As a troubleshooting help, you may want to try running sh -x /etc/init.d/autofs restart to restart the automounter after reconfiguring it. The /etc/init.d/autofs script is responsible for reading the automount maps (configuration), and by using sh -x to invoke it, all commands that are used to read the configuration will be printed. You will be able to see exactly which files and NIS maps are consulted, and what automount commands are run.
-/etc/init.d/autofs start

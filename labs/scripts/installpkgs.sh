@@ -14,7 +14,7 @@ pkginstall() {
 
 packages=()
 if [[ `uname -n` == "server" ]]; then
-  packages=( "bind9" "bind9-doc" "bind9utils" "host" "nfs-kerner-server" )
+  packages=( "bind9" "bind9-doc" "bind9utils" "host" "nfs-kerner-server" "sshpass" )
 elif [[ `uname -n` == "gw" ]]; then
   packages=( "quagga" )
 fi

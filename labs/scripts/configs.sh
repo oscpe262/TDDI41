@@ -84,6 +84,7 @@ configs() {
           sshnfs &
           pid=$! ; progress $pid
           configlist[$OPT]=$?
+          ;;
         b)
           return
           ;;

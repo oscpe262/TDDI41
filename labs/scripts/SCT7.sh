@@ -6,7 +6,7 @@ source common.sh
 
 ### SCT7 MAIN SCRIPT ###########################################################
 
-  [[ ! `uname -u` == "server" ]] && exit 0
+  [[ ! `uname -n` == "server" ]] && exit 0
 
   print_title "SCT7 SETUP SCRIPT"
   [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
@@ -58,9 +58,8 @@ source common.sh
     #Yeah, those resets are just there for looks, literally...
 
   pause
-  /usr/lib/yp/ypinit -m
-  /etc/init.d/nis restart
-
+  nisrestart
+  
   # No user input apart from the list of names is allowed. The script may need to
   # do other things as well. Part of your job is to figure out what. Your script
   # also needs to be as fast as possible. Anything that can be done once for the

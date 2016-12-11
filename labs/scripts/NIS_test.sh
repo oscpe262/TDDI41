@@ -11,6 +11,7 @@
 
 ## - rensa dummykonton
 
+echo "Implicitly tested in NFS_test ..."
 
 ### Report: Automated tests that show that the clients bind to the NIS server at startup. At this point your clients are NIS clients but do not use NIS for anything.
 

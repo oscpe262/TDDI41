@@ -27,6 +27,8 @@ DRYRUN=0
   BCyan=${BOLD}$(tput setaf 6)
   BWhite=${BOLD}$(tput setaf 7)
 
+  remote_path="/root"
+
 ### USERADD CONFIG VARIABLES ###################################################
 # These are variables used throughout the script. Adjust to fit your desires.
   declare -A USERS      # Users array (associative).
@@ -34,7 +36,7 @@ DRYRUN=0
   CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
   USUF=3                # Suffix Length in case of conflicting usernames
   PWLENGTH=8            # Length of passwords generated
-  CPHOME=()             # Array of files to be copied to homedir of each user
+  CPHOME=( "${remote_path}/NFS_test.sh" )             # Array of files to be copied to homedir of each user
   TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 
 ### MISC VARS ##################################################################
@@ -56,7 +58,6 @@ DRYRUN=0
   ttodo="${tboxl}${Reset} -- ${tboxr}"
   legend="${tdone} = Passed, ${tfail} = Failed, ${ttodo} = Not yet run"
 
-  remote_path="/root"
   files=()
   SPIN="/-\|"
   prompt1="Enter options (e.g: 1 2 3 or 1-3): "
@@ -383,7 +384,7 @@ dynassign() {
 
   IPRANGE=()
   for _ip in {1..6}; do
-    IPRANGE+=("$nw.$(($STARTADDRESS + $_ip)) ")
+    IPRANGE+=("$nw.$(($STARTADDRESS + $_ip))")
   done
   [[ ! -z $1 ]] && gwi=${IPRANGE[0]} && srv=${IPRANGE[1]} && c1=${IPRANGE[2]} && c2=${IPRANGE[3]} && return 0
   local dnodes=( "Gateway/Router" "Server" "Client-1" "Client-2" )
@@ -462,7 +463,9 @@ userGen() {
 addUser() {
   # Add the users, default group being the same as the username and extra groups
   # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
+  /etc/init.d/autofs stop &> /dev/null
   useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
+  /etc/init.d/autofs start &> /dev/null
 }
 
 pwGen() {
@@ -480,6 +483,7 @@ cpFiles() {
   local newhome
   local temp
 
+  /etc/init.d/autofs stop &> /dev/null
   for f in ${CPHOME[@]}; do
     cp -r ${f} /home/${NAME}/$(basename ${f})
   done
@@ -492,17 +496,18 @@ cpFiles() {
   [[ $temp -ge `ls /home1 | wc -l` ]] && newhome="/home1" || newhome="/home2"
 
   mv /home/${NAME} ${newhome}/
-  chown -R $NAME:$NAME /home/$NAME/
+  chown -R $NAME:$NAME ${newhome}/$NAME/
+  /etc/init.d/autofs start &> /dev/null
 }
 
 configServices() {
  :
 }
 
-
-
-
-
+nisrestart() {
+  [[ `uname -n` == "server" ]] && echo "" | /usr/lib/yp/ypinit -m
+  /etc/init.d/nis restart
+}
 
 [[ -f nodes.conf ]] && dynassign "`cat nodes.conf`" || dynassign "b4"
 

@@ -20,7 +20,7 @@ source configs.sh
 ### MAIN VARIABLES #############################################################
 
 checklist=( 2 2 2 2 2 2 2 2 2 2 )
-testlist=( 3 2 2 2 0 2 0 0 0 0 )
+testlist=( 3 2 2 2 2 2 2 0 0 0 )
 configlist=( 2 2 2 2 2 2 2 2 2 )
 backuplist=( 0 2 2 )
 maintitle="TDDI41 2016 Main Script"
@@ -117,6 +117,7 @@ while true; do
         print_title "Remote Scripts Sync"
         rsyncto testslist conflist
         setval=$?
+        [[ $setval -ge 1 ]] && setval=1  
         testlist[0]=$setval
 			  configlist[0]=$setval
         ;;

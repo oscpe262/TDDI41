@@ -49,11 +49,12 @@ tests() {
             ntptest ${target} || setval=1
           done
           testlist[3]=$setval
-          [[ $setval -eq 0 ]] && configlist[4]=0
-          sleep 1
           ;;
         4)
-          echo "TBA"
+          print_title "NIS Tests"
+          print_info "NIS is implicitly tested (well, pretty much at least) in the NFS tests. Run NFS configs for client-1 and server -if not done already- and run the NFS test suite."
+          pause
+          configlist [4]=0
           ;;
         5)
           print_title "STO Test Suite"
@@ -64,7 +65,12 @@ tests() {
           sleep 1
           ;;
         6)
-          echo "TBA"
+          print_title "NFS Test Suite"
+          print_info "Testing NFS configuration. This requires NIS to be implemented. ${Red}It will add (and remove the ones added) ${BReset}insecure users. Make sure they aren't left on the system if something goes wrong. This will test NIS (by connecting to C1 as the added users) and make sure the home directories are where they are supposed to be."
+          techo "Test NFS"
+          ssh -t root@${srv} ${remote_path}/NFS_test.sh &> /dev/null &
+          pid=$! ; progress $pid
+          [[ $? == 0 ]] && testlist[6]=0 || testlist[6]=1
           ;;
 		    "b")
           DRYRUN=1
