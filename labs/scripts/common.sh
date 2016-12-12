@@ -36,7 +36,7 @@ DRYRUN=0
   CSHELL="/bin/bash"    # Shell for added users. Default: /bin/bash
   USUF=3                # Suffix Length in case of conflicting usernames
   PWLENGTH=8            # Length of passwords generated
-  CPHOME=( "${remote_path}/NFS_test.sh" )             # Array of files to be copied to homedir of each user
+  CPHOME=( "${remote_path}/NFS_test.sh" "${remote_path}/common.sh" )             # Array of files to be copied to homedir of each user
   TOUCH=(".aliases")    # Array of empty files to be created in homedirs
 
 ### MISC VARS ##################################################################
@@ -104,10 +104,11 @@ progress() {
 #      echo -ne "$pid's retcode: $retcode " >> $LOG
       #[[ $DRYRUN -eq 1 ]] && dry_ok && return 0
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
-        tested_ok "Passed!"
+        tested_ok "${tdone}"
 				return 0
       else
-        error_msg "Failed! ($retcode)"
+        error_msg "${tfail} ($retcode)"
+        sleep 1
 				return 1
       fi
       break

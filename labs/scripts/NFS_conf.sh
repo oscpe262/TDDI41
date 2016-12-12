@@ -45,22 +45,27 @@ if [[ `uname -n` ==  "server" ]]; then
 
   echo -e "*\t server.${DDNAME}:/srv/nfs/local/&" > ${alocal} ###
 
-  echo -e "*\t server.${DDNAME}:/home1/&" > ${ahome}
-  echo -e "*\t server.${DDNAME}:/home2/&" >> ${ahome}
+  echo -e "*\t server.${DDNAME}:/srv/nfs/home1/&" > ${ahome}
+  echo -e "*\t server.${DDNAME}:/srv/nfs/home2/&" >> ${ahome}
 
   [[ ! -f /etc/.bak/exports ]] && cp /etc/exports /etc/.bak/exports
   cp /etc/.bak/exports /etc
   [[ ! -d /srv/nfs/local ]] && mkdir -p /srv/nfs/local
-  sed -i '/usr/d' /etc/fstab
+  sed -i '/srv/d' /etc/fstab
   echo "/usr/local/ /srv/nfs/local none bind,defaults 0 0" >> /etc/fstab
+  echo "/home1/ /srv/nfs/home1 none bind,defaults 0 0" >> /etc/fstab
+  echo "/home2/ /srv/nfs/home2 none bind,defaults 0 0" >> /etc/fstab
   mount /srv/nfs/local
 
-  mntopts="(fsid=0,rw,sync,no_root_squash,no_subtree_check)"
+  mntopts="(rw,sync,no_root_squash,no_subtree_check)"
+  mntrootopts="(fsid=0,rw,sync,no_root_squash,no_subtree_check)"
+  echo "/srv/nfs/ ${c1}${mntrootopts} ${c2}${mntrootopts}" >> /etc/exports
   echo "/srv/nfs/local ${nw}.${STARTADDRESS}/29(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports
   print_info "${Yellow}4-3${BReset} Configure your NFS server to export /home1 and /home2 with the appropriate permissions to your clients (and only your clients)."
 # For more clients, we would of course mask out ...
-  echo "/home1 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
-  echo "/home2 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
+
+  echo "/srv/nfs/home1 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
+  echo "/srv/nfs/home2 ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
   #exportfs -rav #done in service script?
 
   sed -i "s/^ALL\ =.*/ALL\ =\ \ ${maps}/" /var/yp/Makefile

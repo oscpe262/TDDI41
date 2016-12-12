@@ -35,13 +35,13 @@ if [[ `uname -n` == "server" ]]; then
   done
 
 
-  for NAME in ${users[@]}; do
-    techo "Removing user ${Yellow}$NAME${Reset}"
-    userdel $NAME &
-    pid=$! ; progress $pid
-    [[ -d /home1/$NAME ]] && rm -rf /home1/$NAME
-    [[ -d /home2/$NAME ]] && rm -rf /home2/$NAME
-  done
+  #for NAME in ${users[@]}; do
+  #  techo "Removing user ${Yellow}$NAME${Reset}"
+  #  userdel $NAME &
+  #  pid=$! ; progress $pid
+  #  [[ -d /home1/$NAME ]] && rm -rf /home1/$NAME
+  #  [[ -d /home2/$NAME ]] && rm -rf /home2/$NAME
+  #done
 
   techo "${Yellow}NIS${Reset} restart"
   nisrestart 1&> /dev/null &

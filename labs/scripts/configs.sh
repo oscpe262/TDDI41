@@ -21,7 +21,7 @@ configs() {
     echo -e "${BYellow}${_nodes}${Reset}"
 		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer Files to UMLs (${Yellow}Prereq.${Reset})")\n"
 
-		echo " 1) $(mainmenu_item "${configlist[1]}" "Add Users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
+		#echo " 1) $(mainmenu_item "${configlist[1]}" "Add Users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add Users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset} Not yet implemented")"
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS Configuration (${Yellow}DNS${Reset})")"
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP Configuration (${Yellow}NTP${Reset})")"
@@ -36,15 +36,6 @@ configs() {
 				0)
           csync
 					;;
-        1)
-          break
-          print_line
-          read -p "Filepath to list of users on ${Yellow}local host${Reset}: " INFILE
-          [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
-          sshsct7 "dry"
-          configlist[$OPT]=$?
-          files=(${_tmp[@]})
-          ;;
         2)
           break
           print_line
@@ -101,9 +92,9 @@ sshnfs() {
   print_title "NFS Setup Script"
   print_info ""
   for DEST in ${nodes[@]}; do
-    techo "Configuring ${Blue}NIS${Reset} on node ${Yellow}${DEST}${Reset}"
-    ssh -t root@${DEST} ${remote_path}/NFS_conf.sh # &> /dev/null &
-    #pid=$! ; progress $pid
+    techo "Configuring ${Blue}NFS${Reset} on node ${Yellow}${DEST}${Reset}"
+    ssh -t root@${DEST} ${remote_path}/NFS_conf.sh &> /dev/null &
+    pid=$! ; progress $pid
     [[ $? -ne 0 ]] && ((_retval++))
   done
   sleep 3
@@ -117,7 +108,7 @@ sshnis() {
   for DEST in ${nodes[@]}; do
     techo "Configuring ${Blue}NIS${Reset} on node ${Yellow}${DEST}${Reset}"
     ssh -t root@${DEST} ${remote_path}/NIS_conf.sh &> /dev/null &
-    #pid=$! ; progress $pid
+    pid=$! ; progress $pid
     [[ $? -ne 0 ]] && ((_retval++))
   done
   sleep 3
