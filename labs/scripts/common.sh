@@ -243,16 +243,6 @@ invalid_option() {
   pause
 }
 
-transfer() {
-  echo "Using depracated function transfer(), replace with rsyncto"
-  pause
-  for node in ${nodes[@]}; do
-    for file in ${files[@]}; do
-      scp ${file} root@${node}:${remote_path}/
-    done
-  done
-}
-
 rsyncfrom() {
   local INFILE=$1
   local retval=0
