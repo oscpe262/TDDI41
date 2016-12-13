@@ -66,29 +66,18 @@ DRYRUN=0
 
 ### SUPPORT FUNCS ##############################################################
 
-cecho () {
-  echo "Deprecated function, cecho."
-  echo -e "$1" && echo -e "$1" >> "$LOG"
-  tput sgr0
-}
-ncecho () {
-  echo "Deprecated function, ncecho."
-  echo -ne "$1" && echo -ne "$1" >> "$LOG"
-  tput sgr0
-}
-
 ntecho () {
   echo -e "\n\n\t${1}"
-}
-
-spinny() {
-  echo -ne "\b${SPIN:i++%${#SPIN}:1}"
 }
 
 techo() {
   local _line="${1}:  "
   printf "\n%s" "    ${_line}"
   [[ $(tput cols) -ge 120 ]] && printf "%*s" $(( 60-${#_line} )) ""
+}
+
+spinny() {
+  echo -ne "\b${SPIN:i++%${#SPIN}:1}"
 }
 
 progress() {
@@ -101,8 +90,6 @@ progress() {
       echo -ne "\b";
       wait $pid
       retcode=$?
-#      echo -ne "$pid's retcode: $retcode " >> $LOG
-      #[[ $DRYRUN -eq 1 ]] && dry_ok && return 0
       if [[ $retcode == 0 ]] || [[ $retcode == 255 ]]; then
         tested_ok "${tdone}"
 				return 0
@@ -148,17 +135,12 @@ print_info() {
   echo -e "${BOLD}$1${Reset}\n" | fold -sw $T_COLS | sed 's/^/\t/'
 }
 
-dry_ok() {
-  echo -ne "${Magenta}DryRun!${Reset}"
-}
-
 tested_ok () {
   echo -ne "${Green}${1}${Reset}"
 }
 
 error_msg () {
   echo -ne "${Red}${1}${Reset}" >&2
-#  echo -e "${Red}${1}${Reset}" >> "$LOG"
   [[ $FORCE_EXIT -eq 1 ]] && echo -e "Forced Exit active!" && exit 1
 	return 1
 }
@@ -301,13 +283,14 @@ rsyncto(){
     techo "Transferring"
     rsync -aruz -e "ssh" transfer.tar root@${srca}:${remote_path}/ &> /dev/null &
     pid=$!; progress $pid
-    [[ ! $? == 0 ]] && retval=1
+    [[ $? == 0 ]] || ((retval++))
     techo "Unpacking"
     ssh -t root@${srca} tar -xf transfer.tar &> /dev/null &
     pid=$!; progress $pid
-    [[ ! $? == 0 ]] && retval=1
+    [[ $? == 0 ]] | ((retval++))
   done
   rm transfer.tar
+  [[ $retval -ne 0 ]] && retval=1
   return ${retval}
 }
 
@@ -483,6 +466,7 @@ cpFiles() {
     touch /home/${NAME}/${t}
   done
 
+  
   temp=`ls /home2 | wc -l`
   [[ $temp -ge `ls /home1 | wc -l` ]] && newhome="/home1" || newhome="/home2"
 
