@@ -1,14 +1,16 @@
 \input{../report.input.tex}
-\section{UML}
-\subsection{3-2}
+\chapter{UML}
+\section{Exercise 3: Viewing mln output}
+
+\subsection{3-2 Use the cat command (cat filename) to display the scripts. How much memory do the UML instances have?}
 64M for lab1, lab2 server has 128M
 
-\subsection{3-3}
+\subsection{3-3 The start scripts can start each UML in an xterm or screen. What is screen?}
 A ``wrapper for terminal sessions'', or rather, an emulated terminal device. It allows the terminal session to be kept running (and resumed later) even when the terminal client itself is closed.
-
-\subsection{6-1}
+\section{Exercise 6: Using scp to copy files from UML to host}
+\subsection{6-1 What command would you use to copy the file /etc/network/interfaces from the UML to marsix.}
 \verb=$ scp root@10.17.1.212:/etc/network/interfaces <wherever-we-want-to-put-it>=
 
-\subsection{6-2}
+\subsection{6-2 What command would you use to copy the directory /etc/default (and all its contents) from the UML to marsix.}
 \verb=$ scp -r root@...:/etc/default <destination>=
 \end{document}

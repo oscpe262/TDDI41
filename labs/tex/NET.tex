@@ -1,6 +1,7 @@
 \input{../report.input.tex}
 \chapter{NET}
-\subsection{1-1}
+\section{Exercise 1: Review and preparation}
+\subsection{1-1: Describing ping and it's usage.}
 Ping is used to check and time connectivity between two nodes (a). It uses the ICMP protocol to send \verb=ECHO_REQUEST= and \verb=ECHO_RESPONSE= datagrams (c).
 
 b) \verb=ping -n <address>=
@@ -8,7 +9,7 @@ b) \verb=ping -n <address>=
 d) By \verb=ping= alone, we need to know that the host, and the routers leading there, allows ICMP datagrams. But, assuming they do,
 \verb=ping 10.17.1.1= should do the trick. We will then get a response time.
 
-\subsection{1-2}
+\subsection{1-2: Describing traceroute.}
 a) There are often multiple possible paths between nodes, and traceroute tries to list a possible path between two nodes (client, target). Over Internet, we can often run into incomplete traces though as ICMP datagrams and not-explicitly-used UDP ports are often blocked by firewalls. Therefore, http-packets to ports known to be in use (i.e. 80 for a web server, 25 for a mail server, etc.) can be needed to give a proper path.
 
 b) \verb=traceroute= sends IP packets with an increasing ttl, and listening for responses claiming it to have exceeded its ttl. This keeps on going until we get an "unreachable" or TCP reset response, at which time we will have reached the target.
@@ -30,50 +31,56 @@ d) \begin{verbatim}traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
 
 Here we see an example of a 10-hop path from 130.236.210.157 to a Google DNS server (8.8.8.8) with 60 byte packets (IPv4). By default, we send three probe packets per hop and therefore we end up with three response times for each hop. The times are between current and previous node. We also see the nodes' name addresses (where applicable) and IP addresses.
 
-\subsection{1-3}
+\subsection{1-3: ifconfig, route, netstat and ip.}
 a)
 \verb=ifconfig eth0 130.236.189.14/24 broadcast 130.236.189.255=
 
 \verb=ip addr add 130.236.189.14/24 broadcast 130.236.189.255 dev eth0=
 
-\subsection{1-4}
+b) \verb=route -F ; ip route ; netstat -r=
+
+\subsection{1-4: sysctl}
 a) \verb=sysctl= in Linux is the control of kernel runtime parameters. This is done through files in procfs' virtual process file system (\verb=/proc/sys=).
 
 b) If we want to load certain values at boot time, we have to know what init-system we use. For instance, in systemd, we'll put the config files in \verb=/etc/system.d/=, whereas in sysvinit we'll use \verb=/etc/sysctl.conf=.
 
 c) \verb=net.ipv<4|6>.conf.<device|all>.forwarding=
 
-\subsection{1-5}
+\subsection{1-5 Which addresses are your hosts supposed to use? Which names? Which netmasks and broadcast addresses? Which addresses are your hosts supposed to use? Which names? Which netmasks and broadcast addresses?}
 FQDN: b4.sysinst.ida.liu.se\\
 Internal IP range: 130.236.178.152/29 (i.e. 130.236.178.(152-159, brd 159, hosts 153-158))\\
 Router external IP: 130.236.178.17
 
-\subsection{1-6}
+\subsection{1-6 Explain the difference between routing and forwarding (as related to IP networking).}
 Routing is finding the path to where the destinations of packets are, forwarding is just passing the packet on, not knowing whether it would reach the destination or not.
 
-\subsection{7-1}
-\emph{Errata: Yes, there is an oversight by the teachers. nsswitch.conf is configured properly already.}
+\section{Exercise 7: Resolver and NSS configuration}
+\emph{Errata: Yes, there is an oversight by the teachers. nsswitch.conf is configured properly in this regard already.}
+\subsection{7-1 Answer the following questions.}
 
-a) \verb=/etc/nsswitch.conf=
+\subsubsection{a) What configuration file controls NSS.}
+\verb=/etc/nsswitch.conf=
 
-b) \verb=/etc/resolv.conf=
+\subsubsection{b) What configuration file controls the resolver.}
+\verb=/etc/resolv.conf=
 
-c) Defines the domain context for where to look for short host names when we do not have a fully qualified domain name. Usually the same as \verb=domain=, but might, for instance, differ when different subnets are present.
+\subsubsection{c) What does the "search" keyword in the resolver configuration file do.}
+Defines the domain context for where to look for short host names when we do not have a fully qualified domain name. Usually the same as \verb=domain=, but might, for instance, differ when different subnets are present.
 
-%\subsection{7-2}
-% echo "nameserver 130.236.1.9" >> /etc/resolv.conf
+\subsection{7-2 Configure the resolver on all systems to use 130.236.1.9 as its name server.}
+\verb=echo "nameserver 130.236.1.9" >> /etc/resolv.conf=
 
-%\subsection{7-3}
-% sed -i "s/^hosts.*$/hosts: files dns/g" /etc/nsswitch.conf
+\subsection{7-3 Configure the name service switch on all systems to use DNS as a source for host names.}
+\verb= sed -i "s/^hosts.*$/hosts: files dns/g" /etc/nsswitch.conf=
 
-\subsection{8-1}
+\section{Exercise 8: Quagga configuration files}
+\subsection{8-1 Quagga consists of several separate processes. Describe how they fit together.}
 Quagga consists of a couple daemons, each specific to a routing protocol, and \verb=zebra= which is the manager daemon.
 
-\subsection{8-2}
+\subsection{8-2 What configuration files does the Debian installation of Quagga use.}
 The Debian installation of Quagga use the configuration files in \verb=/etc/quagga/*=
 
-\subsection{8-3}
-\emph{How do you configure Quagga interactively? When configuring interactively, how do you save the current configuration to file.}
+\subsection{8-3 How do you configure Quagga interactively? When configuring interactively, how do you save the current configuration to file.}
 
 We connect to the zebra daemon by \verb=telnet= as suggested. From there, we \verb=enable= privileged mode and configure stuff in real time. We can then \verb=write file= to save current config to file.
 
@@ -83,7 +90,8 @@ We connect to the zebra daemon by \verb=telnet= as suggested. From there, we \ve
 % \subsection{9-2}
 % multicast route table to 224.0.0.9 on eth1
 
-\subsection{10}
+\section{Exercise 10: RIP configuration}
+\subsection{10 Report: The output of show ip rip and show ip rip status, and the current routing table.}
 \begin{verbatim}
 ripd> show ip rip status
 Routing Protocol is "rip"
@@ -133,7 +141,8 @@ R(n) 130.236.179.120/29 130.236.178.37        2 130.236.178.37    0 02:55
 default via 130.236.178.1 dev eth1
 \end{verbatim}
 
-\subsection{11}
+\section{Exercise 11: RIP announcements}
+\subsection{11 Report: Relevant output from your session with 130.236.178.1.}
 \begin{verbatim}
 ripd-ida-gw> show ip rip
 Codes: R - RIP, C - connected, S - Static, O - OSPF, B - BGP
@@ -155,12 +164,15 @@ R(n) 130.236.179.120/29 130.236.178.37        2 130.236.178.37    0 02:45
 C(r) 130.236.181.128/25 0.0.0.0               1 self (connected:1)  0
 \end{verbatim}
 
-%13-1 Configure your router to filter incoming announcements (use a prefix list). You should a) Accept routes for 10.17.1.0/24 (but not longer prefixes).
-%zebra: ip prefix-list a1 permit 10.17.1.0/24
+\section{Exercise 13: Intermediate RIP configuration (optional)}
+\subsection{13-1 Configure your router to filter incoming announcements (use a prefix list). You should:}
+\subsubsection{a) Accept routes for 10.17.1.0/24 (but not longer prefixes).}
+zebra: ip prefix-list a1 permit 10.17.1.0/24
 
-% b) Accept routes for the other groups' address space.
-% zebra: ip prefix-list b1 permit 130.236.178.0/23 ge 29
+\subsubsection{b) Accept routes for the other groups' address space.}
+zebra: ip prefix-list b1 permit 130.236.178.0/23 ge 29
 
-% c) Not accept anything else.
-% defaults
+\subsubsection{c) Not accept anything else.}
+defaults
+
 \end{document}

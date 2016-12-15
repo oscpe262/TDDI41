@@ -1,6 +1,7 @@
 \input{../report.input.tex}
 \chapter{SCT}
-\subsection{1-1}
+\section{Exercise 1: \$* and \$@}
+\subsection{1-1 What is the difference between using \$* and \$@ to access all parameters to a script or function?}
  \verb=$@= looks at each argument individually, whereas \verb=@*= regards them as a collection as shown by the example below:
 
 \begin{verbatim}
@@ -10,19 +11,20 @@ printf "%s\n" "$@"
 printf "%s\n" "$*"
 #EOF
 
- $ ./foo.sh meep moop
+$ ./foo.sh meep moop
   meep
   moop
   meep moop
 \end{verbatim}
-
-\subsection{2-1}
+\section{Exercise 2: Positional parameters in for loops}
+\subsection{2-1 Why is \$@ quoted (inside quotation marks) in the for loop?}
 \begin{verbatim}$@\end{verbatim} will make another evaluation of the parameter which can yield unwanted results with reserved characters. For instance, if fed \verb=`ls -F`= when an executable is present in the path (annotated in the output with \verb='*'=, e.g. \verb=foo*= ), it will evaluate the expression (\verb=foo*= becomes \em"all files beginning with\em \verb="foo"=) which might result in duplicate arguments.
 
-\subsection{2-2}
+\subsection{2-2 Could \$* have been used instead of \$@? Explain your answer.}
 Yes, and no. \verb=$*= could work, but we would still run into the issues mentioned in \emph{2-1} with evaluation of the arguments provided. \verb=$*= would not work however, unless it is only one file provided as argument.
 
-\subsection{3-1}
+\section{Exercise 3: While loops}
+\subsection{3-1 How do while loops work.}
 \begin{verbatim}
 #/bin/bash
 i=10
@@ -33,34 +35,40 @@ do
 done
 \end{verbatim}
 
-\subsection{5-1}
+\section{Exercise 5: Bash syntax}
+\subsection{5-1 What does \texttt{\$\{line:0:1\}} do? Note that it is a form of parameter expansion.}
 Evaluates \verb=$line=, string position 0, 1 character(s).
 
-\subsection{5-2}
+\subsubsection{5-2 What does a colon on a single line do (the true branch of the if statement in the example).}
 : == true, which is needed as conditional blocks can't be empty.
 
-\subsection{5-3}
+\subsubsection{5-3 Bash has an alternate syntax for command substitution (backticks). What is it?}
 \verb=$(command)=
 
-\subsection{5-4}
+\subsubsection{5-4 What does \texttt{\$((...))} do? What is this called in the bash man page.}
 Arithmetic expansion. Allows evaluation of arithmetic expressions and substitution of the result, allowing nesting for instance.
 
-\subsection{5-5}
-
+\subsubsection{5-5 How could you count the number of dotfiles using a single pipeline (no loops or variables, just simple commands). You may want to read about commands like grep and wc.}
 \verb=$ ls -a | grep "^\." | wc -l=
 
-\subsection{6-1}
-a) A backslash is used as en escape character in bash, and in this case it escapes the newline, allowing the script to be written on several (two here) lines while being evaluated as if it was a single line.
+\section{Exercise 6: More bash syntax}
+\subsection{6-1 Look at the first two lines of the script (after the initial "\#!" line).}
 
-b) Earlier, we saw that command scope within () are executed in a new sub-shell. If replaced by \{\} the scope is executed in the current shell context.
+\subsubsection{a) What does the backslash at the end of the first of these mean.}
+A backslash is used as en escape character in bash, and in this case it escapes the newline, allowing the script to be written on several (two here) lines while being evaluated as if it was a single line.
 
-\subsection{6-2}
+\subsubsection{b) What do the braces around echo and exit mean? What would happen if you used parenthesis instead of braces.}
+Earlier, we saw that command scope within () are executed in a new sub-shell. If replaced by \{\} the scope is executed in the current shell context.
+
+\subsection{6-2 What does the local command do at the beginning of smtp\_send.}
 \verb=local= creates a temporary object that is local to the current call frame, in this case a variable \verb=$mailserver=.
 
-\subsection{6-3}
+\subsection{6-3 Why call sleep 1 in the script.}
 To demonstrate \verb=sleep=?
 
-\subsection{7-1, 8-1}
+\section{7-1}
+7-1 is implemented as SCT7.sh (with much of the work being done in functions found in common.sh) in the test suite.
 
-See separate files.
+\section{8-1}
+The full test suite is run through tddi41.sh.
 \end{document}

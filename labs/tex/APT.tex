@@ -1,23 +1,29 @@
 \input{../report.input.tex}
 \chapter{APT}
 $\text{Errata: "[...]dpkg, is one of the most powerful"}^{\text{citation needed}}$
-\subsection{1-1}
-a) \verb=# apt-get install <package>=
+\section{Exercise 1: Review and preparation}
+\subsection{1-1 Read the documentation for apt-get and answer the following questions.}
+\subsubsection{a) Which apt-get sub-command is used to install new packages.}
+\verb=# apt-get install <package>=
 
-b) \verb=# apt-get remove|purge <package>=
+\subsubsection{b) Which apt-get sub-command is used to remove packages.}
+\verb=# apt-get remove|purge <package>=
 
-c) \verb=update= gets the latest index files from the repositories.
+\subsubsection{c) What does apt-get update do.}
+\verb=update= gets the latest index files from the repositories.
 
-d) It upgrades all explicitly installed packages and (hopefully) their dependencies.
+\subsubsection{d) What does apt-get dist-upgrade do.}
+It upgrades all explicitly installed packages and (hopefully) their dependencies.
 
-\subsection{1-2}
-a) Prints a list of installed packages, unless a search pattern is given, in which case not installed in the indexes also are included (well, the ones that matches the search pattern).
+\subsection{1-2 Read the documentation for dpkg and answer the following questions.}
+\subsubsection{a) What does dpkg --get-selections do.}
+Prints a list of installed packages, unless a search pattern is given, in which case not installed in the indexes also are included (well, the ones that matches the search pattern).
 
-b) Removes the package and its config files.
+\subsubsection{b) What does dpkg --purge vim do.}
+Removes the package and its config files.
 
+\subsubsection{c) What does dpkg -L bind9 do.Exercise 1: Review and preparation}
 c) Lists files installed by \verb=bind9=.
-
-
 % 2-1
 % # /etc/apt/sources.list
 % deb http://ftp.se.debian.org/debian squeeze
@@ -31,17 +37,23 @@ c) Lists files installed by \verb=bind9=.
 % 4-1
 % # apt-get remove hping
 
-\subsection{6}
-1) \verb=/ <word>=
+\section{Exercise 6: Review of aptitude}
+\subsection{6-1 What command in aptitude will cause the package list to contain only those packages whose names contain a specific word?}
+\verb=/ <word>=
 
-2) \verb=l <word>=
+\subsubsection{6-2 What command in aptitude lets you search the package list without hiding anything?}
+\verb=l <word>=
 
-3) \begin{verbatim}# aptitude install <package>
+\subsubsection{6-3 What command marks a package for installation? For deletion?}
+\begin{verbatim}# aptitude install <package>
 # aptitude remove <package>\end{verbatim}
 ('+'and '-' keys)
 
-4) \verb=# aptitude -i=\\
+\subsubsection{6-4 What command causes all selected actions (installation, deletion, and upgrades) to take place.}
+\verb=# aptitude -i=\\
 ('g'-key)
 
-5) The package has broken dependencies.
+\subsubsection{6-5 If there is a B in the leftmost column, what does that mean.}
+The package has broken dependencies.
+
 \end{document}
