@@ -3,6 +3,9 @@
 for user in `cat /etc/passwd | sed 's/:.*//g'`; do
   uid=`id -u $user`
   if [[ $uid -ge 1000 ]]; then
-    [[ $uid -lt 65000 ]] && userdel -rf $user && rm -rf /home{1,2}/$user
+    if [[ $uid -lt 65000 ]]; then
+      userdel -rf $user
+      rm -rf /home{1,2}/$user
+    fi
   fi
 done

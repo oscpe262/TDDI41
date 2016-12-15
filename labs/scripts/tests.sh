@@ -68,8 +68,8 @@ tests() {
           print_title "NFS Test Suite"
           print_info "Testing NFS configuration. This requires NIS to be implemented. ${Red}It will add (and remove the ones added) ${BReset}insecure users. Make sure they aren't left on the system if something goes wrong. This will test NIS (by connecting to C1 as the added users) and make sure the home directories are where they are supposed to be."
           techo "Test NFS"
-          ssh -t root@${srv} ${remote_path}/NFS_test.sh &> /dev/null &
-          pid=$! ; progress $pid
+          ssh -t root@${srv} ${remote_path}/NFS_test.sh #&> /dev/null &
+          #pid=$! ; progress $pid
           [[ $? == 0 ]] && testlist[6]=0 || testlist[6]=1
           ;;
 		    "b")

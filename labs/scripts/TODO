@@ -1,3 +1,2 @@
-NIS_test: Några som inte är indirekt testade i NFS?
-NFS_conf: autofs with nis, funkar på server, men ej på klienter
-NFS_test: Allt ...
+NFS: kolla export
+     mounta via NIS

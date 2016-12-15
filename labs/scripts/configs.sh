@@ -16,13 +16,12 @@ configs() {
   while true
   do
     print_select_title "Configuration Scripts"
-    print_info "During a dry run, no permanent changes will be made to the system. Therefore, duplicate users in the infile can still be listed if not already present."
     echo -e "\tWhere applicable, configuration will affect the following nodes ( b) to go back and change ):"
     echo -e "${BYellow}${_nodes}${Reset}"
 		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer Files to UMLs (${Yellow}Prereq.${Reset})")\n"
 
-		#echo " 1) $(mainmenu_item "${configlist[1]}" "Add Users (${Yellow}SCT7${Reset}) ${Blue}Dry Run${Reset} Not yet implemented")"
-    echo " 2) $(mainmenu_item "${configlist[2]}" "Add Users (${Yellow}SCT7${Reset}) ${BRed}Live Run${Reset} Not yet implemented")"
+    echo " 1) $(mainmenu_item "${configlist[1]}" "Install all packages (${Red}DEV${Reset})")"
+    echo " 2) $(mainmenu_item "${configlist[2]}" "Add Users (${Yellow}SCT7${Reset})")"
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS Configuration (${Yellow}DNS${Reset})")"
     echo " 4) $(mainmenu_item "${configlist[4]}" "NTP Configuration (${Yellow}NTP${Reset})")"
     echo " 5) $(mainmenu_item "${configlist[5]}" "Storage Configuration (SRV only) (${Yellow}STO${Reset})")"
@@ -36,6 +35,12 @@ configs() {
 				0)
           csync
 					;;
+        1)
+          for DEST in ${nodes[@]}; do
+            techo "Installing packages${Blue}${Reset} on node ${Yellow}${DEST}${Reset}"
+            ssh -t root@${DEST} ${remote_path}/installpkgs.sh || configlist[1]=1
+          done
+          ;;
         2)
           break
           print_line
@@ -47,13 +52,13 @@ configs() {
           files=(${_tmp[@]})
           ;;
         3)
-          sshdns #&
-          #pid=$! ; progress $pid
+          sshdns &
+          pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
         4)
-          sshntp #&
-          #pid=$! ; progress $pid
+          sshntp &
+          pid=$! ; progress $pid
           configlist[$OPT]=$?
           ;;
         5)
@@ -90,7 +95,7 @@ configs() {
 sshnfs() {
   local _retval=0
   print_title "NFS Setup Script"
-  print_info ""
+  print_info "This will configure NFS-shares on the nodes. This set of script depends on NIS and STO to be configured first."
   for DEST in ${nodes[@]}; do
     techo "Configuring ${Blue}NFS${Reset} on node ${Yellow}${DEST}${Reset}"
     ssh -t root@${DEST} ${remote_path}/NFS_conf.sh &> /dev/null &
@@ -104,7 +109,7 @@ sshnfs() {
 sshnis() {
   local _retval=0
   print_title "NIS Setup Script"
-  print_info " "
+  print_info "Installing and configuring NIS and updates its maps."
   for DEST in ${nodes[@]}; do
     techo "Configuring ${Blue}NIS${Reset} on node ${Yellow}${DEST}${Reset}"
     ssh -t root@${DEST} ${remote_path}/NIS_conf.sh &> /dev/null &
@@ -163,16 +168,13 @@ sshdns() {
 }
 
 sshsct7() {
-  local _arg2=""
-  [[ $1 == "dry" ]] && DRYRUN=1 && _arg2="dry" || DRYRUN=0
   files=( "${INFILE}" )
     transfer &
     pid$! ; progress $pid
     for DEST in ${nodes[@]}; do
-      ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) ${arg2} || return 1
+      ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) || return 1
     done
   return 0
 }
-#echo "trace" ; pause
 
 ### EOF ###

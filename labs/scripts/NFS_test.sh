@@ -12,7 +12,7 @@ if [[ `uname -n` == "server" ]]; then
     addUser &
     pid=$! ; progress $pid
     # of course, this isn't secure at all, but as we will delete the accounts in a few moments ...
-    techo "Set passwd"
+    techo "Set ${Yellow}passwd${Reset}"
     echo "${NAME}:${NAME}" | chpasswd &
     pid=$! ; progress $pid
     techo "Files for ${Yellow}$NAME${Reset}"
@@ -29,7 +29,7 @@ if [[ `uname -n` == "server" ]]; then
   # test home dir mounts
   for NAME in ${users[@]}; do
     techo "Logging in to ${Yellow}${NAME}${Reset}"
-    sshpass -p ${NAME} ssh $NAME@$c1 /home/$NAME/NFS_test.sh &> /dev/null &
+    sshpass -p ${NAME} ssh $NAME@$c2 /home/$NAME/NFS_test.sh &> /dev/null &
     pid=$! ; progress $pid
     [[ $? -ne 0 ]] && ((retval++))
   done
