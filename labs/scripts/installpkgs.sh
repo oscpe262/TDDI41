@@ -24,7 +24,7 @@ packages+=( "ntpdate" )
 packages+=( "nis" )
 packages+=( "dnsutils" )
 packages+=( "autofs" )
-packages+=( "nfs-common" )
+packages+=( "nfs-client" )
 for PKG in ${packages[@]}; do
   pkginstall $PKG
 done

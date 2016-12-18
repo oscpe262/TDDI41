@@ -31,7 +31,7 @@ if [[ `uname -n` ==  "server" ]]; then
   pkginstall "nfs-kernel-server"
 
   sed -i '/^portmap/d' /etc/hosts.allow
-  echo "portmap: ${nw}.$STARTADDRESS/255.255.255.248\n\t127.0.0.1" >> /etc/hosts.allow
+  echo -e "portmap: ${nw}.$STARTADDRESS/255.255.255.248\nportmap:\t127.0.0.1" >> /etc/hosts.allow
   echo "portmap: 0.0.0.0" >> /etc/hosts.deny
 
   print_info "${Yellow}3-2${BReset} Configure your server to export the /usr/local directory to all clients. It must not be possible to access /usr/local from any other system."
@@ -40,10 +40,10 @@ if [[ `uname -n` ==  "server" ]]; then
   echo -e "/home\t\t auto.home" > ${amaster}
   echo -e "/usr/local\t auto.local" >> ${amaster}
 
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:/local/&" > ${alocal} ###
+  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/local/&" > ${alocal} ###
 
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:/home1/&" > ${ahome}
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:/home2/&" >> ${ahome}
+  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/home1/&" > ${ahome}
+  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/home2/&" >> ${ahome}
 
   ### Start fresh
   [[ ! -f /etc/.bak/exports ]] && cp /etc/exports /etc/.bak/exports
@@ -96,7 +96,7 @@ fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
 # 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
 print_info "${Yellow}3-3${BReset} Configure your clients to automatically mount /usr/local from the server at boot."
-pkginstall "nfs-common"
+pkginstall "nfs-client"
 
 sed -i '/automount/d' /etc/nsswitch.conf # as usual, we don't want it cluttered if we run it multiple times
 echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
