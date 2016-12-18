@@ -13,6 +13,7 @@ source common.sh
 
   # Read the usernames from file.
   print_title "ADDING USERS (${INFILE})"
+
   while read NAME; do
     print_info "Processing ${NAME}"
     # Remove sucky characters and make it all nice lowercase.
@@ -58,8 +59,9 @@ source common.sh
     #Yeah, those resets are just there for looks, literally...
 
   pause
+  /etc/init.d/autofs start
   nisrestart
-  
+
   # No user input apart from the list of names is allowed. The script may need to
   # do other things as well. Part of your job is to figure out what. Your script
   # also needs to be as fast as possible. Anything that can be done once for the

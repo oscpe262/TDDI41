@@ -2,8 +2,6 @@
 
 ### CONFIGS BRANCH #############################################################
 
-# add node selections somewhere ...
-
 configs() {
   local _nodes="\t"
   [[ ${confnodes[1]} -eq 0 ]] && _nodes+="Gateway, "
@@ -19,7 +17,6 @@ configs() {
     echo -e "\tWhere applicable, configuration will affect the following nodes ( b) to go back and change ):"
     echo -e "${BYellow}${_nodes}${Reset}"
 		echo -e "\n 0) $(mainmenu_item "${configlist[0]}" "Transfer Files to UMLs (${Yellow}Prereq.${Reset})")\n"
-
     echo " 1) $(mainmenu_item "${configlist[1]}" "Install all packages (${Red}DEV${Reset})")"
     echo " 2) $(mainmenu_item "${configlist[2]}" "Add Users (${Yellow}SCT7${Reset})")"
     echo " 3) $(mainmenu_item "${configlist[3]}" "DNS Configuration (${Yellow}DNS${Reset})")"
@@ -168,12 +165,10 @@ sshdns() {
 }
 
 sshsct7() {
-  files=( "${INFILE}" )
-    transfer &
-    pid$! ; progress $pid
-    for DEST in ${nodes[@]}; do
-      ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) || return 1
-    done
+  scp ${INFILE} root@${srv}/root/ &> /dev/null &
+  pid$! ; progress $pid
+  [[ $? -ne 0 ]] && ((_retval++))
+  ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) || return 1
   return 0
 }
 

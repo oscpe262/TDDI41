@@ -435,9 +435,9 @@ userGen() {
 addUser() {
   # Add the users, default group being the same as the username and extra groups
   # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
-  /etc/init.d/autofs stop &> /dev/null
+  /etc/init.d/autofs stop &> /dev/null 
   useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
-  /etc/init.d/autofs start &> /dev/null
+  #/etc/init.d/autofs start &> /dev/null #As it is supposed to be run only once, add this manually where called ...
 }
 
 pwGen() {
@@ -470,7 +470,7 @@ cpFiles() {
 
   mv /home/${NAME} ${newhome}/
   chown -R $NAME:$NAME ${newhome}/$NAME/
-  /etc/init.d/autofs start &> /dev/null
+  #/etc/init.d/autofs start &> /dev/null
 }
 
 configServices() {
@@ -484,5 +484,4 @@ nisrestart() {
 
 [[ -f nodes.conf ]] && dynassign "`cat nodes.conf`" || dynassign "b4"
 
-#echo "trace" ; pause
 ### EOF ###

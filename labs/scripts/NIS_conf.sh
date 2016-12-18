@@ -32,9 +32,9 @@ fi
 
 ### Report: Automated tests that show that the NIS server is running and contains the appropriate data.
 # See NIS_test.sh
-
+#
 ### When testing NIS at this point, when you have no clients, you may need to use the ypbind command manually to bind to the server. The ypcat command is useful to read the contents of a NIS map. The ypwhich command shows which server the client is bound to.
-
+#
 ### The next step is to configure NIS clients. You may configure your server as a NIS client to itself, if you want to. The advantage of this is homogeneity. The disadvantage is that the server will be more difficult to work with if NIS service breaks.
 
 ### Exercise 4: Configure NIS clients ##########################################
@@ -59,7 +59,7 @@ fi
 # See NIS_test.sh
 
 ### Exercise 5: Configure the clients' name service switch #####################
-
+#
 ### 5-2 Configure the name service switch on your clients so they use NIS for as much as possible. Note that you should still use local files as the first information source. Please do not use compat unless you intend to use the special features it provides.
 
 
@@ -78,5 +78,5 @@ fi
 
 ### Report: Automated tests that show that the clients are now using NIS as expected. Answer to the question above.
 # See NIS.pdf and NIS_test.sh
-
+#
 ### Note that your clients should get as much information as possible from NIS. The only information that should remain local is information that truly is local as well as information that never changes.

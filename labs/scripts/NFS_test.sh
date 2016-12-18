@@ -6,22 +6,31 @@ retval=0
 if [[ `uname -n` == "server" ]]; then
   pkginstall "sshpass"
   users=( "matteus" "oscar" )
+  /etc/init.d/autofs stop
   # add users and update nis
   for NAME in ${users[@]}; do
     techo "Add ${Yellow}$NAME${Reset}"
     addUser &
     pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((retval++))
+
     # of course, this isn't secure at all, but as we will delete the accounts in a few moments ...
     techo "Set ${Yellow}passwd${Reset}"
     echo "${NAME}:${NAME}" | chpasswd &
     pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((retval++))
+
     techo "Files for ${Yellow}$NAME${Reset}"
     cpFiles &
     pid=$! ; progress $pid
+    [[ $? -ne 0 ]] && ((retval++))
   done
+
+  /etc/init.d/autofs stop
   techo "${Yellow}NIS${Reset} restart"
   nisrestart 1&> /dev/null &
   pid=$! ; progress $pid
+  [[ $? -ne 0 ]] && ((retval++))
 
 # no entries in /home
   [[ `ls /home | wc -l` -ne 0 ]] && ((retval++))
@@ -35,13 +44,14 @@ if [[ `uname -n` == "server" ]]; then
   done
 
 
-  #for NAME in ${users[@]}; do
-  #  techo "Removing user ${Yellow}$NAME${Reset}"
-  #  userdel $NAME &
-  #  pid=$! ; progress $pid
-  #  [[ -d /home1/$NAME ]] && rm -rf /home1/$NAME
-  #  [[ -d /home2/$NAME ]] && rm -rf /home2/$NAME
-  #done
+  for NAME in ${users[@]}; do
+    [[ `id -u "$NAME"  2>/dev/null || echo -1` -lt 0 ]] && continue
+    techo "Removing user ${Yellow}$NAME${Reset}"
+    userdel $NAME &
+    pid=$! ; progress $pid
+    [[ -d /home1/$NAME ]] && rm -rf /home1/$NAME
+    [[ -d /home2/$NAME ]] && rm -rf /home2/$NAME
+  done
 
   techo "${Yellow}NIS${Reset} restart"
   nisrestart 1&> /dev/null &
