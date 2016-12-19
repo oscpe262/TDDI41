@@ -471,7 +471,7 @@ cpFiles() {
 
   mv /home/${NAME} ${newhome}/
   chown -R $NAME:$NAME ${newhome}/$NAME/
-  echo -e "${NAME}\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}/home1/&" >> /etc/auto.home
+  echo -e "${NAME}\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}${newhome}/&" >> /etc/auto.home
   #/etc/init.d/autofs start &> /dev/null
 }
 

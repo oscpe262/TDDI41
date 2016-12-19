@@ -42,7 +42,6 @@ configs() {
           print_line
           read -p "Filepath to list of users: " INFILE
           [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
-          userscript "${INFILE}"
           sshsct7
           configlist[$OPT]=$?
           files=(${_tmp[@]})
@@ -164,11 +163,14 @@ sshdns() {
 }
 
 sshsct7() {
-  scp ${INFILE} root@${srv}/root/ &> /dev/null &
-  pid$! ; progress $pid
+  scp ${INFILE} root@${srv}:/root/users &#> /dev/null &
+  pid=$! ; progress $pid
   [[ $? -ne 0 ]] && ((_retval++))
-  ssh -t root@${DEST} ${remote_path}/SCT7.sh $(basename ${INFILE}) || return 1
-  return 0
+  pause
+  ssh -t root@${srv} ${remote_path}/SCT7.sh
+  pid=$! ; progress $pid
+  [[ $? -ne 0 ]] && ((_retval++))
+  return $retval
 }
 
 ### EOF ###

@@ -9,7 +9,7 @@ source common.sh
   [[ ! `uname -n` == "server" ]] && exit 0
 
   print_title "SCT7 SETUP SCRIPT"
-  [[ ! -f "${1}" ]] && echo "The file ${1} could not be found." && pause && return 1 || INFILE=${1}
+  [[ ! -f "/root/users" ]] && echo "The file /root/users could not be found." && pause && return 1 || INFILE=/root/users
 
   # Read the usernames from file.
   print_title "ADDING USERS (${INFILE})"
@@ -59,7 +59,7 @@ source common.sh
     #Yeah, those resets are just there for looks, literally...
 
   pause
-  /etc/init.d/autofs start
+  /etc/init.d/autofs restart
   nisrestart
 
   # No user input apart from the list of names is allowed. The script may need to

@@ -18,9 +18,11 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 
 
 ## Configs Screen
+`Install all packages`: installs the necessary packages on selected nodes.
+
 `Transfer Files to UMLs`: syncs remote scripts on the UMLs to current local version.
 
-`Add Users`: automated adding of users (TBA)
+`Add Users`: adds users in a proper way (server).
 
 `DNS Configuration`: configures the server to act as a DNS-server and nodes to use it.
 
@@ -29,6 +31,10 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 `Storage Configuration`: creates a RAID1 array and an LVM group according to STO lab instructions.
 
 `Storage Undo Configs`: undoing of the config above (only guaranteed to work for setups made by the script).
+
+`NIS Configs`: configuring basic NIS.
+
+`NFS Configs`: extending NIS with NFS mounts of /usr/local and /home.
 
 ## Tests Screen
 `Transfer Files to UMLs`: syncs remote scripts on the UMLs to current local version.
@@ -39,13 +45,11 @@ Step 1: The first time you run [the main script](./tddi41.sh), you should run `C
 
 `NTP Test`: tests NTP configuration. *Might return false negatives if peers have yet to be synced.*
 
-`NIS Test`: tests NIS configuration. *TBA*
+`NIS Test`: tests NIS configuration. *Not implemented as functionality is tested in NFS test*
 
 `RAID/LVM Test`: tests STO configuration.
 
-`NFS Test`: tests NFS configuration. *TBA*
-
-`Local Script Development Test`: NET test run locally. (*Development purposes only, to be removed ...*)
+`NFS Test`: tests NFS ans NIS configuration by adding two accounts and making sure stuff is mounted properly.
 
 ***
 ## Files Overview
@@ -71,3 +75,6 @@ The scripts create two files: [nodes.conf](), which contains the globally select
 
 ### Exercises
 Scripts for non-persistent exercises. Not be run as-is, but to be a reference document.
+
+### Wipe Script
+The [wipeuseradd.sh](./wipeuseradd.sh "Wipe Script") is stand-alone (but dependent on common.sh) and removes all non-root/service users.

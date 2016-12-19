@@ -1,4 +1,5 @@
 #!/bin/bash
+source common.sh
 ### Delete users where 1000 < uid < 65000 ######################################
 for user in `cat /etc/passwd | sed 's/:.*//g'`; do
   uid=`id -u $user`
@@ -10,3 +11,4 @@ for user in `cat /etc/passwd | sed 's/:.*//g'`; do
     fi
   fi
 done
+nisrestart
