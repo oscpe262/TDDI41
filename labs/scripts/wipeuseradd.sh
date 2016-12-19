@@ -6,6 +6,7 @@ for user in `cat /etc/passwd | sed 's/:.*//g'`; do
     if [[ $uid -lt 65000 ]]; then
       userdel -rf $user
       rm -rf /home{1,2}/$user
+      sed -i "/${user}\t/d" /etc/auto.home
     fi
   fi
 done

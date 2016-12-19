@@ -6,7 +6,6 @@ amaster="/etc/auto.master"
 alocal="/etc/auto.local"
 ahome="/etc/auto.home"
 maps="passwd group hosts rpc services netid protocols netgrp auto.master auto.home auto.local"
-exproot="/srv/nfs"
 
 /etc/init.d/autofs stop # in case of rerun
 
@@ -40,10 +39,10 @@ if [[ `uname -n` ==  "server" ]]; then
   echo -e "/home\t\t auto.home" > ${amaster}
   echo -e "/usr/local\t auto.local" >> ${amaster}
 
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/local/&" > ${alocal} ###
+  echo -e "*\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}/local/&" > ${alocal} ###
 
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/home1/&" > ${ahome}
-  echo -e "*\t -fstype=nfs3 server.${DDNAME}:${exproot}/home2/&" >> ${ahome}
+  #echo -e "*\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}/home1/&" > ${ahome}
+  #echo -e "*\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}/home2/&" >> ${ahome}
 
   ### Start fresh
   [[ ! -f /etc/.bak/exports ]] && cp /etc/exports /etc/.bak/exports
@@ -78,10 +77,10 @@ if [[ `uname -n` ==  "server" ]]; then
   ### Yeah, this is mainly to illustrate differences ...
   mntopt="rw,sync,no_root_squash,no_subtree_check"
   mntopts="(${mntopt})"
-  mntrootopts="(fsid=0,${mntopts})"
+  mntrootopts="(fsid=0,${mntopt})"
 
   echo "/srv/nfs/ ${c1}${mntrootopts} ${c2}${mntrootopts}" >> /etc/exports
-  echo "/srv/nfs/local/ ${nw}.${STARTADDRESS}/29(${mntopts})" >> /etc/exports
+  echo "/srv/nfs/local/ ${nw}.${STARTADDRESS}/29${mntopts}" >> /etc/exports
   # For more clients, we would of course mask out ...
   echo "/srv/nfs/home1/ ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
   echo "/srv/nfs/home2/ ${c1}${mntopts} ${c2}${mntopts}" >> /etc/exports
@@ -96,7 +95,7 @@ fi
 # 3-3 Configure your clients to automatically mount /usr/local from the server at boot.
 # 5-2 Configure the automounter so it mounts /home/USERNAME from the user's real home directory (on the NFS server). Make /home an indirect mount point - that is, the automounter will automatically mount subdirectories of /home, but not /home itself. You will probably need one line per user in the configuration file.
 print_info "${Yellow}3-3${BReset} Configure your clients to automatically mount /usr/local from the server at boot."
-pkginstall "nfs-client"
+[[ ! `uname -n` ==  "server" ]] && pkginstall "nfs-client"
 
 sed -i '/automount/d' /etc/nsswitch.conf # as usual, we don't want it cluttered if we run it multiple times
 echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf

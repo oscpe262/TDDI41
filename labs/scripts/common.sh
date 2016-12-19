@@ -26,6 +26,7 @@ FORCE_EXIT=0
   BWhite=${BOLD}$(tput setaf 7)
 
   remote_path="/root"
+  exproot="/srv/nfs"
 
 ### USERADD CONFIG VARIABLES ###################################################
 # These are variables used throughout the script. Adjust to fit your desires.
@@ -435,7 +436,7 @@ userGen() {
 addUser() {
   # Add the users, default group being the same as the username and extra groups
   # (-G) defined in $CGROUPS, creating homedir (-m) and setting shell to $CSHELL (-s).
-  /etc/init.d/autofs stop &> /dev/null 
+  /etc/init.d/autofs stop &> /dev/null
   useradd -m -G ${CGROUPS} -s ${CSHELL} ${NAME}
   #/etc/init.d/autofs start &> /dev/null #As it is supposed to be run only once, add this manually where called ...
 }
@@ -470,11 +471,12 @@ cpFiles() {
 
   mv /home/${NAME} ${newhome}/
   chown -R $NAME:$NAME ${newhome}/$NAME/
+  echo -e "${NAME}\t -fstype=nfs,vers=3 server.${DDNAME}:${exproot}/home1/&" >> /etc/auto.home
   #/etc/init.d/autofs start &> /dev/null
 }
 
 configServices() {
- :
+  :
 }
 
 nisrestart() {

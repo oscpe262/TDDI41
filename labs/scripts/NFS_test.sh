@@ -51,6 +51,7 @@ if [[ `uname -n` == "server" ]]; then
     pid=$! ; progress $pid
     [[ -d /home1/$NAME ]] && rm -rf /home1/$NAME
     [[ -d /home2/$NAME ]] && rm -rf /home2/$NAME
+    sed -i "/${NAME}/d" /etc/auto.home
   done
 
   techo "${Yellow}NIS${Reset} restart"

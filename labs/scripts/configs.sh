@@ -39,10 +39,9 @@ configs() {
           done
           ;;
         2)
-          break
           print_line
           read -p "Filepath to list of users: " INFILE
-          [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users2"
+          [[ -z ${INFILE} ]] && INFILE="/home/splatrat/test/users"
           userscript "${INFILE}"
           sshsct7
           configlist[$OPT]=$?
