@@ -16,7 +16,7 @@ packages=()
 if [[ `uname -n` == "server" ]]; then
   packages=( "bind9" "bind9-doc" "bind9utils" "host" "nfs-kerner-server" "sshpass" )
 elif [[ `uname -n` == "gw" ]]; then
-  packages=( "quagga" )
+  packages=( "quagga" "nfs-client" )
 fi
 packages+=( "ssh" )
 packages+=( "ntp" )
@@ -24,7 +24,6 @@ packages+=( "ntpdate" )
 packages+=( "nis" )
 packages+=( "dnsutils" )
 packages+=( "autofs" )
-packages+=( "nfs-client" )
 for PKG in ${packages[@]}; do
   pkginstall $PKG
 done
