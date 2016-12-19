@@ -163,7 +163,7 @@ sshdns() {
 }
 
 sshsct7() {
-  scp ${INFILE} root@${srv}:/root/users &#> /dev/null &
+  scp ${INFILE} root@${srv}:/root/users &
   pid=$! ; progress $pid
   [[ $? -ne 0 ]] && ((_retval++))
   pause

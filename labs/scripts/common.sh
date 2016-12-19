@@ -165,7 +165,6 @@ mainmenu_item() {
 }
 
 nodebox() {
-  #echo -e "fpp $1"
   [[ $1 -eq 0 ]] && echo -e "${ttodo}"
   [[ $1 -eq 1 ]] && echo -e "${tboxl} ${Yellow}gw${Reset} ${tboxr}"
   [[ $1 -eq 2 ]] && echo -e "${tboxl} ${Yellow}sr${Reset} ${tboxr}"

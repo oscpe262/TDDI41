@@ -2,8 +2,10 @@
 ################################################################################
 # TDDI41 2016 Main Script by oscpe262 and matla782
 #
-# This script is for TDDI41:b4 use only. No warranties - you are responsible for
-# any consequence of not knowing what it does.
+# This script is developed for TDDI41:b4 use. It has since been made dynamic,
+# but have not been thoroughly tested for this purpose. No warranties - you are
+# responsible for any consequence of not knowing what the script does.
+# Using it wrong might kill your hamster.
 # This script is somewhat inspired by oscpe262's revamp of helmuthdu's Arch
 # Ultimate Install , which can be found at https://github.com/helmuthdu/aui .
 ################################################################################
@@ -117,7 +119,7 @@ while true; do
         print_title "Remote Scripts Sync"
         rsyncto testslist conflist
         setval=$?
-        [[ $setval -ge 1 ]] && setval=1  
+        [[ $setval -ge 1 ]] && setval=1
         testlist[0]=$setval
 			  configlist[0]=$setval
         ;;

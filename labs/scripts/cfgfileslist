@@ -11,3 +11,8 @@
 /etc/bind/named.conf.options
 /etc/bind/zones
 /etc/apt/sources.conf
+/etc/auto.home
+/etc/auto.master
+/etc/auto.local
+/etc/default/nfs-kernel-server
+/var/yp/Makefile
