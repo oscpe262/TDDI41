@@ -51,7 +51,6 @@ if [[ ! `uname -n` == "server" ]]; then
   sed -i '/^+/d' /etc/passwd
   echo "order nis" >> /etc/host.conf
   echo -e "hosts:\t\tfiles nis dns" >> /etc/nsswitch.conf
-  echo "+::::::" >> /etc/passwd
   nisrestart
 fi
 
@@ -65,7 +64,7 @@ fi
 
 if [[ ! `uname -n` == "server" ]]; then
   sednssw "passwd"    "files nis"
-  sednssw "group"     "compat"
+  sednssw "group"     "files nis"
   sednssw "shadow"    "files nis"
   sednssw "hosts"     "files nis dns"
   sednssw "networks"  "files nis"

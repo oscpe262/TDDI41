@@ -32,7 +32,8 @@ hosts() {
 
 edit_resolv() {
   local TARGET="$BASEPATH/resolv.conf"
-  echo "domain ida.liu.se" > $TARGET
+  echo "domain ${b4}" > $TARGET
+  echo "search ${b4}" >> $TARGET
   echo "search ida.liu.se" >> $TARGET
   echo "nameserver ${nw}.9" >> $TARGET
   echo "nameserver ${nw}.154" >> $TARGET
