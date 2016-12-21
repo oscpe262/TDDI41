@@ -84,10 +84,10 @@ while true; do
   inArray "2" "${testlist[@]}" && checklist[3]=2
   inArray "1" "${testlist[@]}" && checklist[3]=1
   if [[ ${testlist[0]} -eq 1 ]] || [[ ${configlist[0]} -eq 1 ]]; then
-    checklist[6]=1
+    checklist[4]=1
   else
     if [[ ${testlist[0]} -eq 0 ]] && [[ ${configlist[0]} -eq 0 ]]; then
-      checklist[6]=0
+      checklist[4]=0
     fi
   fi
 

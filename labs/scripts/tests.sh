@@ -52,7 +52,6 @@ tests() {
           print_title "NIS Tests"
           print_info "NIS is implicitly tested (well, pretty much at least) in the NFS tests. Run NFS configs for client-1 and server -if not done already- and run the NFS test suite."
           pause
-          configlist [4]=0
           ;;
         5)
           print_title "STO Test Suite"
@@ -68,7 +67,13 @@ tests() {
           techo "Test NFS"
           ssh -t root@${srv} ${remote_path}/NFS_test.sh #&> /dev/null &
           #pid=$! ; progress $pid
-          [[ $? == 0 ]] && testlist[6]=0 || testlist[6]=1
+          if [[ $? == 0 ]]; then
+            testlist[6]=0
+            testlist[4]=0 
+          else
+             testlist[6]=1
+             testlist[4]=1
+           fi
           ;;
 		    "b")
           DRYRUN=1

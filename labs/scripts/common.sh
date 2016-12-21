@@ -446,8 +446,7 @@ pwGen() {
   randomString
   PASSWD=${RAND}
   echo -ne "$PASSWD" > /dev/shm/name
-
-# This isn't very safe, but as we're going to print it anyway later ...
+  # This isn't very safe, but as we're going to print it anyway later ...
   echo "${NAME}:${PASSWD}" | chpasswd
 }
 
