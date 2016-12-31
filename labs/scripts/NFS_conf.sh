@@ -100,6 +100,8 @@ print_info "${Yellow}3-3${BReset} Configure your clients to automatically mount 
 sed -i '/automount/d' /etc/nsswitch.conf # as usual, we don't want it cluttered if we run it multiple times
 echo -e "automount:\tfiles nis" >> /etc/nsswitch.conf
 
+# Ersätt med borttagen "/etc/" i /etc/default/autofs
+# rm ${amaster}
 sed -i '/auto\.master/d' ${amaster}
 echo -e "+auto.master" >> ${amaster}
 
