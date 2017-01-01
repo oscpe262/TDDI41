@@ -1,0 +1,41 @@
+---
+
+### All ########################################################################
+- hosts: server
+  remote_user: root
+  tasks:
+    - name: Write ldap.conf
+      template:
+        src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/ldap.conf'
+        dest: '/etc/openldap/ldap.conf'
+
+#    - name: Parent entry for users
+#      ldap_entry:
+#        dn: ou=users,dc=oscpe,dc=bot,dc=nu
+#        state: present
+#        objectClass: organizationalUnit
+#
+    - name: Root entry
+      ldap_entry:
+        dn: dc=oscpe,dc=bot,dc=nu
+        server_uri: ldapi://192.168.122.11/
+        bind_dn: cn=root,dc=oscpe,dc=bot,dc=nu
+        bind_pw: cdassist2
+        state: present
+        objectClass:
+          - dcObject
+          - organizationalUnit
+        attributes:
+          description: Root Entry
+#
+#    - name: Root Role
+#      ldap_entry:
+#        dn: cn=root,dc=oscpe,dc=bot,dc=nu
+#        state: present
+#        objectClass:
+#          - simpleSecurityObject
+#          - organizationalRole
+#        attributes:
+#          description: LDAP Admin
+#          userPassword: "{SSHA}X+301MBPDJDsTYFJ3tB0q4aqOWBxlb4c"
+...
