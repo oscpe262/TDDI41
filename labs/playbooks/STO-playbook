@@ -1,2 +1,55 @@
 ---
+### Packages ###################################################################
+- hosts: server
+  remote_user: root
+  tasks:
+    - name: STO packages; lvm2, mdadm
+      pacman: name={{item.name}} state=latest
+      with_items:
+        - { name: 'lvm2' }
+        - { name: 'mdadm' }
+
+### RAID #######################################################################
+    - name: check for /dev/md0
+      shell: "mdadm -D /dev/md0"
+      ignore_errors: yes
+      register: mdadm_check
+
+    - name: init /dev/md0
+      shell: "mdadm --create /dev/md0 --level=1 --metadata=1.2 --raid-devices=2 /dev/sdb /dev/sdc"
+      when: mdadm_check.rc != 0
+
+    - name: wait for /dev/md0 to come online
+      shell: "mdadm --wait /dev/md0"
+      when: mdadm_check.rc != 0
+
+### LVM ########################################################################
+    - name: check for /dev/vg0
+      shell: "vgdisplay /dev/vg0"
+      ignore_errors: yes
+      register: vg_check
+
+    - name: check for /dev/vg0/home2
+      shell: "lvdisplay /dev/vg0/home2"
+      ignore_errors: yes
+      register: lv_check
+
+    - name: volume group
+      lvg: vg=vg0 pvs="/dev/sdd,/dev/sde"
+      when: vg_check.rc != 0
+
+    - lvol: vg=vg0 lv=home2 size=100%FREE
+      when: lv_check.rc != 0
+
+### File Systems ###############################################################
+    - filesystem: fstype=ext4 dev=/dev/vg0/home2
+    - filesystem: fstype=ext4 dev=/dev/md0
+
+    - file: path=/home1 state=directory owner=root group=root mode=0755
+    - file: path=/home2 state=directory owner=root group=root mode=0755
+
+    - mount: name=/home1 src=/dev/md0 fstype=ext4 opts=defaults,auto,relatime state=mounted
+    - mount: name=/home2 src=/dev/vg0/home2 fstype=ext4 opts=defaults,auto,relatime state=mounted
+
+
 ...
