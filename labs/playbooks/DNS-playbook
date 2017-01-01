@@ -54,7 +54,7 @@
       template: src={{item.src}} dest={{item.dest}}
       with_items:
         - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/zones/db.oscpe.bot.nu', dest: '/etc/bind/zones/db.oscpe.bot.nu' }
-        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/zones/db.oscpe.bot.nu', dest: '/etc/bind/zones/db.oscpe.bot.nu' }
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/zones/db.oscpe.bot.nu.in-addr.arpa', dest: '/etc/bind/zones/db.oscpe.bot.nu.in-addr.arpa' }
         - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf', dest: '/etc/named.conf' }
         - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf.local', dest: '/etc/bind/named.conf.local' }
         - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf.options', dest: '/etc/bind/named.conf.options' }
