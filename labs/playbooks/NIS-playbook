@@ -1,2 +1,96 @@
 ---
+### PREAMBLE ###################################################################
+# Yes, you may think "wtf, this isn't NIS, it's LDAP", and you are right! Since NIS sucks, we'll go for LDAP here. But since the course lab is titled "NIS", the naming convention stays ...
+
+### All ########################################################################
+- hosts: boxes
+  remote_user: root
+  tasks:
+    - name: Ensure openldap is installed
+      pacman: name=openldap state=latest
+
+    - name: install pip
+      pacman: name=python2-pip state=latest
+
+    - name: install python-ldap
+      command: pip2 install python-ldap
+
+### Server setup ###############################################################
+- hosts: server
+  remote_user: root
+  tasks:
+    - name: Enable slapd.service
+      service: name=slapd state=stopped enabled=yes
+
+    - name: server slapd.conf
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/slapd.conf
+        dest: /etc/openldap/slapd.conf
+      notify:
+        - stopslap
+        - slapgen
+        - chown_conf_dir
+        - slapindex
+        - done
+
+    - name: db init
+      shell: "cp /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG"
+
+    - name: startslap
+      service: name=slapd state=started
+      ignore_errors: yes
+
+  handlers:
+    - name: stopslap
+      service: name=slapd state=stopped
+
+    - name: slapgen
+      shell: "rm -rf /etc/openldap/slapd.d/* ; slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/"
+
+    - name: chown_conf_dir
+      file: path=/etc/openldap/slapd.d state=directory owner=ldap group=ldap recurse=yes
+
+    - name: slapindex
+      command: slapindex
+      become: true
+      become_user: ldap
+
+    - name: done
+      service: name=slapd state=started
+
+### Client Setup ###############################################################
+- hosts: boxes
+  remote_user: root
+  tasks:
+    - name: Write ldap.conf
+      template:
+        src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/ldap.conf'
+        dest: '/etc/openldap/ldap.conf'
+#
+#    - name: Parent entry for users
+#      ldap_entry:
+#        dn: ou=users,dc=oscpe,dc=bot,dc=nu
+#        state: present
+#        objectClass: organizationalUnit
+#
+#    - name: Root entry
+#      ldap_entry:
+#        dn: dc=oscpe,dc=bot,dc=nu
+#        state: present
+#        objectClass:
+#          - dcObject
+#          - organizationalUnit
+#        attributes:
+#          description: Root Entry
+#
+#    - name: Root Role
+#      ldap_entry:
+#        dn: cn=root,dc=oscpe,dc=bot,dc=nu
+#        state: present
+#        objectClass:
+#          - simpleSecurityObject
+#          - organizationalRole
+#        attributes:
+#          description: LDAP Admin
+#          userPassword: "{SSHA}X+301MBPDJDsTYFJ3tB0q4aqOWBxlb4c"
 ...
