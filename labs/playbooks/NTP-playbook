@@ -1,0 +1,37 @@
+---
+### GW NTP-server
+- hosts: gateway
+  vars:
+  remote_user: root
+  tasks:
+    - name: Write NTP-server config
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/ntp.srv.conf
+        dest: /etc/ntp.conf
+
+### NTP peers
+- hosts: boxes:!gateway
+  vars:
+  remote_user: root
+  tasks:
+    - name: Write NTP-peer config
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/ntp.peer.conf
+        dest: /etc/ntp.conf
+
+### NTP on all Nodes
+- hosts: boxes
+  vars:
+  remote_user: root
+  tasks:
+    - name: Ensure NTP is installed
+      pacman: name=ntp state=latest
+      notify:
+        - restart ntp
+    - name: Start and Enable ntpd.service
+      service: name=ntpd state=started enabled=yes
+  handlers:
+    - name: restart ntp
+      service: name=ntpd state=restarted
+
+...
