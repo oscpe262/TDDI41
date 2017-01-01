@@ -1,0 +1,19 @@
+[gateway]
+192.168.122.10 ansible_python_interpreter=/usr/bin/python2
+
+[server]
+192.168.122.11 ansible_python_interpreter=/usr/bin/python2
+
+[clients]
+192.168.122.[12:13]
+
+[clients:vars]
+ansible_python_interpreter=/usr/bin/python2
+
+[nosrv:children]
+gateway
+clients
+
+[boxes:children]
+server
+nosrv
