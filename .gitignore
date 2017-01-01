@@ -10,3 +10,4 @@ nodes.conf
 *.out
 *.tar
 *.retry
+disk*
