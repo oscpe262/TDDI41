@@ -1,0 +1,71 @@
+---
+### Non-server conf
+- hosts: nosrv
+  remote_user: root
+  tasks:
+    - name: Set nodes to use server
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/resolv.nosrv.conf
+        dest: /etc/resolv.conf
+
+- hosts: boxes
+  remote_user: root
+  tasks:
+    - name: /etc/hosts
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/hosts
+        dest: /etc/hosts
+
+### NS conf
+- hosts: server
+  remote_user: root
+  tasks:
+    - name: Ensure BIND is installed
+      pacman: name=bind state=latest
+      notify:
+        - restart named
+    ##########################
+    - name: Write resolv.conf
+      template:
+        src: ~/Dropbox/LiU/TDDI41/labs/arch.configs/resolv.srv.conf
+        dest: /etc/resolv.conf
+    ##########################
+    # Create dirs
+    - file:
+        path: /etc/bind/
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+    - file:
+        path: /etc/bind/zones
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+    - file:
+        path: /var/cache/bind
+        state: directory
+        owner: named
+        group: named
+        mode: 0755
+    ##########################
+    - name: Write zone files and named confs
+      template: src={{item.src}} dest={{item.dest}}
+      with_items:
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/zones/db.oscpe.bot.nu', dest: '/etc/bind/zones/db.oscpe.bot.nu' }
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/zones/db.oscpe.bot.nu', dest: '/etc/bind/zones/db.oscpe.bot.nu' }
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf', dest: '/etc/named.conf' }
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf.local', dest: '/etc/bind/named.conf.local' }
+        - { src: '~/Dropbox/LiU/TDDI41/labs/arch.configs/bind/named.conf.options', dest: '/etc/bind/named.conf.options' }
+      notify:
+        - restart named
+    ##########################
+    - name: Start and Enable named.service
+      service: name=named state=started enabled=yes
+    ##########################
+  handlers:
+    - name: restart named
+      service: name=named state=restarted
+
+...

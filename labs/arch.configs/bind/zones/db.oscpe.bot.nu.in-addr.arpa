@@ -1,0 +1,17 @@
+$TTL	3600
+@	IN	SOA	server.oscpe.bot.nu.	HOSTMASTER.oscpe.bot.nu. (
+		1	; Serial
+		3600		; Refresh
+		600		; Retry
+		86400		; Expire
+		600		; Negative Cache TLL
+);
+
+; name servers
+	IN	NS	server.oscpe.bot.nu.
+
+; PTR records
+10.122.168.192.in-addr.arpa.	IN	PTR	gw.oscpe.bot.nu.
+11.122.168.192.in-addr.arpa.	IN	PTR	server.oscpe.bot.nu.
+12.122.168.192.in-addr.arpa.	IN	PTR	client-1.oscpe.bot.nu.
+13.122.168.192.in-addr.arpa.	IN	PTR	client-2.oscpe.bot.nu.

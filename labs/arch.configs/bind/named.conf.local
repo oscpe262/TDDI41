@@ -1,0 +1,30 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+acl internals {
+	127.0.0.0/8;
+	192.168.122.10;
+	192.168.122.11;
+	192.168.122.12;
+	192.168.122.13;
+};
+
+zone "oscpe.bot.nu" {
+	type master;
+	file "/etc/bind/zones/db.oscpe.bot.nu";
+};
+
+zone "nu.bot.oscpe.in-addr.arpa" {
+	type master;
+	file "/etc/bind/zones/db.oscpe.bot.nu.in-addr.arpa";
+};
+
+controls {
+	inet 127.0.0.1 port 953 allow {127.0.0.1; };
+};
+include "/etc/rndc.key";
