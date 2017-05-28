@@ -25,7 +25,7 @@
   remote_user: root
   tasks:
     - name: Ensure NTP is installed
-      pacman: name=ntp state=latest
+      package: name=ntp state=latest
       notify:
         - restart ntp
     - name: Start and Enable ntpd.service

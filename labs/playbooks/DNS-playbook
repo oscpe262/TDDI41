@@ -1,6 +1,6 @@
 ---
 ### Non-server conf
-- hosts: nosrv
+- hosts: boxes:!server
   remote_user: root
   tasks:
     - name: Set nodes to use server

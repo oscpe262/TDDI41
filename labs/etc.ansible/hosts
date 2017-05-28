@@ -1,19 +1,36 @@
 [gateway]
-192.168.122.10 ansible_python_interpreter=/usr/bin/python2
+192.168.122.10
 
 [server]
-192.168.122.11 ansible_python_interpreter=/usr/bin/python2
+192.168.122.11
+#192.168.122.109
 
 [clients]
 192.168.122.[12:13]
 
-[clients:vars]
-ansible_python_interpreter=/usr/bin/python2
+[betelgeuse]
+#betelgeuse.oscpe.se
+oscpe262.ddns.net:4163
+#192.168.0.101:4163
 
-[nosrv:children]
-gateway
-clients
+[alnilam]
+#alnilam.oscpe.se
+oscpe262.ddns.net:4160
+#192.168.0.102:4160
+
+[saiph]
+localhost
 
 [boxes:children]
+gateway
 server
-nosrv
+clients
+
+[statics:children]
+betelgeuse
+alnilam
+
+[physical:children]
+betelgeuse
+alnilam
+saiph

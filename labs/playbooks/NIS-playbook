@@ -46,6 +46,7 @@
 
     - name: slapgen
       shell: "rm -rf /etc/openldap/slapd.d/* ; slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/"
+      warn: no
 
     - name: chown_conf_dir
       file: path=/etc/openldap/slapd.d state=directory owner=ldap group=ldap recurse=yes
