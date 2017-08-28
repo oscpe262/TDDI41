@@ -1,0 +1,83 @@
+---
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+
+- name: STO packages; lvm2, mdadm
+  package: name={{item.name}} state=latest
+  with_items:
+    - { name: 'lvm2' }
+    - { name: 'mdadm' }
+    - { name: 'nfs-utils' }
+
+### RAID #######################################################################
+- name: check for /dev/md0
+  shell: "mdadm -D /dev/md0"
+  ignore_errors: yes
+  register: mdadm_check
+
+- name: init /dev/md0
+  shell: "mdadm --create /dev/md0 --level=1 --metadata=1.2 --raid-devices=2 /dev/{{ disk1 }} /dev/{{ disk2}}"
+  when: mdadm_check.rc != 0
+
+- name: wait for /dev/md0 to come online
+  shell: "mdadm --wait /dev/md0"
+  when: mdadm_check.rc != 0
+
+### LVM ########################################################################
+- name: check for /dev/vg0
+  shell: "vgdisplay /dev/vg0"
+  ignore_errors: yes
+  register: vg_check
+
+- name: check for /dev/vg0/home2
+  shell: "lvdisplay /dev/vg0/home2"
+  ignore_errors: yes
+  register: lv_check
+
+- name: volume group
+  lvg: vg=vg0 pvs="/dev/{{ disk3 }},/dev/{{ disk4 }}"
+  when: vg_check.rc != 0
+
+- name: logical volume
+  lvol: vg=vg0 lv=home2 size=100%FREE
+  when: lv_check.rc != 0
+
+### File Systems ###############################################################
+- name: file systems
+  filesystem: fstype=ext4 dev=/dev/{{ item }}
+  with_items:
+    - vg0/home2
+    - md0
+
+- name: Mount points
+  file: path=/{{ item }} state=directory owner=root group=root mode=0755
+  with_items:
+    - home1
+    - home2
+    - srv/nfs/home1
+    - srv/nfs/home2
+
+- name: Mount file systems
+  mount: name={{ item.name }} src=/dev{{ item.src }} fstype=ext4 opts=defaults,auto,relatime state=mounted
+  with_items:
+    - { name: '/home1', src: '/md0' }
+    - { name: '/home2', src: '/vg0/home2' }
+
+### FSTAB ######################################################################
+- name: FSTAB
+  template:
+    src: fstab.j2
+    dest: /etc/fstab
+  notify:
+    - Remount filesystems
+    - nfs-server
+
+- name: "Clean Exports"
+  template:
+    src: exports.j2
+    dest: '{{ exports_dest }}'
+  notify:
+    - Exportfs
+...

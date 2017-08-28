@@ -1,0 +1,6 @@
+## roles/STO/handlers/main.yml
+# Handlers for the role
+# vim:ft=ansible:
+---
+...
+

@@ -1,0 +1,34 @@
+# Ansible role 'STO'
+
+An Ansible role for setting up STO lab TDDI41.
+
+## Requirements
+
+## Role Variables
+| Variable                       | Default                          | Comments (type)  |
+| :---                           | :---                             | :---             |
+| disk[n] | none | Mandatory, disk[1-4] |
+## Dependencies
+
+## Example Playbook
+```Yaml
+- hosts: foo
+  roles:
+    - role: STO
+      disk1: ubdd
+      disk2: ubde
+      disk3: ubdf
+      disk4: ubdg
+```
+
+## Testing
+
+## License
+
+BSD
+
+## Contributors
+
+Issues, feature requests, ideas, suggestions, etc. are appreciated and can be posted in the Issues section. Pull requests are also very welcome. Please create a topic branch for your proposed changes, it's the easiest way to merge back into the project.
+
+- [Oscar Petersson](https://github.com/oscpe262/) (Maintainer)

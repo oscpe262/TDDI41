@@ -1,0 +1,23 @@
+- hosts: clients
+  roles: 
+    - role: NTP
+      tags: ntp
+      ntp_srv_ip: 'gw.b4.sysinst.ida.liu.se'
+
+- hosts: gateway
+  roles:
+    - role: NTP
+      tags: ntp
+      ntp_server: True
+
+- hosts: server
+  roles:
+    - role: NTP
+      tags: ntp
+      ntp_srv_ip: 'gw.b4.sysinst.ida.liu.se'
+    - role: STO
+      tags: sto
+      disk1: ubdd
+      disk2: ubde
+      disk3: ubdf
+      disk4: ubdg

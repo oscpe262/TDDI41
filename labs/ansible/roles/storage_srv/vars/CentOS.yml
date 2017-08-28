@@ -1,0 +1,8 @@
+---
+#
+disk1: sda
+disk2: sdb
+#
+disk3: sdc
+disk4: sdd
+...
