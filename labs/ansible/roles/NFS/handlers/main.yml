@@ -1,6 +1,19 @@
-## roles/<role>/handlers/main.yml
+## roles/NFS/handlers/main.yml
 # Handlers for the role
 # vim:ft=ansible:
 ---
+- name: Restart NFS
+  service: "name={{ nfs_server_daemon }} state=restarted"
+  when: nfs_exports|length
+
+- name: Update NIS
+  command: 'echo "" | /usr/lib/yp/ypinit -m'
+
+- name: Restart NIS
+  service: "name=nis state=restarted"
+
+- name: Restart AutoFS
+  service: "name=autofs state=restarted"
+
 ...
 

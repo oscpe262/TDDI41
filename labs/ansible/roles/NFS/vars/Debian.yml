@@ -1,0 +1,6 @@
+## roles/NFS/vars/Debian.yml
+# Debian specific variables associated with this role.
+# vim:ft=ansible:
+---
+nfs_server_daemon: nfs-kernel-server
+...

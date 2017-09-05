@@ -1,4 +1,4 @@
-# Ansible role '<role>'
+# Ansible role 'NFS'
 
 An Ansible role for setting up something for whatever purpose.
 
@@ -14,7 +14,7 @@ An Ansible role for setting up something for whatever purpose.
 ```Yaml
 - hosts: foo
   roles:
-    - role: <role>
+    - role: NFS
 ```
 
 ## Testing

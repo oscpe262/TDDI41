@@ -3,12 +3,16 @@
     - role: NTP
       tags: ntp
       ntp_srv_ip: 'gw.b4.sysinst.ida.liu.se'
+    - role: NFS
+      tags: nfs
 
 - hosts: gateway
   roles:
     - role: NTP
       tags: ntp
       ntp_server: True
+    - role: NFS
+      tags: nfs
 
 - hosts: server
   roles:
@@ -21,3 +25,11 @@
       disk2: ubde
       disk3: ubdf
       disk4: ubdg
+    - role: NFS
+      is_server: True
+      tags: nfs
+      nfs_exports:
+        - "/srv/nfs/ 130.236.178.152/29(fsid=0,rw,sync,no_root_squash,no_subtree_check"
+        - "/srv/nfs/local 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
+        - "/srv/nfs/home1 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
+        - "/srv/nfs/home2 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
