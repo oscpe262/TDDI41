@@ -1,0 +1,20 @@
+---
+  - name: Deploy Quagga for Debian Systems
+    apt: pkg=quagga state=installed
+
+  - name: Create config files
+    template: src={{ item.name }}.j2 dest=/etc/quagga/{{ item.name }}
+    with_items: conffiles
+
+  - name: Set permissions for config files
+    file: path=/etc/quagga/{{ item.name }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
+    with_items: conffiles
+
+  - name: Enable desired routing protocols
+    template: src=daemons.j2 dest=/etc/quagga/daemons
+
+  - name: Enable telnet access and the retaining of routes over restarts
+    template: src=debian.conf.j2 dest=/etc/quagga/debian.conf
+
+    notify:
+    - Restart Quagga

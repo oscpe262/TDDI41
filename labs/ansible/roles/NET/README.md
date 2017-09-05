@@ -1,6 +1,6 @@
 # Ansible role 'NET'
 
-As the ansible part of the course is written after I finished the course, I can't be arsed to write a bootstrap role or mess with Quagga. I suggest that you either a) write it yourself, b) use the NET script found elsewhere in this repo, c) use the course's UML script's extended functionality to bootstrap stuff as you want it, or d) just do this lab manually. (a) or (d) is recommended for beginners, in particular (a).
+As the ansible part of the course is written after I finished the course, I can't be arsed to write a bootstrap role or test the Quagga role. I suggest that you either a) write it yourself, b) use the NET script found elsewhere in this repo, c) use the course's UML script's extended functionality to bootstrap stuff as you want it, or d) just do this lab manually. (a) or (d) is recommended for beginners, in particular (a).
 
 What you need to do is (for all clients, unless stated otherwise):
 - Edit `/etc/hostname`
