@@ -1,0 +1,11 @@
+domain ida.liu.se
+search ida.liu.se
+{% if server in ansible_hostname %}
+search {{ group_id }}.sysinst.ida.liu.se
+nameserver 130.236.178.{{ srv_ip }}
+nameserver 130.236.1.9
+nameserver 130.236.186.13
+nameserver 130.236.186.16
+{% else %}
+nameserver 130.236.178.{{ srv_ip }}
+{% endif %}

@@ -1,4 +1,4 @@
-## roles/<role>/handlers/main.yml
+## roles/DNS/handlers/main.yml
 # Handlers for the role
 # vim:ft=ansible:
 ---

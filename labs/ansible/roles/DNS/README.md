@@ -1,20 +1,21 @@
-# Ansible role '<role>'
+# Ansible role 'DNS'
 
-An Ansible role for setting up something for whatever purpose.
+An Ansible role for setting up resolv.conf for the DNS lab (TDDI41).
 
 ## Requirements
+The role requires the bind server hostname to be `server`.
 
 ## Role Variables
 | Variable                       | Default                          | Comments (type)  |
 | :---                           | :---                             | :---             |
-
+| srv_ip | 154 | Currently only supporting 130.236.178.0, if assigned 179, adjust accordingly in the template |
 ## Dependencies
 
 ## Example Playbook
 ```Yaml
 - hosts: foo
   roles:
-    - role: <role>
+    - role: DNS
 ```
 
 ## Testing

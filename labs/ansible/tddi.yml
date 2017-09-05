@@ -29,6 +29,50 @@
       disk2: ubde
       disk3: ubdf
       disk4: ubdg
+    - role: bind
+            tags: dns,bind
+      bind_acls:
+        - name: internals
+          match_list:
+            - "127.0.0.0/8"
+            - "130.236.178.152/29"
+      bind_allow_query:
+        - "internals"
+      bind_allow_update: "none"
+      bind_forwarders: 
+        - 8.8.8.8
+        - 8.8.4.4
+      bind_forward_only: false
+      bind_listen_ipv4: "any"
+      bind_log: "data/named.run"
+      bind_other_name_servers: []
+      bind_recursion: false
+      bind_rrset_order: "random"
+      bind_zone_also_notify: []
+      bind_zone_hostmaster_email: "hostmaster"
+      bind_zone_hosts:
+        - name: gw
+          ip: '130.236.178.153'
+        - name: server
+          ip: '130.236.178.154'
+          aliases:
+            - ns1
+        - name: client-1
+          ip: '130.236.178.155'
+        - name: client-2
+          ip: '130.236.178.156'
+      bind_zone_mail_servers: []
+      bind_zone_master_server_ip: "130.236.178.154"
+      bind_zone_minimum_ttl: "1D"
+      bind_zone_name_servers: "{{ ansible_hostname }}"
+      bind_zone_name: "{{ group_id }}.sysinst.ida.liu.se"
+      bind_zone_networks: "130.236.178"
+      bind_zone_other_name_servers: []
+      bind_zone_text: []
+      bind_zone_time_to_expire: "1D"
+      bind_zone_time_to_refresh: "1H"
+      bind_zone_time_to_retry: "10M"
+      bind_zone_ttl: "1W"
     - role: NIS
       tags: nis
     - role: NFS
@@ -39,3 +83,4 @@
         - "/srv/nfs/local 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
         - "/srv/nfs/home1 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
         - "/srv/nfs/home2 130.236.178.152/29(rw,sync,no_root_squash,no_subtree_check)"
+    

@@ -1,20 +1,9 @@
-## roles/<role>/tasks/main.yml
+## roles/DNS/tasks/main.yml
 ## Role main file
 # vim:ft=ansible:
 ---
-## Initialise distribution-specific variables
-#- include_vars: "{{ item }}"
-#  with_first_found:
-#    - "{{ ansible_distribution }}.yml"
-#    - "{{ ansible_os_family }}.yml"
-#  tags:
-
-#- include: Archlinux.yml
-#  when: "'Archlinux' in ansible_distribution"
-#  tags: 
-
-#- include: CentOS.yml
-#  when: "'CentOS' in ansible_distribution"
-#  tags: 
-
+- name: resolv.conf
+  template:
+    src: resolv.conf
+    dest: /etc/resolv.conf
 ...
