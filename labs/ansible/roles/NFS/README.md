@@ -1,13 +1,14 @@
 # Ansible role 'NFS'
 
-An Ansible role for setting up something for whatever purpose.
+An Ansible role for setting up NFS lab in TDDI41
 
 ## Requirements
 
 ## Role Variables
 | Variable                       | Default                          | Comments (type)  |
 | :---                           | :---                             | :---             |
-
+| nfs_exports | [] | list of exports |
+| is_server | | Set to True for server |
 ## Dependencies
 
 ## Example Playbook
@@ -15,6 +16,9 @@ An Ansible role for setting up something for whatever purpose.
 - hosts: foo
   roles:
     - role: NFS
+      is_server: True
+      nfs_exports:
+        - "/srv/nfs/ *(fsid=0,rw,sync)" 
 ```
 
 ## Testing

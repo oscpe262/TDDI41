@@ -1,0 +1,46 @@
+## roles/NIS/tasks/Server.yml
+## Role main file
+# vim:ft=ansible:
+---
+- name: "Install the NIS server software on your server"
+  apt:
+    name: nis
+    state: installed
+
+- name: "Stop NIS if started"
+  service:
+    name: nis
+    state: stopped
+
+- name: "Assign ypserver"
+  lineinfile:
+    path: /etc/yp.conf
+    state: present
+    regex: "^ypserver"
+    line: "ypserver server.{{ group_id }}.sysinst.ida.liu.se"
+
+- name: Assign secure nets (1/2)
+  lineinfile:
+    path: /etc/ypserv.securenets
+    state: absent
+    regex: "0\.0\.0\.0"
+
+- name: Assign secure nets (2/2)
+  lineinfile:
+    path: /etc/ypserv.securenets
+    state: present
+    line: "255.255.255.248  130.236.178.152"
+  notify:
+    - Update NIS
+    - Restart NIS
+
+- name: Set as server
+  lineinfile:
+    path: /etc/default/nis
+    state: present
+    regex: "NISSERVER"
+    line: "NISSERVER=master"
+
+- name: Populate NIS tables with data from your local files.
+  meta: flush_handlers
+...

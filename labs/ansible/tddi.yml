@@ -3,6 +3,8 @@
     - role: NTP
       tags: ntp
       ntp_srv_ip: 'gw.b4.sysinst.ida.liu.se'
+    - role: NIS
+      tags: nis
     - role: NFS
       tags: nfs
 
@@ -11,6 +13,8 @@
     - role: NTP
       tags: ntp
       ntp_server: True
+    - role: NIS
+      tags: nis
     - role: NFS
       tags: nfs
 
@@ -25,6 +29,8 @@
       disk2: ubde
       disk3: ubdf
       disk4: ubdg
+    - role: NIS
+      tags: nis
     - role: NFS
       is_server: True
       tags: nfs

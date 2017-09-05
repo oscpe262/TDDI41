@@ -1,6 +1,11 @@
-## roles/<role>/handlers/main.yml
+## roles/NFS/handlers/main.yml
 # Handlers for the role
 # vim:ft=ansible:
 ---
+- name: Update NIS
+  command: 'echo "" | /usr/lib/yp/ypinit -m'
+
+- name: Restart NIS
+  service: "name=nis state=restarted"
 ...
 

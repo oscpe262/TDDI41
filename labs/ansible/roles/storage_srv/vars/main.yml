@@ -1,8 +1,0 @@
----
-# more under tasks/main ... :-/
-fstab: /etc/fstab
-exports_dest: /etc/exports
-nw: 192.168.122.0
-mntrootopts: '(fsid=0,rw,sync,no_root_squash,no_subtree_check)'
-mntopts: '(rw,sync,no_root_squash,no_subtree_check)'
-...

@@ -1,20 +1,20 @@
-# Ansible role '<role>'
+# Ansible role 'NIS'
 
-An Ansible role for setting up something for whatever purpose.
+An Ansible role for setting up NIS lab (TDDI41)
 
 ## Requirements
 
 ## Role Variables
 | Variable                       | Default                          | Comments (type)  |
 | :---                           | :---                             | :---             |
-
+| is_server | | Set for server |
 ## Dependencies
 
 ## Example Playbook
 ```Yaml
 - hosts: foo
   roles:
-    - role: <role>
+    - role: NIS
 ```
 
 ## Testing

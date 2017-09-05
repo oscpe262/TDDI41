@@ -1,4 +1,4 @@
-## roles/<role>/vars/main.yml
+## roles/NIS/vars/main.yml
 # General variables associated with this role.
 # vim:ft=ansible:
 ---

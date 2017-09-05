@@ -1,0 +1,52 @@
+## roles/NIS/tasks/Server.yml
+## Role main file
+# vim:ft=ansible:
+---
+- name: "Install the NIS software on clients"
+  apt:
+    name: nis
+    state: installed
+
+- name: "Stop NIS if started"
+  service:
+    name: nis
+    state: stopped
+
+- name: "Assign ypserver"
+  lineinfile:
+    path: /etc/yp.conf
+    state: present
+    regex: "^ypserver"
+    line: "ypserver server.{{ group_id }}.sysinst.ida.liu.se"
+
+- name: Set as client
+  lineinfile:
+    path: /etc/default/nis
+    state: present
+    regex: "NISSERVER"
+    line: "NISSERVER=false"
+
+- file:
+    path: /var/yp
+    state: directory
+    mode: 0700
+
+- name: bind yp
+  command: ypbind
+
+- name: host.conf
+  lineinfile:
+    path: /etc/host.conf
+    state: present
+    regex: "^order"
+    line: "order nis"
+
+- name: "5-2 Configure the name service switch on your clients so they use NIS for as much as possible. Note that you should still use local files as the first information source. Please do not use compat unless you intend to use the special features it provides."
+  template:
+    src: nsswitch.conf.j2
+    dest: /etc/nsswitch.conf.j2
+
+- name: Restart NIS
+  service: "name=nis state=restarted"
+...
+
