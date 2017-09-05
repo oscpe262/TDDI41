@@ -1,4 +1,4 @@
-## roles/<role>/defaults/main.yml
+## roles/NET/defaults/main.yml
 # Default lower priority variables for the role
 # vim:ft=ansible:
 ---

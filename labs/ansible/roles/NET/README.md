@@ -1,21 +1,21 @@
-# Ansible role '<role>'
+# Ansible role 'NET'
 
-An Ansible role for setting up something for whatever purpose.
+As the ansible part of the course is written after I finished the course, I can't be arsed to write a bootstrap role or mess with Quagga. I suggest that you either a) write it yourself, b) use the NET script found elsewhere in this repo, c) use the course's UML script's extended functionality to bootstrap stuff as you want it, or d) just do this lab manually. (a) or (d) is recommended for beginners, in particular (a).
 
-## Requirements
+What you need to do is (for all clients, unless stated otherwise):
+- Edit `/etc/hostname`
+- Edit `/etc/resolv.conf`
+- Edit `/etc/apt/sources.conf`
+- Receive keys with `apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553 7638D0442B90D010 6FB2A1C265FFB764`
+- Edit `/etc/network/interfaces`
+- Edit `/etc/hosts`
+- Edit `/etc/sysctl.conf`
+- Install `quagga` (or some other routing software) on the gw and configure it.
+- Install `ssh` and preferrably (mandatory if you are to use any scripts or ansible stuff) ssh keys and python2 support packages.
 
-## Role Variables
-| Variable                       | Default                          | Comments (type)  |
-| :---                           | :---                             | :---             |
+This will take a while if you are not used to unix or linux administrations, but shouldn't be very hard.
 
-## Dependencies
-
-## Example Playbook
-```Yaml
-- hosts: foo
-  roles:
-    - role: <role>
-```
+Once done, this specific role can be used as-is for NET-testing.
 
 ## Testing
 

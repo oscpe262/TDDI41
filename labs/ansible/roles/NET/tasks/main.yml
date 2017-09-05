@@ -1,4 +1,4 @@
-## roles/<role>/tasks/main.yml
+## roles/NET/tasks/main.yml
 ## Role main file
 # vim:ft=ansible:
 ---
