@@ -1,0 +1,45 @@
+---
+#- include_vars: "{{ item }}"
+#  with_first_found:
+#    - "{{ ansible_distribution }}.yml"
+#    - "{{ ansible_os_family }}.yml"
+
+#- include: Archlinux.yml
+#  when: "'Archlinux' in ansible_distribution"
+
+#- include: CentOS.yml
+#  when: "'CentOS' in ansible_distribution"
+- include_vars: secrets.yml
+
+- name: Manage global Groups on node (server)
+  group:
+    name:  '{{ item.key }}'
+    gid:   '{{ item.value.gidnr }}'
+    state: present
+  with_dict: '{{ posixgroups }}'
+  when: "'present' in item.value.state"
+
+- name: Manage user Groups on node (server)
+  group:
+    name:  '{{ item.key }}'
+    gid:   '{{ item.value.uidnr }}'
+    state: present
+  with_dict: '{{ userentries }}'
+  when: "'present' in item.value.state"
+
+- name: Useradd
+  user:
+    name:       '{{ item.key }}'
+    password:   "{{ lookup('password', 'credentials/' + item.key + '/password.txt encrypt=md5_crypt') }}"
+    home:       "/home/{{ item.key }}"
+    createhome: "yes"
+    force:      'yes'
+    remove:     'no'
+    group:      "{{ item.key }}"
+    groups:     '{{ item.value.groups }},users'
+    uid:        '{{ item.value.uidnr }}'
+    shell:      "/bin/zsh"
+    state:      '{{ item.value.state }}'
+  with_dict:   "{{ userentries }}"
+
+...

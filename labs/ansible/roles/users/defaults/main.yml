@@ -1,0 +1,33 @@
+---
+posixgroups:
+  users:
+    gidnr: 100
+    state: present
+
+userentries:
+  splatrat:
+    fullname: Oscar Petersson
+    lastname: Petersson
+    uidnr: 1000
+    groups: "wheel"
+    state: present
+  simba:
+    fullname: Simba Fabbri
+    lastname: Fabbri
+    uidnr: 1002
+    groups: ""
+    state: present
+  julia:
+    fullname: Julia Fabbri
+    lastname: Fabbri
+    uidnr: 1003
+    groups: ""
+    state: present
+  malin:
+    fullname: Malin Andersson
+    lastname: Andersson
+    uidnr: 1004
+    groups: ""
+    state: present
+
+...
