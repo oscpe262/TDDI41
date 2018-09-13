@@ -89,12 +89,12 @@ Adds recursive directory search (lists subdirectories and their content as well)
 \section{Exercise 5: Absolute and relative path names}
 \subsection{5-1 In the example above name at least one relative path name indicating ssh if:}
 \subsubsection{a) The current working directory is /usr/bin.}
-\verb=./ssh/=
+\verb=./ssh=
 
-\verb=../bin/ssh/ =
+\verb=../bin/ssh =
 
 \subsubsection{b) The current working directory is /usr/local/bin.}
-\verb=../../bin/ssh/=
+\verb=../../bin/ssh=
 
 \section{Exercise 6: Long format chmod}
 \subsection{6-1 It is possible to set individual permissions for user, group and others using chmod. Review the documentation and answer the following questions.}
@@ -154,7 +154,7 @@ Changes current work directory to the parent directory.
 Changes current work directory to the parent directory of the parent directory.
 
 \subsection{9-3 What information about a file is shown by ls -laF?}
-Current directory content in the format:
+Current directory content in the format:\\
 \verb=filemode <> user group filesize(bytes) modification_time filename[entry type indicator]=
 
 \subsection{9-4 In the following output from}
@@ -280,9 +280,9 @@ This line sends \textbf{SIGKILL} to all processes with a PID larger than 1, i.e.
 \subsection{16-2 What keystroke in less moves to the end of the file.}
 \subsection{16-3 What would you type in less to start searching for "option".}
 \subsection{16-4 What would you type in less to move to the next match for "option".}
-BOF: g
-EOF: G
-forward search: /option
+BOF: g\\
+EOF: G\\
+forward search: /option\\
 backward search: ?option
 
 \subsection{16-5 Locate the package documentation for the ssh package and answer the following questions by reading the README.Debian.gz file (hint: remembering the answers to these questions may be useful in the project).}
@@ -309,8 +309,9 @@ Prints the last 10 lines of \verb=/var/log/syslog= and keeps parsing.
 \subsection{18-2 If you want to extract the last ten lines in /var/log/syslog that are related to the service cron, what command would you use? (Hint: the grep command can search for matching lines in a file).}
 \verb=$ cat /var/log/syslog | grep cron=
 
-\section{Part 5 Errata:}
-The default configuration for most contemporary distributions is systemd, regardless of what one thinks of that. Sure, sysvinit might be a reasonable (at least you can reason wether it is or not ...) choice regarding this course, but that does not change the fact that the major distributions likely to be found in a professional environment (Debian, Fedora, SUSE, Red Hat, \*buntu, Mint)- except for legacy systems - are not running sysvinit.
+%\section{Part 5 Errata:}
+% The default configuration for most contemporary distributions is systemd, regardless of what one thinks of that. Sure, sysvinit might be a reasonable (at least you can reason wether it is or not ...) choice regarding this course, but that does not change the fact that the major distributions likely to be found in a professional environment (Debian, Fedora, SUSE, Red Hat, \*buntu, Mint)- except for legacy systems - are not running sysvinit.
+% Errata-errata: Well, to be fair, likely to be found is old legacy systems, and Ubuntu is running upstart etc. So, never mind this crap.
 
 \section{Exercise 19: Booting Linux}
 \subsection{19-1 What services are started when your system boots into run level 2 (i.e. not only services exclusive to run level 2, but all services started as the computer boots into run level 2).}
