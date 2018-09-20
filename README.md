@@ -15,7 +15,9 @@ You will not find:
 
 ## Examiners
 I've made all repos I used during my time at LiU available once the course was done that term. There has been a few occasions where those who run the course has contacted me asking for me to take down the repo or make it private. Just to save you the time of writing a mail to me about it, the answer is always 'no'. There has been one exception due to the nature of the course in question, but this course is not like that one.
+
 Here is the thing ... You as an examiner have the obligation to ensure that each student has aquired the necessary skills/knowledge, and short technical answers to a set of questions that are the same each year does not ensure the proficiency of a student. It only ensures that someone has had the proficiency at one point. Of course, such a set of questions is a great tool for aiding learning, and it should be treated as such. The scripting part of the labs done here is fairly unique and my guess is that you'll rarely see it done this way (as it is major overkill to write a configuration management tool in bash when it won't render you a higher grade).
+
 If someone uses my Ansible roles (be that from this or any of my other repos), it should be encouraged. The golden rules of a sysadmin are after all "don't do something twice" and "don't reinvent the wheel".
 
 ## Requirements
