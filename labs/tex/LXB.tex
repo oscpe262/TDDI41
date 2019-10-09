@@ -139,7 +139,11 @@ Allows entering the directory and listing of its content.
 
 \subsubsection{c) chmod -R u+rw,g+rw,o-rwx dir}
 
-\emph{(c)} is the most suitable one, as it doesn't change possibly existing executive permissions for \verb=[ug]=. \emph{(a)} would remove any executive permissions on all files (and directories, making them inaccessible) for anyone, and \emph{(b)} would add executive permissions for \verb=[ug]= to all files and directories in the tree.
+\emph{(c)} is, arguably, the least wrong one, as it doesn't change possibly existing executive permissions for \verb=[ug]=. \emph{(a)} would remove any executive permissions on all files (and directories, making them inaccessible) for anyone, and \emph{(b)} would add executive permissions for \verb=[ug]= to all files and directories in the tree.
+
+The prerequisits for \emph{(c)} would be that the executive permissions on the files already are correct.
+
+The \emph{truly} correct answer would on the other hand be that a \emph{user} should not have the right to chmod recursively anywhere in the tree apart from their user-specific directories, and those should not be writable to anyone else.
 
 
 \section{Exercise 8: Owner and group manipulation}
