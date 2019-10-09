@@ -13,6 +13,18 @@ You will not find:
 - ansible tests (TBA)
 - grade 5 stuff, as I intended to be a guinea pig for the Kerberos lab, but never got around to it.
 
+Other stuff that can be found on my github page in regards to this course:
+- A guide to start you up with Ansible (grade 4)
+- Ansible roles for installing FreeIPA and joining clients (grade 5), though I haven't focused on getting it to work for Debian, nor are they very well polished.
+
+Other noteworthy stuff:
+
+NIS is horrible. Seriously. There should never again be a NIS server set up in this world if I could have a say. It's insecure, it is horrible to administrate on a larger scale without customized tools, it's insecure, and did I mention it is insecure? That said, if you ever work as a sysadmin in the next ten years, the possibility of you coming across a NIS domain is far higher than 0. Learning how it works, and how to administrate it, isn't a bad thing, but you should never set up a NIS domain again once this course is over. Any old NIS domain you come across should be migrated to LDAP (guess what, LDAP can serve NIS stuff if need be) ASAP.
+
+If you ever plan on doing sysadmin stuff outside this course (and I think you should if you find this course even the slightest amusing), make sure to put some time into getting a grasp on LDAP and Kerberos. It's not hard, and it is used everywhere. Sure, it might go under the name 'Active Directory' and be extended from the standard protocols (as always with Microsoft - "embrace, extend, extinguish" you know (and if you don't, google it)), but it's there, and not many AD technicians know how it actually works behind their GUIs, so when it doesn't work, they spend hours with MS Support or come and ask us Linux admins to help out. Okay, that last thing never really happens, because they don't even have a clue that we know that shit, but they should. :p
+
+And yes, the grading system on this course sucks donkey balls. Configuration management should be grade 3, LDAP+Kerberos should be grade 4, writing shell scripts should be grade 5, because that's how system administrations should be done today. Home-cooked scripts are used, and you need to know how to read them, but you should very rarely write an advanced one, because it has already been done, and it's most likely implemented in, for instance, Ansible. So, do yourself a favour and do this course in Ansible. It doesn't take much extra time, some aspects may even take less time (in particular if you use my roles or roles found on Ansible Galaxy), and then you are doing stuff the right way. Plus, if something goes belly-up, you can reroll it in no-time.
+
 ## Examiners
 I've made all repos I used during my time at LiU available once the course was done that term. There has been a few occasions where those who run the course has contacted me asking for me to take down the repo or make it private. Just to save you the time of writing a mail to me about it, the answer is always 'no'. There has been one exception due to the nature of the course in question, but this course is not like that one.
 
